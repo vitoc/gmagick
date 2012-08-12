@@ -1,0 +1,899 @@
+/**
+   +----------------------------------------------------------------------+
+   | PHP Version 5 / Gmagick	                                          |
+   +----------------------------------------------------------------------+
+   | Copyright (c) 2009 Vito Chin, Mikko Koppanen                         |
+   +----------------------------------------------------------------------+
+   | This source file is subject to version 3.01 of the PHP license,      |
+   | that is bundled with this package in the file LICENSE, and is        |
+   | available through the world-wide-web at the following url:           |
+   | http://www.php.net/license/3_01.txt                                  |
+   | If you did not receive a copy of the PHP license and are unable to   |
+   | obtain it through the world-wide-web, please send a note to          |
+   | license@php.net so we can mail you a copy immediately.               |
+   +----------------------------------------------------------------------+
+   | Author: Mikko Kopppanen <mkoppanen@php.net>                          |
+   |         Vito Chin <vito@php.net>		                              |
+   +----------------------------------------------------------------------+
+*/
+
+#include "php_gmagick.h"
+#include "php_gmagick_macros.h"
+#include "php_gmagick_helpers.h"
+
+/* {{{ proto GmagickDraw GmagickDraw::setStrokeColor(PixelWand stroke_wand)
+	Sets the color used for stroking object outlines.
+*/
+PHP_METHOD(gmagickdraw, setstrokecolor)
+{
+	zval *param;
+	php_gmagickdraw_object *internd;
+	php_gmagickpixel_object *internp;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z", &param) == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	
+	GMAGICK_CAST_PARAMETER_TO_COLOR(param, internp, 2);
+
+	if (internd->drawing_wand != NULL) {
+		DrawSetStrokeColor(internd->drawing_wand, internp->pixel_wand);
+	}
+
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto GmagickDraw GmagickDraw::setStrokeWidth(float stroke_width)
+	Sets the width of the stroke used to draw object outlines.
+*/
+PHP_METHOD(gmagickdraw, setstrokewidth)
+{
+	php_gmagickdraw_object *internd;
+	double width;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &width) == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	if (internd->drawing_wand != NULL) {
+		DrawSetStrokeWidth(internd->drawing_wand, width);
+	}
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto GmagickDraw GmagickDraw::ellipse(float ox, float oy, float rx, float ry, float start, float end)
+        Draws an ellipse on the image.
+*/
+PHP_METHOD(gmagickdraw, ellipse)
+{
+	double ox, oy, rx, ry, start, end;
+	php_gmagickdraw_object *internd;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddddd", &ox, &oy, &rx, &ry, &start, &end) == FAILURE) {
+	        return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	DrawEllipse(internd->drawing_wand, ox, oy, rx, ry, start, end);
+
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto GmagickDraw GmagickDraw::annotation(float x, float y, string *text)
+	Draws text on the image.
+*/
+PHP_METHOD(gmagickdraw, annotate)
+{
+	php_gmagickdraw_object *internd;
+	double x, y;
+	unsigned char *text;
+	int text_len;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dds", &x, &y, &text, &text_len) == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	DrawAnnotation(internd->drawing_wand, x, y, text);
+
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto GmagickDraw GmagickDraw::arc(float sx, float sy, float ex, float ey, float sd, float ed)
+	Draws an arc falling within a specified bounding rectangle on the image.
+*/
+PHP_METHOD(gmagickdraw, arc)
+{
+	double sx, sy, ex, ey, sd, ed;
+	php_gmagickdraw_object *internd;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddddd", &sx, &sy, &ex, &ey, &sd, &ed) == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	DrawArc(internd->drawing_wand, sx, sy, ex, ey, sd, ed);
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto GmagickDraw GmagickDraw::bezier(array coordinates)
+	Draws a bezier curve through a set of points on the image.
+*/
+PHP_METHOD(gmagickdraw, bezier)
+{
+
+	zval *coordinate_array;
+	php_gmagickdraw_object *internd;
+	PointInfo *coordinates;
+	int num_elements = 0;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a", &coordinate_array) == FAILURE) {
+		return;
+	}
+	coordinates = get_pointinfo_array(coordinate_array, &num_elements TSRMLS_CC);
+
+	if (coordinates == (PointInfo *)NULL) {
+		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Unable to read coordinate array", 2);
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	DrawBezier(internd->drawing_wand, num_elements, coordinates);
+
+	efree(coordinates);
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto GmagickPixel GmagickDraw::getFillColor()
+	Returns the fill color used for drawing filled objects.
+*/
+PHP_METHOD(gmagickdraw, getfillcolor)
+{
+	php_gmagickpixel_object *internp;
+	php_gmagickdraw_object *internd;
+	PixelWand *tmp_wand;
+	
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+		return;
+	}
+	
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	
+	tmp_wand = NewPixelWand();
+	DrawGetFillColor(internd->drawing_wand, tmp_wand);
+
+	object_init_ex(return_value, php_gmagickpixel_sc_entry);
+	internp = (php_gmagickpixel_object *) zend_object_store_get_object(return_value TSRMLS_CC);
+	GMAGICKPIXEL_REPLACE_PIXELWAND(internp, tmp_wand);
+
+	return;
+}
+/* }}} */
+
+/* {{{ proto float GmagickDraw::getFillOpacity()
+	Returns the opacity used when drawing using the fill color or fill texture.  Fully opaque is 1.0.
+*/
+PHP_METHOD(gmagickdraw, getfillopacity)
+{
+	php_gmagickdraw_object *internd;
+	double opacity;
+	
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	opacity = DrawGetFillOpacity(internd->drawing_wand);
+
+	RETVAL_DOUBLE(opacity);
+}
+/* }}} */
+
+/* {{{ proto string GmagickDraw::getFont()
+	Returns a null-terminaged string specifying the font used when annotating with text. The value returned must be freed by the user when no longer needed.
+*/
+PHP_METHOD(gmagickdraw, getfont)
+{
+	php_gmagickdraw_object *internd;
+	char *font;
+	
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	font = DrawGetFont(internd->drawing_wand);
+	if(font == (char *)NULL || *font == '\0') {
+		RETURN_FALSE;
+	} else {
+		ZVAL_STRING(return_value, font, 1);
+		GMAGICK_FREE_MEMORY(char *, font);
+		return;
+	}
+}
+/* }}} */
+
+/* {{{ proto float GmagickDraw::getFontSize()
+	Returns the font pointsize used when annotating with text.
+*/
+PHP_METHOD(gmagickdraw, getfontsize)
+{
+	php_gmagickdraw_object *internd;
+	double font_size;
+	
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	font_size = DrawGetFontSize(internd->drawing_wand);
+	ZVAL_DOUBLE(return_value, font_size);
+	return;
+}
+/* }}} */
+
+/* {{{ proto int GmagickDraw::getFontStyle()
+	Returns the font style used when annotating with text.
+*/
+PHP_METHOD(gmagickdraw, getfontstyle)
+{
+	php_gmagickdraw_object *internd;
+	long font_style;
+	
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	font_style = DrawGetFontStyle(internd->drawing_wand);
+	ZVAL_LONG(return_value, font_style);
+	return;
+}
+/* }}} */
+
+/* {{{ proto int GmagickDraw::getFontWeight()
+	Returns the font weight used when annotating with text.
+*/
+PHP_METHOD(gmagickdraw, getfontweight)
+{
+	php_gmagickdraw_object *internd;
+	long weight;
+	
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	weight = DrawGetFontWeight(internd->drawing_wand);
+	ZVAL_LONG(return_value, weight);
+	return;
+}
+/* }}} */
+
+/* {{{ proto float GmagickDraw::getStrokeOpacity()
+	Returns the opacity of stroked object outlines.
+*/
+PHP_METHOD(gmagickdraw, getstrokeopacity)
+{
+	php_gmagickdraw_object *internd;
+	double opacity;
+	
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	opacity = DrawGetStrokeOpacity(internd->drawing_wand);
+
+	RETVAL_DOUBLE(opacity);
+}
+/* }}} */
+
+/* {{{ proto GmagickPixel GmagickDraw::getStrokeColor(PixelWand stroke_color)
+	Returns the color used for stroking object outlines.
+*/
+PHP_METHOD(gmagickdraw, getstrokecolor)
+{
+	php_gmagickpixel_object *internp;
+	php_gmagickdraw_object *internd;
+	PixelWand *tmp_wand;
+	
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	tmp_wand = NewPixelWand();
+	DrawGetStrokeColor(internd->drawing_wand, tmp_wand);
+
+	object_init_ex(return_value, php_gmagickpixel_sc_entry);
+	internp = (php_gmagickpixel_object *) zend_object_store_get_object(return_value TSRMLS_CC);
+	GMAGICKPIXEL_REPLACE_PIXELWAND(internp, tmp_wand);
+
+	return;
+}
+/* }}} */
+
+/* {{{ proto float GmagickDraw::getStrokeWidth()
+	Returns the width of the stroke used to draw object outlines.
+*/
+PHP_METHOD(gmagickdraw, getstrokewidth)
+{
+	php_gmagickdraw_object *internd;
+	double width;
+	
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	width = DrawGetStrokeWidth(internd->drawing_wand);
+
+	RETVAL_DOUBLE(width);
+}
+/* }}} */
+
+/* {{{ proto int GmagickDraw::getTextDecoration()
+	Returns the decoration applied when annotating with text.
+*/
+PHP_METHOD(gmagickdraw, gettextdecoration)
+{
+	php_gmagickdraw_object *internd;
+	long decoration;
+	
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	decoration = DrawGetTextDecoration(internd->drawing_wand);
+	ZVAL_LONG(return_value, decoration);
+	return;
+}
+/* }}} */
+
+/* {{{ proto string GmagickDraw::getTextEncoding()
+	Returns a null-terminated string which specifies the code set used for text annotations. The string must be freed by the user once it is no longer required.
+*/
+PHP_METHOD(gmagickdraw, gettextencoding)
+{
+	php_gmagickdraw_object *internd;
+	char *encoding;
+	
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	encoding = DrawGetTextEncoding(internd->drawing_wand);
+
+	if(encoding == (char *)NULL || *encoding == '\0') {
+		RETURN_FALSE;
+	} else {
+		ZVAL_STRING(return_value, encoding, 1);
+		GMAGICK_FREE_MEMORY(char *, encoding);
+		return;
+	}
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::line(float sx, float sy, float ex, float ey)
+	Draws a line on the image using the current stroke color, stroke opacity, and stroke width.
+*/
+PHP_METHOD(gmagickdraw, line)
+{
+	php_gmagickdraw_object *internd;
+	double sx, sy, ex, ey;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddd", &sx, &sy, &ex, &ey) == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	DrawLine(internd->drawing_wand, sx, sy, ex, ey);
+	GMAGICK_CHAIN_METHOD;
+	
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::point(float x, float y)
+	Draws a point using the current stroke color and stroke thickness at the specified coordinates.
+*/
+PHP_METHOD(gmagickdraw, point)
+{
+	php_gmagickdraw_object *internd;
+	double x, y;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd", &x, &y) == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	DrawPoint(internd->drawing_wand, x, y);
+
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::polygon(array coordinates)
+	Draws a polygon using the current stroke, stroke width, and fill color or texture, using the specified array of coordinates.
+*/
+PHP_METHOD(gmagickdraw, polygon)
+{
+	zval *coordinate_array;
+	php_gmagickdraw_object *internd;
+	PointInfo *coordinates;
+	int num_elements = 0;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a", &coordinate_array) == FAILURE) {
+		return;
+	}
+
+	coordinates = get_pointinfo_array(coordinate_array, &num_elements TSRMLS_CC);
+
+	if (coordinates == (PointInfo *)NULL) {
+		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Unable to read coordinate array", 2);
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	DrawPolygon(internd->drawing_wand, num_elements, coordinates);
+
+	efree(coordinates);
+
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::polyline(array coordinates)
+	Draws a polyline using the current stroke, stroke width, and fill color or texture, using the specified array of coordinates.
+*/
+PHP_METHOD(gmagickdraw, polyline)
+{
+	zval *coordinate_array;
+	php_gmagickdraw_object *internd;
+	PointInfo *coordinates;
+	int num_elements = 0;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a", &coordinate_array) == FAILURE) {
+		return;
+	}
+
+	coordinates = get_pointinfo_array(coordinate_array, &num_elements TSRMLS_CC);
+
+	if (coordinates == (PointInfo *)NULL) {
+		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Unable to read coordinate array", 2);
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	DrawPolyline(internd->drawing_wand, num_elements, coordinates);
+
+	efree(coordinates);
+	GMAGICK_CHAIN_METHOD;
+
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::rectangle(float x1, float y1, float x2, float y2)
+	Draws a rectangle given two coordinates and using the current stroke, stroke width, and fill settings.
+*/
+PHP_METHOD(gmagickdraw, rectangle)
+{
+	double x1, y1, x2, y2;
+	php_gmagickdraw_object *internd;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddd", &x1, &y1, &x2, &y2) == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	DrawRectangle(internd->drawing_wand, x1, y1, x2, y2);
+
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::rotate(float degrees)
+	Applies the specified rotation to the current coordinate space.
+*/
+PHP_METHOD(gmagickdraw, rotate)
+{
+	php_gmagickdraw_object *internd;
+	double degrees;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &degrees) == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	DrawRotate(internd->drawing_wand, degrees);
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::roundRectangle(float x1, float y1, float x2, float y2, float rx, float ry)
+	Draws a rounted rectangle given two coordinates, x & y corner radiuses and using the current stroke, stroke width, and fill settings.
+*/
+PHP_METHOD(gmagickdraw, roundrectangle)
+{
+	double x1, y1, x2, y2, rx, ry;
+	php_gmagickdraw_object *internd;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddddd", &x1, &y1, &x2, &y2, &rx, &ry) == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	DrawRoundRectangle(internd->drawing_wand, x1, y1, x2, y2, rx, ry);
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::scale(float x, float y)
+	Adjusts the scaling factor to apply in the horizontal and vertical directions to the current coordinate space.
+*/
+PHP_METHOD(gmagickdraw, scale)
+{
+	php_gmagickdraw_object *internd;
+	double x, y;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd", &x, &y) == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	DrawScale(internd->drawing_wand, x, y);
+	GMAGICK_CHAIN_METHOD;
+}
+/* {{{ proto bool GmagickDraw::setFillColor(PixelWand fill_wand)
+	Sets the fill color to be used for drawing filled objects.
+*/
+PHP_METHOD(gmagickdraw, setfillcolor)
+{
+	zval *param;
+	php_gmagickdraw_object *internd;
+	php_gmagickpixel_object *internp;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z", &param) == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	GMAGICK_CAST_PARAMETER_TO_COLOR(param, internp, 2);
+	DrawSetFillColor(internd->drawing_wand, internp->pixel_wand);
+
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::setFillOpacity(float fillOpacity)
+	Sets the opacity to use when drawing using the fill color or fill texture.  Fully opaque is 1.0.
+*/
+PHP_METHOD(gmagickdraw, setfillopacity)
+{
+	php_gmagickdraw_object *internd;
+	double fillOpacity;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &fillOpacity) == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	DrawSetFillOpacity(internd->drawing_wand, fillOpacity);
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::setFont(string font_name)
+	Sets the fully-sepecified font to use when annotating with text.
+*/
+PHP_METHOD(gmagickdraw, setfont)
+{
+	php_gmagickdraw_object *internd;
+	char *font, *absolute;
+	int font_len, error = 0;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &font, &font_len) == FAILURE) {
+		return;
+	}
+
+	/* Check that no empty string is passed */
+	if (font_len == 0) {
+		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Can not set empty font", 2);
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	/* And if it wasn't */
+	if (!check_configured_font(font, font_len TSRMLS_CC)) {
+
+		if (!(absolute = expand_filepath(font, NULL TSRMLS_CC))) {
+			GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Unable to set font", 2);
+		}
+
+		/* Do a safe-mode check for the font */
+		GMAGICK_SAFE_MODE_CHECK(absolute, error);
+		GMAGICKDRAW_CHECK_READ_OR_WRITE_ERROR(internd, absolute, error, GMAGICK_FREE_FILENAME);
+
+		if (VCWD_ACCESS(absolute, F_OK|R_OK)) {
+			zend_throw_exception_ex(php_gmagickdraw_exception_class_entry, 2 TSRMLS_CC,
+				"The given font is not found in the GraphicsMagick configuration and the file (%s) is not accessible", absolute);
+
+			efree(absolute);
+			return;
+		}
+
+		DrawSetFont(internd->drawing_wand, absolute);
+		efree(absolute);
+
+	} else {
+		DrawSetFont(internd->drawing_wand, font);
+	}
+
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::setFontSize(float pointsize)
+	Sets the font pointsize to use when annotating with text.
+*/
+PHP_METHOD(gmagickdraw, setfontsize)
+{
+	php_gmagickdraw_object *internd;
+	double font_size;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &font_size) == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	DrawSetFontSize(internd->drawing_wand, font_size);
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::setFontStyle(int style)
+	Sets the font style to use when annotating with text. The AnyStyle enumeration acts as a wild-card "don't care" option.
+*/
+PHP_METHOD(gmagickdraw, setfontstyle)
+{
+	php_gmagickdraw_object *internd;
+	long style_id = AnyStyle;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &style_id) == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	DrawSetFontStyle(internd->drawing_wand, style_id);
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::setFontWeight(int font_weight)
+	Sets the font weight to use when annotating with text.
+*/
+PHP_METHOD(gmagickdraw, setfontweight)
+{
+	php_gmagickdraw_object *internd;
+	long weight;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &weight) == FAILURE) {
+		return;
+	}
+
+	if (weight >= 100 && weight <= 900) {
+
+		internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+		DrawSetFontWeight(internd->drawing_wand, weight);
+		GMAGICK_CHAIN_METHOD;
+
+	} else {
+		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Font weight valid range is 100-900", 2);
+	}
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::setStrokeOpacity(float stroke_opacity)
+	Specifies the opacity of stroked object outlines.
+*/
+PHP_METHOD(gmagickdraw, setstrokeopacity)
+{
+	php_gmagickdraw_object *internd;
+	double opacity;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &opacity) == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	DrawSetStrokeOpacity(internd->drawing_wand, opacity);
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::setTextDecoration(int decoration)
+	Specifies a decoration to be applied when annotating with text.
+*/
+PHP_METHOD(gmagickdraw, settextdecoration)
+{
+	php_gmagickdraw_object *internd;
+	long decoration;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &decoration) == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	DrawSetTextDecoration(internd->drawing_wand, decoration);
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+
+/* {{ proto bool GmagickDraw::setGravity(int GRAVITY)
+   Sets the gravity value
+*/
+PHP_METHOD(gmagickdraw, setgravity)
+{
+	php_gmagickdraw_object *internd;
+	long gravity;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &gravity) == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	DrawSetGravity(internd->drawing_wand, gravity);
+
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{ proto int GmagickDraw::getGravity()
+   Gets the gravity value
+*/
+PHP_METHOD(gmagickdraw, getgravity)
+{
+   php_gmagickdraw_object *internd;
+
+   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+      return;
+   }
+
+   internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+   RETVAL_LONG(DrawGetGravity(internd->drawing_wand));
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::setTextEncoding(string encoding)
+	Specifies specifies the code set to use for text annotations. The only character encoding which may be specified at this time is "UTF-8" for representing Unicode as a sequence of bytes. Specify an empty string to set text encoding to the system's default. Successful text annotation using Unicode may require fonts designed to support Unicode.
+*/
+PHP_METHOD(gmagickdraw, settextencoding)
+{
+	php_gmagickdraw_object *internd;
+	char *encoding;
+	int encoding_len;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &encoding, &encoding_len) == FAILURE) {
+		return;
+	}
+
+	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	DrawSetTextEncoding(internd->drawing_wand, encoding);
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::affine(array affine)
+	Adjusts the current affine transformation matrix with the specified affine transformation matrix. Note that the current affine transform is adjusted rather than replaced.
+*/
+PHP_METHOD(gmagickdraw, affine)
+{
+	php_gmagickdraw_object *internd;
+	zval *affine_matrix, **ppzval;
+	HashTable *affine;
+	char *matrix_elements[] = { "sx", "rx", "ry",
+						        "sy", "tx", "ty" };
+	int i;
+	double value;
+	AffineMatrix *pmatrix;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a", &affine_matrix) == FAILURE) {
+		return;
+	}
+
+	/* Allocate space to build matrix */
+	pmatrix = emalloc(sizeof(AffineMatrix));
+
+	affine = Z_ARRVAL_P(affine_matrix);
+	zend_hash_internal_pointer_reset_ex(affine, (HashPosition *) 0);
+
+	for (i = 0; i < 6 ; i++) {
+
+		if (zend_hash_find(affine, matrix_elements[i], 3, (void**)&ppzval) == FAILURE) {
+			efree(pmatrix);
+            GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "AffineMatrix should contain keys: sx, rx, ry, sy, tx and ty", 2);
+		} else {
+			
+			zval tmp_zval, *tmp_pzval;
+
+			tmp_zval = **ppzval;
+			zval_copy_ctor(&tmp_zval);
+			tmp_pzval = &tmp_zval;
+			convert_to_double(tmp_pzval);
+
+			value = Z_DVAL(tmp_zval);
+
+			if (strcmp(matrix_elements[i], "sx") == 0) {
+				pmatrix->sx = value;
+			} else if (strcmp(matrix_elements[i], "rx") == 0) {
+				pmatrix->rx = value;
+			} else if (strcmp(matrix_elements[i], "ry") == 0) {
+				pmatrix->ry = value;
+			} else if (strcmp(matrix_elements[i], "sy") == 0) {
+				pmatrix->sy = value;
+			} else if (strcmp(matrix_elements[i], "tx") == 0) {
+				pmatrix->tx = value;
+			} else if (strcmp(matrix_elements[i], "ty") == 0) {
+				pmatrix->ty = value;
+			}
+		}
+	}
+	
+	internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	DrawAffine(internd->drawing_wand, pmatrix);
+	efree(pmatrix);
+
+	RETURN_TRUE;
+}
+/* }}} */
+
