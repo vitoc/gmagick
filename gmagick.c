@@ -813,7 +813,9 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, setimagefilename,	gmagick_setimagefilename_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimageformat,		gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimageformat,		gmagick_setimageformat_args, ZEND_ACC_PUBLIC)
+#if GMAGICK_LIB_MASK >= 1003007	
     PHP_ME(gmagick, setcompressionquality,	gmagick_setcompressionquality_args, ZEND_ACC_PUBLIC)
+#endif    
 	PHP_ME(gmagick, getimagegamma,		gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagegamma,		gmagick_setimagegamma_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimagegreenprimary,	gmagick_empty_args, ZEND_ACC_PUBLIC)
