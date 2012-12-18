@@ -3083,7 +3083,11 @@ PHP_METHOD(gmagick, levelimage)
 	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
-	status = MagickLevelImageChannel(intern->magick_wand, channel, black_point, gamma, white_point);
+	if (channel == DefaultChannels) {
+		status = MagickLevelImage(intern->magick_wand, black_point, gamma, white_point);
+	} else {
+		status = MagickLevelImageChannel(intern->magick_wand, channel, black_point, gamma, white_point);
+	}
 
 	/* No magick is going to happen */
 	if (status == MagickFalse) {
@@ -3092,6 +3096,7 @@ PHP_METHOD(gmagick, levelimage)
 	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
+
 
 /* {{{ proto bool Gmagick::magnifyImage()
 	Is a convenience method that scales an image proportionally to twice its original size.

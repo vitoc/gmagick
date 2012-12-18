@@ -59,7 +59,9 @@ static void php_gmagick_object_free_storage(void *object TSRMLS_DC)
 */
 static zend_object_value php_gmagick_object_new_ex(zend_class_entry *class_type, php_gmagick_object **ptr, zend_bool init_wand TSRMLS_DC)
 {
+#if PHP_VERSION_ID < 50399
 	zval *tmp;
+#endif
 	zend_object_value retval;
 	php_gmagick_object *intern;
 
@@ -141,7 +143,9 @@ static void php_gmagickdraw_object_free_storage(void *object TSRMLS_DC)
 */
 static zend_object_value php_gmagickdraw_object_new_ex(zend_class_entry *class_type, php_gmagickdraw_object **ptr, zend_bool init_wand TSRMLS_DC)
 {
+#if PHP_VERSION_ID < 50399
 	zval *tmp;
+#endif
 	zend_object_value retval;
 	php_gmagickdraw_object *intern;
 
@@ -206,7 +210,9 @@ static void php_gmagickpixel_object_free_storage(void *object TSRMLS_DC)
 */
 static zend_object_value php_gmagickpixel_object_new_ex(zend_class_entry *class_type, php_gmagickpixel_object **ptr, zend_bool init_wand TSRMLS_DC)
 {
+#if PHP_VERSION_ID < 50399
 	zval *tmp;
+#endif
 	zend_object_value retval;
 	php_gmagickpixel_object *intern;
 

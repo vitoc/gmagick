@@ -82,7 +82,7 @@ PHP_METHOD(gmagickpixel, getcolor)
 	zend_bool as_array = 0, normalise_array = 0;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|b", &as_array, &normalise_array) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|bb", &as_array, &normalise_array) == FAILURE) {
 		return;
 	}
 
