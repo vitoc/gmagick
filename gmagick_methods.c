@@ -346,6 +346,38 @@ PHP_METHOD(gmagick, cropthumbnailimage)
 }
 /* }}} */
 
+/* {{{ proto Gmagick Gmagick::coalesceImages()
+    Composites a set of images while respecting any page offsets and disposal methods.  
+    GIF, MIFF, and MNG animation sequences typically start with an image background and 
+    each subsequent image varies in size and offset.  returns a new sequence where each image in the 
+    sequence is the same size as the first and composited with the next image in the sequence.
+*/
+PHP_METHOD(gmagick, coalesceimages)
+{
+    MagickWand *tmp_wand;
+    php_gmagick_object *intern, *intern_return;
+
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+        return;
+    }
+    
+    intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+    GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
+
+    tmp_wand = MagickCoalesceImages(intern->magick_wand);
+
+    if (tmp_wand == (MagickWand *)NULL) {
+        GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Coalesce image failed");
+    }
+
+    object_init_ex(return_value, php_gmagick_sc_entry);
+    intern_return = (php_gmagick_object *)zend_object_store_get_object(return_value TSRMLS_CC);
+    GMAGICK_REPLACE_MAGICKWAND(intern_return, tmp_wand);
+    return;
+
+}
+/* }}} */
+
 /* {{{ proto Gmagick Gmagick::composite(Gmagick source, int compose, int x, int y)
 	Crops image
 */

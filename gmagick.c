@@ -320,6 +320,8 @@ ZEND_BEGIN_ARG_INFO_EX(gmagick_chopimage_args, 0, 0, 4)
 	ZEND_ARG_INFO(0, y)
 ZEND_END_ARG_INFO()
 
+
+
 ZEND_BEGIN_ARG_INFO_EX(gmagick_commentimage_args, 0, 0, 1)
 	ZEND_ARG_INFO(0, comment)
 ZEND_END_ARG_INFO()
@@ -761,6 +763,7 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick,	thumbnailimage,		gmagick_thumbnailimage_args,	ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick,	clear,			gmagick_empty_args,		ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick,	cropimage,		gmagick_cropimage_args,		ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, coalesceimages, gmagick_empty_args, ZEND_ACC_PUBLIC)	
 	PHP_ME(gmagick, compositeimage,		gmagick_compositeimage_args,	ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, drawimage,		gmagick_drawimage_args,		ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, annotateimage,		gmagick_annotateimage_args, 	ZEND_ACC_PUBLIC)

@@ -135,6 +135,7 @@ PHP_METHOD(gmagick, borderimage);
 PHP_METHOD(gmagick, thresholdimage);
 PHP_METHOD(gmagick, charcoalimage);
 PHP_METHOD(gmagick, chopimage);
+PHP_METHOD(gmagick, coalesceimages);
 PHP_METHOD(gmagick, commentimage);
 PHP_METHOD(gmagick, current);
 PHP_METHOD(gmagick, cyclecolormapimage);
