@@ -267,6 +267,7 @@ PHP_METHOD(gmagick, rollimage);
 PHP_METHOD(gmagick, rotateimage);
 PHP_METHOD(gmagick, scaleimage);
 PHP_METHOD(gmagick, separateimagechannel);
+PHP_METHOD(gmagick, sharpenimage);
 PHP_METHOD(gmagick, shearimage);
 PHP_METHOD(gmagick, solarizeimage);
 PHP_METHOD(gmagick, spreadimage);

@@ -4012,6 +4012,34 @@ PHP_METHOD(gmagick, separateimagechannel)
 }
 /* }}} */
 
+/* {{{ proto bool Imagick::sharpenImage(float radius, float sigma[, int channel])
+    Sharpens an image.  We convolve the image with a Gaussian operator of the given radius  and standard deviation (sigma). For reasonable results, the radius should be larger than sigma.  Use a radius of 0 and selects a suitable radius for you.
+*/
+PHP_METHOD(gmagick, sharpenimage)
+{
+    double sigma, radius;
+    MagickBool status;
+    php_gmagick_object *intern;
+    long channel = DefaultChannels;
+
+    /* Parse parameters given to function */
+    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd|l", &radius, &sigma) == FAILURE) {
+        return;
+    }
+	
+    intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+    GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
+
+    status = MagickSharpenImage(intern->magick_wand, radius, sigma);
+	
+    /* No magick is going to happen */
+    if (status == MagickFalse) { 
+        GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to sharpen image");
+    }
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
 /* {{{ proto bool Gmagick::shearImage(GmagickPixel background, float x_shear, float y_shear)
 	Slides one edge of an image along the X or Y axis
 */
