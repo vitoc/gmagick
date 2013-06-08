@@ -19,7 +19,7 @@ This extension requires GraphicsMagick version 1.2.6+ and PHP 5.1.3+.
 		<email>mkoppanen@php.net</email>
 		<active>yes</active>
 	</lead>
-	<date>2012-12-08</date>
+	<date>2012-12-27</date>
 	<version>
 		<release>1.1.2RC1</release>
 		<api>1.1.2RC1</api>
@@ -31,6 +31,7 @@ This extension requires GraphicsMagick version 1.2.6+ and PHP 5.1.3+.
 	<license uri="http://www.php.net/license">PHP License</license>
 <notes>
 1. Version number updated.
+
 2. levelImage() will now choose between MagickLevelImage and MagickLevelImageChannel depending on whether the channel is provided (the former if it isn't). To adjust  the levels of an image by scaling the colours falling between specified white and black points to the full available quantum range, leave out the channel or use Gmagick::CHANNEL_DEFAULT. The range of applicable  channels for this method can be seen here:
 
 http://www.graphicsmagick.org/wand/magick_wand.html#magicklevelimagechannel
@@ -38,10 +39,11 @@ http://www.graphicsmagick.org/wand/magick_wand.html#magicklevelimagechannel
 Constants available here:
 
 http://www.php.net/manual/en/gmagick.constants.php
-
 Method interface is preserved. 
 
-3. 
+3. coalesceImage() method added.
+
+4. sharpenImage() method added.
 </notes>
 	<contents>
 		<dir name="/">
