@@ -1,0 +1,16 @@
+ARG_WITH("gmagick", "GraphicsMagick support", "no");
+
+if (PHP_GMAGICK != "no") {
+
+	if (CHECK_HEADER_ADD_INCLUDE("wand/wand_api.h", "CFLAGS_GMAGICK", PHP_PHP_BUILD + "\\include\\graphicsmagick;" + PHP_GMAGICK)
+			&& CHECK_LIB("CORE_RL_wand_.lib", "gmagick", PHP_PHP_BUILD + "\\lib\\graphicsmagick;" + PHP_GMAGICK)
+			&& CHECK_LIB("CORE_RL_magick_.lib", "gmagick", PHP_PHP_BUILD + "\\lib\\graphicsmagick;" + PHP_GMAGICK)
+			)
+	{
+		ADD_FLAG("CFLAGS_GMAGICK", "/D NDEBUG /D _WINDOWS /D WIN32 /D _VISUALC_ /D NeedFunctionPrototypes /D _DLL /D _MAGICKMOD_ /D _WANDLIB_");
+		EXTENSION('gmagick', 'gmagick_helpers.c gmagick_methods.c gmagick.c gmagickdraw_methods.c gmagickpixel_methods.c');
+		AC_DEFINE('HAVE_GMAGICK', 1);
+	} else {
+		WARNING("gmagick not enabled; libraries and headers not found");
+	}
+}
