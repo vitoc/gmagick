@@ -22,13 +22,22 @@
 
 /* Define Extension Properties */
 #define PHP_GMAGICK_EXTNAME    "gmagick"
-#define PHP_GMAGICK_VERSION    "1.1.2RC1"
+#define PHP_GMAGICK_VERSION    "1.1.3RC1"
 #define PHP_GMAGICK_EXTNUM     00001
 #define MAX_BUFFER_SIZE        1024
 
 /* Include GraphicsMagick header */
 #include <stdio.h>
 #include <sys/types.h>
+#if defined(PHP_WIN32) && !defined(ssize_t)
+/* XXX actually wand_api.h should be included after php.h,
+	ssize_t were there with much more probability. */
+# ifdef _WIN64
+typedef __int64 ssize_t;
+# else 
+typedef long ssize_t;
+# endif
+#endif
 #include <wand/wand_api.h>
 
 /* Include some required php headers */
@@ -277,6 +286,7 @@ PHP_METHOD(gmagick, trimimage);
 PHP_METHOD(gmagick, sampleimage);
 PHP_METHOD(gmagick, cloneimage);
 PHP_METHOD(gmagick, appendimages);
+PHP_METHOD(gmagick, unsharpmaskimage);
 /* draw */
 PHP_METHOD(gmagickdraw, setstrokecolor);
 PHP_METHOD(gmagickdraw, setstrokewidth);

@@ -602,3 +602,16 @@ zend_bool php_gmagick_thumbnail_dimensions(MagickWand *magick_wand, zend_bool be
 	}
 	return 1;
 }
+
+/** zend_bool php_gmagick_thumbnail_dimensions(MagickWand *magick_wand, zend_bool bestfit, long desired_width, long desired_height, long *new_width, long *new_height)
+*/
+
+zend_bool php_gmagick_ensure_not_empty (MagickWand *magick_wand)
+{
+        if (MagickGetNumberImages(magick_wand) == 0) {
+            TSRMLS_FETCH ();
+			GMAGICK_THROW_GMAGICK_EXCEPTION(magick_wand, "Can not process empty Gmagick object");                
+            return 0;
+        }
+        return 1;
+}

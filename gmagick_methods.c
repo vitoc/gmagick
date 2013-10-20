@@ -4404,3 +4404,31 @@ PHP_METHOD(gmagick, appendimages)
 	return;
 }
 /* }}} */
+
+/* {{{ proto bool Gmagick::unsharpMaskImage(float radius, float sigma, float amount, float threshold)
+        We convolve the image with a Gaussian operator of the given radius and standard deviation (sigma). For reasonable results, radius should be larger than sigma.  Use a radius of 0 and Imagick::UnsharpMaskImage() selects a suitable radius for you.
+*/
+PHP_METHOD(gmagick, unsharpmaskimage)
+{
+        php_gmagick_object *intern;
+        double radius, sigma, amount, threshold;
+        MagickBool status;
+
+        /* Parse parameters given to function */
+        if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddd", &radius, &sigma, &amount, &threshold) == FAILURE) {
+                return;
+        }
+
+        intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+        if (php_gmagick_ensure_not_empty (intern->magick_wand) == 0)
+                return;
+
+		status = MagickUnsharpMaskImage(intern->magick_wand, radius, sigma, amount, threshold);
+
+        if (status == MagickFalse) {
+			GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to unsharp mask image");        	
+            return;
+        }
+        RETURN_TRUE;
+}
+/* }}} */

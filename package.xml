@@ -19,10 +19,10 @@ This extension requires GraphicsMagick version 1.2.6+ and PHP 5.1.3+.
 		<email>mkoppanen@php.net</email>
 		<active>yes</active>
 	</lead>
-	<date>2012-12-27</date>
+	<date>2013-10-20</date>
 	<version>
-		<release>1.1.2RC1</release>
-		<api>1.1.2RC1</api>
+		<release>1.1.3RC1</release>
+		<api>1.1.3RC1</api>
 	</version>
 	<stability>
 		<release>beta</release>
@@ -30,24 +30,14 @@ This extension requires GraphicsMagick version 1.2.6+ and PHP 5.1.3+.
 	</stability>
 	<license uri="http://www.php.net/license">PHP License</license>
 <notes>
-1. Version number updated.
-
-2. levelImage() will now choose between MagickLevelImage and MagickLevelImageChannel depending on whether the channel is provided (the former if it isn't). To adjust  the levels of an image by scaling the colours falling between specified white and black points to the full available quantum range, leave out the channel or use Gmagick::CHANNEL_DEFAULT. The range of applicable  channels for this method can be seen here:
-
-http://www.graphicsmagick.org/wand/magick_wand.html#magicklevelimagechannel
-
-Constants available here:
-
-http://www.php.net/manual/en/gmagick.constants.php
-Method interface is preserved. 
-
-3. coalesceImage() method added.
-
-4. sharpenImage() method added.
+1. unsharpenMaskImage method and corresponding test added.
+2. Updated test for getQuantumDepth
+3. Version number updated
 </notes>
 	<contents>
 		<dir name="/">
 			<file name="config.m4" role="src" />
+			<file name="config.w32" role="src" />
 			<file name="gmagick.c" role="src">
 				<tasks:replace from="@PACKAGE_VERSION@" to="version" type="package-info" />
 			</file>
@@ -160,6 +150,9 @@ Method interface is preserved.
 				<file role="test" name="gmagick-097-sampleimage.phpt"/>
 				<file role="test" name="gmagick-098-cloneimage.phpt"/>
 				<file role="test" name="gmagick-099-appendimages.phpt"/>
+				<file role="test" name="gmagick-100-coalesceimages.phpt"/>
+				<file role="test" name="gmagick-101-sharpenimage.phpt"/>
+				<file role="test" name="gmagick-102-unsharpenmaskimage.phpt"/>
 				<file role="test" name="gmagickdraw-001-setstrokecolor_setstrokewidth.phpt"/>
 				<file role="test" name="gmagickdraw-002-ellipse.phpt"/>
 				<file role="test" name="gmagickdraw-003-annotate.phpt"/>

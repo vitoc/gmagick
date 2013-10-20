@@ -749,6 +749,14 @@ ZEND_BEGIN_ARG_INFO_EX(gmagick_appendimages_args, 0, 0, 1)
 	ZEND_ARG_INFO(0, stack)
 ZEND_END_ARG_INFO()
 
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_unsharpmaskimage_args, 0, 0, 4)
+        ZEND_ARG_INFO(0, radius)
+        ZEND_ARG_INFO(0, sigma)
+        ZEND_ARG_INFO(0, amount)
+        ZEND_ARG_INFO(0, threshold)
+ZEND_END_ARG_INFO()
+
 /* {{{ static zend_function_entry php_gmagick_functions[]
 */
 static zend_function_entry php_gmagick_functions[] =
@@ -922,7 +930,7 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, sampleimage,		gmagick_sampleimage_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, cloneimage,		gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, appendimages,		gmagick_appendimages_args, ZEND_ACC_PUBLIC)
-
+	PHP_ME(gmagick, unsharpmaskimage,	gmagick_unsharpmaskimage_args, ZEND_ACC_PUBLIC)
 	PHP_MALIAS(gmagick, read, readimage,	gmagick_readimage_args,	ZEND_ACC_PUBLIC)
 	PHP_MALIAS(gmagick, write, writeimage,	gmagick_writeimage_args, ZEND_ACC_PUBLIC)
 	{ NULL, NULL, NULL }
