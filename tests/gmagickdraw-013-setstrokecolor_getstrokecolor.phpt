@@ -2,8 +2,9 @@
 Test setstrokecolor, getstrokecolor
 --SKIPIF--
 <?php
-/* $Id: gmagickdraw-013-setstrokecolor_getstrokecolor.phpt 280206 2009-05-09 18:22:48Z vito $ */
+/* $Id: gmagickdraw-013-setstrokecolor_getstrokecolor.phpt 331869 2013-10-20 11:27:00Z remi $ */
 if(!extension_loaded('gmagick')) die('skip');
+if (Gmagick::QUANTUM_DEPTH != 8) die('skip QUANTUM_DEPTH='.Gmagick::QUANTUM_DEPTH);
 ?>
 --FILE--
 <?php

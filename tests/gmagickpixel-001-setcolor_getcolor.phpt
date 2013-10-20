@@ -2,8 +2,9 @@
 Test setColor and getColor methods
 --SKIPIF--
 <?php
-/* $Id: gmagickpixel-001-setcolor_getcolor.phpt 280206 2009-05-09 18:22:48Z vito $ */
+/* $Id: gmagickpixel-001-setcolor_getcolor.phpt 331869 2013-10-20 11:27:00Z remi $ */
 if(!extension_loaded('gmagick')) die('skip');
+if (Gmagick::QUANTUM_DEPTH != 8) die('skip QUANTUM_DEPTH='.Gmagick::QUANTUM_DEPTH);
 ?>
 --FILE--
 <?php

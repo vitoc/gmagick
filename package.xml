@@ -21,8 +21,8 @@ This extension requires GraphicsMagick version 1.2.6+ and PHP 5.1.3+.
 	</lead>
 	<date>2013-10-20</date>
 	<version>
-		<release>1.1.3RC1</release>
-		<api>1.1.3RC1</api>
+		<release>1.1.4RC1</release>
+		<api>1.1.4RC1</api>
 	</version>
 	<stability>
 		<release>beta</release>
@@ -30,9 +30,17 @@ This extension requires GraphicsMagick version 1.2.6+ and PHP 5.1.3+.
 	</stability>
 	<license uri="http://www.php.net/license">PHP License</license>
 <notes>
-1. unsharpenMaskImage method and corresponding test added.
-2. Updated test for getQuantumDepth
-3. Version number updated
+From Remi Collet's patches:
+http://svn.php.net/viewvc?view=revision&revision=331875
+http://svn.php.net/viewvc?view=revision&revision=331878
+http://svn.php.net/viewvc?view=revision&revision=331868
+http://svn.php.net/viewvc?view=revision&revision=331869
+http://svn.php.net/viewvc?view=revision&revision=331870
+Changes:
+1. Added Gmagick::QUANTUM_DEPTH constant
+2. Added tests for environments where QUANTUM_DEPTH = 16 (with skip conditions for QUANTUM_DEPTH = 8)
+3. Fix warning: implicit declaration of function 'php_gmagick_ensure_not_empty' [-Wimplicit-function-declaration]
+4. Fix: initialize stack = 0 in appendimages.
 </notes>
 	<contents>
 		<dir name="/">
@@ -76,8 +84,10 @@ This extension requires GraphicsMagick version 1.2.6+ and PHP 5.1.3+.
 				<file role="test" name="gmagick-023-gammaimage.phpt"/>
 				<file role="test" name="gmagick-024-getcopyright_getfilename.phpt"/>
 				<file role="test" name="gmagick-025-set_and_getimageckgroundcolor.phpt"/>
+				<file role="test" name="gmagick-025-set_and_getimageckgroundcolor_q16.phpt"/>
 				<file role="test" name="gmagick-026-set_getimageblueprimary.phpt"/>
 				<file role="test" name="gmagick-027-set_getimagebordercolor.phpt"/>
+				<file role="test" name="gmagick-027-set_getimagebordercolor_q16.phpt"/>
 				<file role="test" name="gmagick-028-set_getimagechanneldepth.phpt"/>
 				<file role="test" name="gmagick-029-set_getimagecolorspace.phpt"/>
 				<file role="test" name="gmagick-030-getimagecolors.phpt"/>
@@ -159,6 +169,7 @@ This extension requires GraphicsMagick version 1.2.6+ and PHP 5.1.3+.
 				<file role="test" name="gmagickdraw-004-arc.phpt"/>
 				<file role="test" name="gmagickdraw-005-bezier.phpt"/>
 				<file role="test" name="gmagickdraw-006-setfillcolor_getfillcolor.phpt"/>
+				<file role="test" name="gmagickdraw-006-setfillcolor_getfillcolor_q16.phpt"/>
 				<file role="test" name="gmagickdraw-007-setfillopacity_getfillopacity.phpt"/>
 				<file role="test" name="gmagickdraw-008-setfont_getfont.phpt"/>
 				<file role="test" name="gmagickdraw-009-setfontsize_getfontsize.phpt"/>
@@ -166,6 +177,7 @@ This extension requires GraphicsMagick version 1.2.6+ and PHP 5.1.3+.
 				<file role="test" name="gmagickdraw-011-setfontweight_getfontweight.phpt"/>
 				<file role="test" name="gmagickdraw-012-setstrokeopacity_getstrokeopacity.phpt"/>
 				<file role="test" name="gmagickdraw-013-setstrokecolor_getstrokecolor.phpt"/>
+				<file role="test" name="gmagickdraw-013-setstrokecolor_getstrokecolor_q16.phpt"/>
 				<file role="test" name="gmagickdraw-014-setstrokewidth_getstrokewidth.phpt"/>
 				<file role="test" name="gmagickdraw-015-settextdecoration_gettextdecoration.phpt"/>
 				<file role="test" name="gmagickdraw-016-settextencoding_gettextencoding.phpt"/>

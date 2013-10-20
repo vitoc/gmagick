@@ -96,7 +96,7 @@ PHP_METHOD(gmagickpixel, getcolor)
 		
 		len = spprintf(&buffer, 50, "rgb(%s)", color_string);
 		GMAGICK_FREE_MEMORY(char *, color_string);
-		RETVAL_STRING(buffer, 0);
+		RETVAL_STRINGL(buffer, len, 0);
 		return;
 	} else {
 		array_init(return_value);

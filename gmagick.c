@@ -1210,7 +1210,7 @@ PHP_MSHUTDOWN_FUNCTION(gmagick)
 PHP_MINFO_FUNCTION(gmagick)
 {
 	const char *version;
-	long version_number;
+	unsigned long version_number;
 	
 	version = MagickGetVersion(&version_number);
 	

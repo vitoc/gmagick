@@ -985,14 +985,11 @@ PHP_METHOD(gmagick, gammaimage)
 */
 PHP_METHOD(gmagick, getcopyright)
 {
-	php_gmagick_object *intern;
 	char *copyright;
 	
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
 		return;
 	}
-
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
 
 	copyright = (char *)MagickGetCopyright();
 	ZVAL_STRING(return_value, copyright, 1);
@@ -2265,7 +2262,7 @@ PHP_METHOD(gmagick, getimageprofile)
 	char *profile, *name;
 	int name_len;
 
-	long length;
+	unsigned long length;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &name, &name_len) == FAILURE) {
 		return;
@@ -2462,7 +2459,8 @@ PHP_METHOD(gmagick, setimageiterations)
 PHP_METHOD(gmagick, setimageprofile)
 {
 	php_gmagick_object *intern;
-	char *name, *profile;
+	char *name;
+	unsigned char*profile;
 	int profile_len, name_len;
 	MagickBool status;
 
@@ -2694,14 +2692,11 @@ PHP_METHOD(gmagick, getimagewidth)
 */
 PHP_METHOD(gmagick, getpackagename)
 {
-	php_gmagick_object *intern;
 	char *package_name;
 	
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
 		return;
 	}
-
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
 
 	package_name = (char *)MagickGetPackageName();
 	ZVAL_STRING(return_value, package_name, 1);
@@ -2716,15 +2711,13 @@ PHP_METHOD(gmagick, getpackagename)
 */
 PHP_METHOD(gmagick, getquantumdepth)
 {
-	php_gmagick_object *intern;
 	char *quantum_depth;
-	long depth;
+	unsigned long depth;
 	
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
 	quantum_depth = (char *)MagickGetQuantumDepth(&depth);
 
 	array_init(return_value);
@@ -2740,14 +2733,11 @@ PHP_METHOD(gmagick, getquantumdepth)
 */
 PHP_METHOD(gmagick, getreleasedate)
 {
-	php_gmagick_object *intern;
 	char *release_date;
 	
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
 		return;
 	}
-
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
 
 	release_date = (char *)MagickGetReleaseDate();
 	ZVAL_STRING(return_value, release_date, 1);
@@ -2779,7 +2769,7 @@ PHP_METHOD(gmagick, getsamplingfactors)
 {
 	php_gmagick_object *intern;
 	double *sampling_factors;
-	long number_factors = 0, i;
+	unsigned long number_factors = 0, i;
 	
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
 		return;
@@ -2972,15 +2962,12 @@ PHP_METHOD(gmagick, setsize)
 */
 PHP_METHOD(gmagick, getversion)
 {
-	php_gmagick_object *intern;
 	char *version_string;
-	long version_number;
+	unsigned long version_number;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
 		return;
 	}
-
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
 
 	version_string = (char *)MagickGetVersion(&version_number);
 	array_init(return_value);
@@ -3471,7 +3458,8 @@ PHP_METHOD(gmagick, previousimage)
 PHP_METHOD(gmagick, profileimage)
 {
 	php_gmagick_object *intern;
-	char *name, *profile;
+	char *name;
+	unsigned char *profile;
 	int name_len, profile_len;
 	MagickBool status;
 
@@ -3713,7 +3701,7 @@ PHP_METHOD(gmagick, raiseimage)
 */
 PHP_METHOD(gmagick, readimageblob)
 {
-	char *image_string;
+	unsigned char *image_string;
 	char *filename = NULL;
 	long filename_len;
 	int image_string_len;
@@ -3844,7 +3832,7 @@ PHP_METHOD(gmagick, removeimageprofile)
 	char *name;
 	unsigned char *profile;
 	int name_len;
-	long profile_len;
+	unsigned long profile_len;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &name, &name_len) == FAILURE) {
@@ -4020,7 +4008,6 @@ PHP_METHOD(gmagick, sharpenimage)
     double sigma, radius;
     MagickBool status;
     php_gmagick_object *intern;
-    long channel = DefaultChannels;
 
     /* Parse parameters given to function */
     if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd|l", &radius, &sigma) == FAILURE) {
@@ -4381,7 +4368,7 @@ PHP_METHOD(gmagick, cloneimage)
 PHP_METHOD(gmagick, appendimages)
 {
 	MagickWand *tmp_wand;
-	zend_bool stack;
+	zend_bool stack = 0;
 	php_gmagick_object *intern, *intern_return;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {

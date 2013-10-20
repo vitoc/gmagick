@@ -62,9 +62,9 @@
 	}
 /* }}} */
 
-/* {{{ GMAGICK_THROW_GMAGICK_EXCEPTION(magick_wand, fallback)
+/* {{{ GMAGICK_THROW_GMAGICK_EXCEPTION_EX(magick_wand, fallback)
 */
-#define GMAGICK_THROW_GMAGICK_EXCEPTION(magick_wand, fallback) \
+#define GMAGICK_THROW_GMAGICK_EXCEPTION_EX(magick_wand, fallback) \
 { \
 	ExceptionType severity; \
 	char *description; \
@@ -75,13 +75,18 @@
 	} \
 	if (!description) { \
 		zend_throw_exception(php_gmagick_exception_class_entry, fallback, 1 TSRMLS_CC); \
-		return; \
 	} else { \
 		zend_throw_exception(php_gmagick_exception_class_entry, description, (long)severity TSRMLS_CC); \
 		GMAGICK_FREE_MEMORY(char *, description); \
-		return; \
 	} \
 }
+/* }}} */
+
+/* {{{ GMAGICK_THROW_GMAGICK_EXCEPTION(magick_wand, fallback)
+*/
+#define GMAGICK_THROW_GMAGICK_EXCEPTION(magick_wand, fallback) \
+	GMAGICK_THROW_GMAGICK_EXCEPTION_EX(magick_wand, fallback); \
+	return;
 /* }}} */
 
 /* {{{ GMAGICK_CALCULATE_THUMBNAIL_SIDES(magick_wand, desired_width, desired_height, fit)

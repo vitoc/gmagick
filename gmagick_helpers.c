@@ -297,6 +297,9 @@ void php_gmagick_initialize_constants()
 	GMAGICK_REGISTER_CONST_LONG("ORIENTATION_RIGHTBOTTOM", RightBottomOrientation);
 	GMAGICK_REGISTER_CONST_LONG("ORIENTATION_LEFTBOTTOM", LeftBottomOrientation);
 #endif
+#if defined(QuantumDepth)
+	GMAGICK_REGISTER_CONST_LONG("QUANTUM_DEPTH", QuantumDepth);
+#endif
 }
 /* }}} */
 
@@ -610,7 +613,7 @@ zend_bool php_gmagick_ensure_not_empty (MagickWand *magick_wand)
 {
         if (MagickGetNumberImages(magick_wand) == 0) {
             TSRMLS_FETCH ();
-			GMAGICK_THROW_GMAGICK_EXCEPTION(magick_wand, "Can not process empty Gmagick object");                
+			GMAGICK_THROW_GMAGICK_EXCEPTION_EX(magick_wand, "Can not process empty Gmagick object");   
             return 0;
         }
         return 1;
