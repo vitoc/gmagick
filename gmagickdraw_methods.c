@@ -831,6 +831,207 @@ PHP_METHOD(gmagickdraw, settextencoding)
 }
 /* }}} */
 
+/* {{{ proto bool GmagickDraw::setStrokeAntialias(bool stroke_antialias)
+        Controls whether stroked outlines are antialiased. Stroked outlines are antialiased by default.  When antialiasing is disabled stroked pixels are thresholded to determine if the stroke color or underlying canvas color should be used.
+*/
+PHP_METHOD(gmagickdraw, setstrokeantialias)
+{
+        php_gmagickdraw_object *internd;
+        zend_bool antialias;
+
+        /* Parse parameters given to function */
+        if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "b", &antialias) == FAILURE) {
+                return;
+        }
+
+        internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+
+        DrawSetStrokeAntialias(internd->drawing_wand, antialias);
+		GMAGICK_CHAIN_METHOD;
+
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::setStrokeDashOffset(float dash_offset)
+        Specifies the offset into the dash pattern to start the dash.
+*/
+PHP_METHOD(gmagickdraw, setstrokedashoffset)
+{
+        php_gmagickdraw_object *internd;
+        double offset;
+
+        /* Parse parameters given to function */
+        if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &offset) == FAILURE) {
+                return;
+        }
+
+        internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+
+        DrawSetStrokeDashOffset(internd->drawing_wand, offset);
+        GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::setStrokeLineCap(int linecap)
+        Specifies the shape to be used at the end of open subpaths when they are stroked. Values of LineCap are UndefinedCap, ButtCap, RoundCap, and SquareCap.
+*/
+PHP_METHOD(gmagickdraw, setstrokelinecap)
+{
+        php_gmagickdraw_object *internd;
+        long line_cap;
+
+        /* Parse parameters given to function */
+        if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &line_cap) == FAILURE) {
+                return;
+        }
+        
+        internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+
+        DrawSetStrokeLineCap(internd->drawing_wand, line_cap);
+        GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::setStrokeLineJoin(int linejoin)
+        Specifies the shape to be used at the corners of paths (or other vector shapes) when they are stroked. Values of LineJoin are UndefinedJoin, MiterJoin, RoundJoin, and BevelJoin.
+*/
+PHP_METHOD(gmagickdraw, setstrokelinejoin)
+{        
+        php_gmagickdraw_object *internd;
+        long line_join;
+
+        /* Parse parameters given to function */
+        if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &line_join) == FAILURE) {
+                return;
+        }
+        
+        internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+
+        DrawSetStrokeLineJoin(internd->drawing_wand, line_join);
+        GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::setStrokeMiterLimit(int miterlimit)
+        Specifies the miter limit. When two line segments meet at a sharp angle and miter joins have been specified for 'lineJoin', it is possible for the miter to extend far beyond the thickness of the line stroking the path. The miterLimit' imposes a limit on the ratio of the miter length to the 'lineWidth'.
+*/
+PHP_METHOD(gmagickdraw, setstrokemiterlimit)
+{
+        php_gmagickdraw_object *internd;
+        long miter_limit;
+
+        /* Parse parameters given to function */
+        if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &miter_limit) == FAILURE) {
+                return;
+        }
+        
+        internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+
+        DrawSetStrokeMiterLimit(internd->drawing_wand, miter_limit);
+        GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
+/* {{{ proto bool GmagickDraw::getStrokeAntialias()
+        Returns the current stroke antialias setting. Stroked outlines are antialiased by default.  When antialiasing is disabled stroked pixels are thresholded to determine if the stroke color or underlying canvas color should be used.
+*/
+PHP_METHOD(gmagickdraw, getstrokeantialias)
+{
+        php_gmagickdraw_object *internd;
+        MagickBool status;
+
+        if (zend_parse_parameters_none() == FAILURE) {
+                return;
+        }
+        
+        internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+        status = DrawGetStrokeAntialias(internd->drawing_wand);
+
+        if (status == MagickFalse) {
+                RETURN_FALSE;
+        } else {
+                RETURN_TRUE;
+        }
+}
+/* }}} */
+
+/* {{{ proto float GmagickDraw::getStrokeDashOffset()
+        Returns the offset into the dash pattern to start the dash.
+*/
+PHP_METHOD(gmagickdraw, getstrokedashoffset)
+{
+        php_gmagickdraw_object *internd;
+        double offset;
+
+        if (zend_parse_parameters_none() == FAILURE) {
+                return;
+        }
+        
+        internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+        offset = DrawGetStrokeDashOffset(internd->drawing_wand);
+
+        RETVAL_DOUBLE(offset);
+}
+/* }}} */
+
+/* {{{ proto int GmagickDraw::getStrokeLineCap()
+        Returns the shape to be used at the end of open subpaths when they are stroked. Values of LineCap are UndefinedCap, ButtCap, RoundCap, and SquareCap.
+*/
+PHP_METHOD(gmagickdraw, getstrokelinecap)
+{
+        php_gmagickdraw_object *internd;
+        long line_cap;
+
+        if (zend_parse_parameters_none() == FAILURE) {
+                return;
+        }
+        
+        internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+        line_cap = DrawGetStrokeLineCap(internd->drawing_wand);
+
+        RETVAL_LONG(line_cap);
+}
+/* }}} */
+
+/* {{{ proto int GmagickDraw::getStrokeLineJoin()
+        Returns the shape to be used at the corners of paths (or other vector shapes) when they are stroked. Values of LineJoin are UndefinedJoin, MiterJoin, RoundJoin, and BevelJoin.
+*/
+PHP_METHOD(gmagickdraw, getstrokelinejoin)
+{
+        php_gmagickdraw_object *internd;
+        long line_join;
+
+        if (zend_parse_parameters_none() == FAILURE) {
+                return;
+        }
+        
+        internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+        line_join = DrawGetStrokeLineJoin(internd->drawing_wand);
+
+        RETVAL_LONG(line_join);
+}
+/* }}} */
+
+/* {{{ proto int GmagickDraw::getStrokeMiterLimit()
+        Returns the miter limit. When two line segments meet at a sharp angle and miter joins have been specified for 'lineJoin', it is possible for the miter to extend far beyond the thickness of the line stroking the path. The miterLimit' imposes a limit on the ratio of the miter length to the 'lineWidth'.
+*/
+PHP_METHOD(gmagickdraw, getstrokemiterlimit)
+{
+        php_gmagickdraw_object *internd;
+        unsigned long miter_limit;
+
+        if (zend_parse_parameters_none() == FAILURE) {
+                return;
+        }
+        
+        internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+        miter_limit = DrawGetStrokeMiterLimit(internd->drawing_wand);
+
+        RETVAL_LONG(miter_limit);
+}
+/* }}} */
+
+
 /* {{{ proto bool GmagickDraw::affine(array affine)
 	Adjusts the current affine transformation matrix with the specified affine transformation matrix. Note that the current affine transform is adjusted rather than replaced.
 */

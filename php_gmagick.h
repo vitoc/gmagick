@@ -22,7 +22,7 @@
 
 /* Define Extension Properties */
 #define PHP_GMAGICK_EXTNAME    "gmagick"
-#define PHP_GMAGICK_VERSION    "1.1.4RC1"
+#define PHP_GMAGICK_VERSION    "1.1.5RC1"
 #define PHP_GMAGICK_EXTNUM     00001
 #define MAX_BUFFER_SIZE        1024
 
@@ -325,6 +325,16 @@ PHP_METHOD(gmagickdraw, setfontweight);
 PHP_METHOD(gmagickdraw, setstrokeopacity);
 PHP_METHOD(gmagickdraw, settextdecoration);
 PHP_METHOD(gmagickdraw, settextencoding);
+PHP_METHOD(gmagickdraw, setstrokeantialias);
+PHP_METHOD(gmagickdraw, setstrokedashoffset);
+PHP_METHOD(gmagickdraw, setstrokelinecap);
+PHP_METHOD(gmagickdraw, setstrokelinejoin);
+PHP_METHOD(gmagickdraw, setstrokemiterlimit);
+PHP_METHOD(gmagickdraw, getstrokeantialias);
+PHP_METHOD(gmagickdraw, getstrokedashoffset);
+PHP_METHOD(gmagickdraw, getstrokelinecap);
+PHP_METHOD(gmagickdraw, getstrokelinejoin);
+PHP_METHOD(gmagickdraw, getstrokemiterlimit);
 
 /* pixel */
 PHP_METHOD(gmagickpixel, __construct);

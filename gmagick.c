@@ -1062,6 +1062,26 @@ ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_settextencoding_args, 0, 0, 1)
 	ZEND_ARG_INFO(0, encoding)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setstrokeantialias_args, 0, 0, 1)
+        ZEND_ARG_INFO(0, antialias)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setstrokedashoffset_args, 0, 0, 1)
+        ZEND_ARG_INFO(0, offset)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setstrokelinecap_args, 0, 0, 1)
+        ZEND_ARG_INFO(0, LINECAP)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setstrokelinejoin_args, 0, 0, 1)
+        ZEND_ARG_INFO(0, LINEJOIN)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setstrokemiterlimit_args, 0, 0, 1)
+        ZEND_ARG_INFO(0, miterLimit)
+ZEND_END_ARG_INFO()
+
 static zend_function_entry php_gmagickdraw_class_methods[] =
 {
 	PHP_ME(gmagickdraw, setstrokecolor,	gmagickdraw_setstrokecolor_args,	ZEND_ACC_PUBLIC)
@@ -1101,6 +1121,17 @@ static zend_function_entry php_gmagickdraw_class_methods[] =
 	PHP_ME(gmagickdraw, setstrokeopacity, gmagickdraw_setstrokeopacity_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickdraw, settextdecoration, gmagickdraw_settextdecoration_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickdraw, settextencoding, gmagickdraw_settextencoding_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagickdraw, setstrokeantialias, gmagickdraw_setstrokeantialias_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagickdraw, setstrokedashoffset, gmagickdraw_setstrokedashoffset_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagickdraw, setstrokelinecap, gmagickdraw_setstrokelinecap_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagickdraw, setstrokelinejoin, gmagickdraw_setstrokelinejoin_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagickdraw, setstrokemiterlimit, gmagickdraw_setstrokemiterlimit_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagickdraw, getstrokeantialias, gmagick_empty_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagickdraw, getstrokedashoffset,  gmagick_empty_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagickdraw, getstrokelinecap,  gmagick_empty_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagickdraw, getstrokelinejoin,  gmagick_empty_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagickdraw, getstrokemiterlimit, gmagick_empty_args, ZEND_ACC_PUBLIC)
+
 	{ NULL, NULL, NULL }
 };
 /* }}} */

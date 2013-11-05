@@ -606,10 +606,9 @@ zend_bool php_gmagick_thumbnail_dimensions(MagickWand *magick_wand, zend_bool be
 	return 1;
 }
 
-/** zend_bool php_gmagick_thumbnail_dimensions(MagickWand *magick_wand, zend_bool bestfit, long desired_width, long desired_height, long *new_width, long *new_height)
+/** zend_bool php_gmagick_ensure_not_empty(MagickWand *magick_wand, zend_bool bestfit, long desired_width, long desired_height, long *new_width, long *new_height)
 */
-
-zend_bool php_gmagick_ensure_not_empty (MagickWand *magick_wand)
+zend_bool php_gmagick_ensure_not_empty(MagickWand *magick_wand)
 {
         if (MagickGetNumberImages(magick_wand) == 0) {
             TSRMLS_FETCH ();
@@ -617,4 +616,38 @@ zend_bool php_gmagick_ensure_not_empty (MagickWand *magick_wand)
             return 0;
         }
         return 1;
+}
+
+/** double *php_imagick_zval_to_double_array(zval *param_array, long *num_elements TSRMLS_DC)
+*/
+double *php_gmagick_zval_to_double_array(zval *param_array, long *num_elements TSRMLS_DC)
+{
+        zval **ppzval;
+        double *double_array;
+        long elements, i = 0;
+
+        *num_elements = elements = zend_hash_num_elements(Z_ARRVAL_P(param_array));
+
+        if (elements == 0) {
+                return NULL;
+        }
+
+        double_array = (double *)emalloc(sizeof(double) * elements);
+
+        for (zend_hash_internal_pointer_reset(Z_ARRVAL_P(param_array));
+                        zend_hash_get_current_data(Z_ARRVAL_P(param_array), (void **) &ppzval) == SUCCESS;
+                        zend_hash_move_forward(Z_ARRVAL_P(param_array)), i++
+        ) {
+                zval tmp_zval, *tmp_pzval;
+
+                tmp_zval = **ppzval;
+                zval_copy_ctor(&tmp_zval);
+                tmp_pzval = &tmp_zval;
+                convert_to_double(tmp_pzval);
+
+                double_array[i] = Z_DVAL_P(tmp_pzval);
+                tmp_pzval = NULL;
+        }
+        *num_elements = elements;
+        return double_array;
 }

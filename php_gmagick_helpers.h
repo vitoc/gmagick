@@ -49,4 +49,7 @@ zend_bool php_gmagick_thumbnail_dimensions(MagickWand *magick_wand, zend_bool be
 /* {{{ zend_bool php_gmagick_ensure_not_empty (MagickWand *magick_wand) */
 zend_bool php_gmagick_ensure_not_empty (MagickWand *magick_wand);
 
+/* {{{ double *php_gmagick_zval_to_double_array(zval *param_array, long *num_elements TSRMLS_DC) */
+double *php_gmagick_zval_to_double_array(zval *param_array, long *num_elements TSRMLS_DC);
+
 #endif
