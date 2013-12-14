@@ -9,7 +9,7 @@ if(!extension_loaded('gmagick')) die('skip');
 <?php
     $gDraw = new GmagickDraw();
     $gDraw->setStrokeDashArray(array(3, 2));
-    print_R($gDraw->getStrokeDashArray());
+    print_r($gDraw->getStrokeDashArray());
 ?>
 --EXPECT--
 Array
