@@ -1082,7 +1082,7 @@ ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setstrokemiterlimit_args, 0, 0, 1)
         ZEND_ARG_INFO(0, miterLimit)
 ZEND_END_ARG_INFO()
 
-#if GMAGICK_LIB_MASK >= 1004000 
+#if GMAGICK_LIB_MASK >= 1003000 
 ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setstrokedasharray_args, 0, 0, 1)
         ZEND_ARG_INFO(0, dashArray)
 ZEND_END_ARG_INFO()
@@ -1137,7 +1137,7 @@ static zend_function_entry php_gmagickdraw_class_methods[] =
 	PHP_ME(gmagickdraw, getstrokelinecap,  gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickdraw, getstrokelinejoin,  gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickdraw, getstrokemiterlimit, gmagick_empty_args, ZEND_ACC_PUBLIC)
-#if GMAGICK_LIB_MASK >= 1004000 	
+#if GMAGICK_LIB_MASK >= 1003000 	
     PHP_ME(gmagickdraw, getstrokedasharray, gmagick_empty_args, ZEND_ACC_PUBLIC)
     PHP_ME(gmagickdraw, setstrokedasharray, gmagickdraw_setstrokedasharray_args, ZEND_ACC_PUBLIC)
 #endif

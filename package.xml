@@ -19,10 +19,10 @@ This extension requires GraphicsMagick version 1.2.6+ and PHP 5.1.3+.
 		<email>mkoppanen@php.net</email>
 		<active>yes</active>
 	</lead>
-	<date>2013-12-14</date>
+	<date>2013-12-15</date>
 	<version>
-		<release>1.1.6RC1</release>
-		<api>1.1.6RC1</api>
+		<release>1.1.6RC2</release>
+		<api>1.1.6RC2</api>
 	</version>
 	<stability>
 		<release>beta</release>
@@ -30,9 +30,7 @@ This extension requires GraphicsMagick version 1.2.6+ and PHP 5.1.3+.
 	</stability>
 	<license uri="http://www.php.net/license">PHP License</license>
 <notes>
-Additional method: Set and get stroke dash array (on GmagickDraw)
-Update version checks for method availability
-Updated existing tests and added new test
+Incorporate Remi's patch on php_gmagick_zval_to_double_array
 </notes>
 	<contents>
 		<dir name="/">

@@ -335,7 +335,7 @@ PHP_METHOD(gmagickdraw, getstrokedashoffset);
 PHP_METHOD(gmagickdraw, getstrokelinecap);
 PHP_METHOD(gmagickdraw, getstrokelinejoin);
 PHP_METHOD(gmagickdraw, getstrokemiterlimit);
-#if GMAGICK_LIB_MASK >= 1004000 
+#if GMAGICK_LIB_MASK >= 1003000 
 PHP_METHOD(gmagickdraw, setstrokedasharray);
 PHP_METHOD(gmagickdraw, getstrokedasharray);
 #endif

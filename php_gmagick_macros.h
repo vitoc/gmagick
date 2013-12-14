@@ -53,6 +53,12 @@
 	zend_declare_class_constant_long(php_gmagick_sc_entry, const_name, sizeof(const_name)-1, (long)value TSRMLS_CC);
 /* }}} */
 
+/* {{{ GMAGICK_REGISTER_CONST_STRING(const_name, value)
+*/
+#define GMAGICK_REGISTER_CONST_STRING(const_name, value) \
+	zend_declare_class_constant_string(php_gmagick_sc_entry, const_name, sizeof(const_name)-1, value TSRMLS_CC);
+/* }}} */
+
 /* {{{ GMAGICK_FREE_MEMORY(type, value)
 */
 #define GMAGICK_FREE_MEMORY(type, value) \

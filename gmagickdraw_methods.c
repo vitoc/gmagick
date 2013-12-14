@@ -1098,7 +1098,7 @@ PHP_METHOD(gmagickdraw, getstrokemiterlimit)
 /* }}} */
 
 
-#if GMAGICK_LIB_MASK >= 1004000 
+#if GMAGICK_LIB_MASK >= 1003000 
 /* {{{ proto array GmagickDraw::getStrokeDashArray()
         Returns an array representing the pattern of dashes and gaps used to stroke paths (see DrawSetStrokeDashArray). The array must be freed once it is no longer required by the user.
 */
@@ -1111,7 +1111,7 @@ PHP_METHOD(gmagickdraw, getstrokedasharray)
         if (zend_parse_parameters_none() == FAILURE) {
                 return;
         }
-        
+
         internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
 
         stroke_array = DrawGetStrokeDashArray(internd->drawing_wand, &num_elements);
@@ -1157,4 +1157,5 @@ PHP_METHOD(gmagickdraw, setstrokedasharray)
         RETURN_TRUE;
 }
 /* }}} */
+
 #endif

@@ -300,6 +300,12 @@ void php_gmagick_initialize_constants()
 #if defined(QuantumDepth)
 	GMAGICK_REGISTER_CONST_LONG("QUANTUM_DEPTH", QuantumDepth);
 #endif
+
+	/* from magick/version.h */
+	GMAGICK_REGISTER_CONST_STRING("VERSION_TXT", MagickLibVersionText);
+	GMAGICK_REGISTER_CONST_LONG("VERSION_LIB", MagickLibVersion);
+	/* from config */
+	GMAGICK_REGISTER_CONST_LONG("VERSION_NUM", GMAGICK_LIB_MASK);
 }
 /* }}} */
 
@@ -632,7 +638,8 @@ double *php_gmagick_zval_to_double_array(zval *param_array, long *num_elements T
                 return NULL;
         }
 
-        double_array = (double *)emalloc(sizeof(double) * elements);
+        /* Number of elements + 1 for final 0 */
+        double_array = (double *)emalloc(sizeof(double) * (elements+1));
 
         for (zend_hash_internal_pointer_reset(Z_ARRVAL_P(param_array));
                         zend_hash_get_current_data(Z_ARRVAL_P(param_array), (void **) &ppzval) == SUCCESS;
@@ -648,6 +655,6 @@ double *php_gmagick_zval_to_double_array(zval *param_array, long *num_elements T
                 double_array[i] = Z_DVAL_P(tmp_pzval);
                 tmp_pzval = NULL;
         }
-        *num_elements = elements;
+ 		double_array[elements] = 0.0;
         return double_array;
 }
