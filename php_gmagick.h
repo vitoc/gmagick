@@ -22,7 +22,7 @@
 
 /* Define Extension Properties */
 #define PHP_GMAGICK_EXTNAME    "gmagick"
-#define PHP_GMAGICK_VERSION    "1.1.5RC1"
+#define PHP_GMAGICK_VERSION    "1.1.6RC1"
 #define PHP_GMAGICK_EXTNUM     00001
 #define MAX_BUFFER_SIZE        1024
 
@@ -207,7 +207,7 @@ PHP_METHOD(gmagick, setimageindex);
 PHP_METHOD(gmagick, getimageinterlacescheme);
 PHP_METHOD(gmagick, setimageinterlacescheme);
 PHP_METHOD(gmagick, getimageiterations);
-#if GMAGICK_LIB_MASK >= 1004000
+#if GMAGICK_LIB_MASK >= 1005000
 PHP_METHOD(gmagick, getimagematte);
 #endif
 PHP_METHOD(gmagick, getimagegeometry);
@@ -335,7 +335,10 @@ PHP_METHOD(gmagickdraw, getstrokedashoffset);
 PHP_METHOD(gmagickdraw, getstrokelinecap);
 PHP_METHOD(gmagickdraw, getstrokelinejoin);
 PHP_METHOD(gmagickdraw, getstrokemiterlimit);
-
+#if GMAGICK_LIB_MASK >= 1004000 
+PHP_METHOD(gmagickdraw, setstrokedasharray);
+PHP_METHOD(gmagickdraw, getstrokedasharray);
+#endif
 /* pixel */
 PHP_METHOD(gmagickpixel, __construct);
 PHP_METHOD(gmagickpixel, setcolor);

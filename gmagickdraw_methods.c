@@ -109,6 +109,72 @@ PHP_METHOD(gmagickdraw, annotate)
 }
 /* }}} */
 
+/* {{{ proto bool GmagickDraw::affine(array affine)
+	Adjusts the current affine transformation matrix with the specified affine transformation matrix. Note that the current affine transform is adjusted rather than replaced.
+*/
+PHP_METHOD(gmagickdraw, affine)
+{
+	php_gmagickdraw_object *internd;
+	zval *affine_matrix, **ppzval;
+	HashTable *affine;
+	char *matrix_elements[] = { "sx", "rx", "ry",
+						        "sy", "tx", "ty" };
+	int i;
+	double value;
+	AffineMatrix *pmatrix;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a", &affine_matrix) == FAILURE) {
+		return;
+	}
+
+	/* Allocate space to build matrix */
+	pmatrix = emalloc(sizeof(AffineMatrix));
+
+	affine = Z_ARRVAL_P(affine_matrix);
+	zend_hash_internal_pointer_reset_ex(affine, (HashPosition *) 0);
+
+	for (i = 0; i < 6 ; i++) {
+
+		if (zend_hash_find(affine, matrix_elements[i], 3, (void**)&ppzval) == FAILURE) {
+			efree(pmatrix);
+            GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "AffineMatrix should contain keys: sx, rx, ry, sy, tx and ty", 2);
+		} else {
+			
+			zval tmp_zval, *tmp_pzval;
+
+			tmp_zval = **ppzval;
+			zval_copy_ctor(&tmp_zval);
+			tmp_pzval = &tmp_zval;
+			convert_to_double(tmp_pzval);
+
+			value = Z_DVAL(tmp_zval);
+
+			if (strcmp(matrix_elements[i], "sx") == 0) {
+				pmatrix->sx = value;
+			} else if (strcmp(matrix_elements[i], "rx") == 0) {
+				pmatrix->rx = value;
+			} else if (strcmp(matrix_elements[i], "ry") == 0) {
+				pmatrix->ry = value;
+			} else if (strcmp(matrix_elements[i], "sy") == 0) {
+				pmatrix->sy = value;
+			} else if (strcmp(matrix_elements[i], "tx") == 0) {
+				pmatrix->tx = value;
+			} else if (strcmp(matrix_elements[i], "ty") == 0) {
+				pmatrix->ty = value;
+			}
+		}
+	}
+	
+	internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+
+	DrawAffine(internd->drawing_wand, pmatrix);
+	efree(pmatrix);
+
+	RETURN_TRUE;
+}
+/* }}} */
+
 /* {{{ proto GmagickDraw GmagickDraw::arc(float sx, float sy, float ex, float ey, float sd, float ed)
 	Draws an arc falling within a specified bounding rectangle on the image.
 */
@@ -1032,69 +1098,63 @@ PHP_METHOD(gmagickdraw, getstrokemiterlimit)
 /* }}} */
 
 
-/* {{{ proto bool GmagickDraw::affine(array affine)
-	Adjusts the current affine transformation matrix with the specified affine transformation matrix. Note that the current affine transform is adjusted rather than replaced.
+#if GMAGICK_LIB_MASK >= 1004000 
+/* {{{ proto array GmagickDraw::getStrokeDashArray()
+        Returns an array representing the pattern of dashes and gaps used to stroke paths (see DrawSetStrokeDashArray). The array must be freed once it is no longer required by the user.
 */
-PHP_METHOD(gmagickdraw, affine)
+PHP_METHOD(gmagickdraw, getstrokedasharray)
 {
-	php_gmagickdraw_object *internd;
-	zval *affine_matrix, **ppzval;
-	HashTable *affine;
-	char *matrix_elements[] = { "sx", "rx", "ry",
-						        "sy", "tx", "ty" };
-	int i;
-	double value;
-	AffineMatrix *pmatrix;
+        php_gmagickdraw_object *internd;
+        double *stroke_array;
+        unsigned long num_elements, i;
 
-	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a", &affine_matrix) == FAILURE) {
-		return;
-	}
+        if (zend_parse_parameters_none() == FAILURE) {
+                return;
+        }
+        
+        internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
 
-	/* Allocate space to build matrix */
-	pmatrix = emalloc(sizeof(AffineMatrix));
+        stroke_array = DrawGetStrokeDashArray(internd->drawing_wand, &num_elements);
+        array_init(return_value);
 
-	affine = Z_ARRVAL_P(affine_matrix);
-	zend_hash_internal_pointer_reset_ex(affine, (HashPosition *) 0);
+        for (i = 0; i < num_elements ; i++) {
+                add_next_index_double(return_value, stroke_array[i]);
+        }
 
-	for (i = 0; i < 6 ; i++) {
-
-		if (zend_hash_find(affine, matrix_elements[i], 3, (void**)&ppzval) == FAILURE) {
-			efree(pmatrix);
-            GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "AffineMatrix should contain keys: sx, rx, ry, sy, tx and ty", 2);
-		} else {
-			
-			zval tmp_zval, *tmp_pzval;
-
-			tmp_zval = **ppzval;
-			zval_copy_ctor(&tmp_zval);
-			tmp_pzval = &tmp_zval;
-			convert_to_double(tmp_pzval);
-
-			value = Z_DVAL(tmp_zval);
-
-			if (strcmp(matrix_elements[i], "sx") == 0) {
-				pmatrix->sx = value;
-			} else if (strcmp(matrix_elements[i], "rx") == 0) {
-				pmatrix->rx = value;
-			} else if (strcmp(matrix_elements[i], "ry") == 0) {
-				pmatrix->ry = value;
-			} else if (strcmp(matrix_elements[i], "sy") == 0) {
-				pmatrix->sy = value;
-			} else if (strcmp(matrix_elements[i], "tx") == 0) {
-				pmatrix->tx = value;
-			} else if (strcmp(matrix_elements[i], "ty") == 0) {
-				pmatrix->ty = value;
-			}
-		}
-	}
-	
-	internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
-
-	DrawAffine(internd->drawing_wand, pmatrix);
-	efree(pmatrix);
-
-	RETURN_TRUE;
+		GMAGICK_FREE_MEMORY(double *, stroke_array);        
+        return;
 }
 /* }}} */
 
+/* {{{ proto bool GmagickDraw::setStrokeDashArray(array dashArray)
+        Specifies the pattern of dashes and gaps used to stroke paths. The strokeDashArray represents an array of numbers that specify the lengths of alternating dashes and gaps in pixels. If an odd number of values is provided, then the list of values is repeated to yield an even number of values. To remove an existing dash array, pass a zero number_elements argument and null dash_array. A typical strokeDashArray_ array might contain the members 5 3 2.
+*/
+PHP_METHOD(gmagickdraw, setstrokedasharray)
+{
+        zval *param_array;
+        double *double_array;
+        long elements;
+        php_gmagickdraw_object *internd;
+
+        /* Parse parameters given to function */
+        if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a", &param_array) == FAILURE) {
+                return;
+        }
+
+        double_array = php_gmagick_zval_to_double_array(param_array, &elements TSRMLS_CC);
+
+        if (!double_array) {
+                //php_gmagick_throw_exception(GMAGICKDRAW_CLASS, "Cannot read stroke dash array parameter" TSRMLS_CC);
+				GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Cannot read stroke dash array parameter", 2);                
+                return;
+        }
+
+        internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+
+        DrawSetStrokeDashArray(internd->drawing_wand, elements, double_array);
+        efree(double_array);
+
+        RETURN_TRUE;
+}
+/* }}} */
+#endif

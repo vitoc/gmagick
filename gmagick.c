@@ -850,7 +850,7 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, getimageinterlacescheme,gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimageinterlacescheme,gmagick_setimageinterlacescheme_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimageiterations,	gmagick_empty_args, ZEND_ACC_PUBLIC)
-#if GMAGICK_LIB_MASK >= 1004000
+#if GMAGICK_LIB_MASK >= 1005000
 	PHP_ME(gmagick, getimagematte,		gmagick_empty_args, ZEND_ACC_PUBLIC)
 #endif
 	PHP_ME(gmagick, getimagemattecolor,	gmagick_empty_args, ZEND_ACC_PUBLIC)
@@ -1082,6 +1082,12 @@ ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setstrokemiterlimit_args, 0, 0, 1)
         ZEND_ARG_INFO(0, miterLimit)
 ZEND_END_ARG_INFO()
 
+#if GMAGICK_LIB_MASK >= 1004000 
+ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setstrokedasharray_args, 0, 0, 1)
+        ZEND_ARG_INFO(0, dashArray)
+ZEND_END_ARG_INFO()
+#endif
+
 static zend_function_entry php_gmagickdraw_class_methods[] =
 {
 	PHP_ME(gmagickdraw, setstrokecolor,	gmagickdraw_setstrokecolor_args,	ZEND_ACC_PUBLIC)
@@ -1131,6 +1137,10 @@ static zend_function_entry php_gmagickdraw_class_methods[] =
 	PHP_ME(gmagickdraw, getstrokelinecap,  gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickdraw, getstrokelinejoin,  gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickdraw, getstrokemiterlimit, gmagick_empty_args, ZEND_ACC_PUBLIC)
+#if GMAGICK_LIB_MASK >= 1004000 	
+    PHP_ME(gmagickdraw, getstrokedasharray, gmagick_empty_args, ZEND_ACC_PUBLIC)
+    PHP_ME(gmagickdraw, setstrokedasharray, gmagickdraw_setstrokedasharray_args, ZEND_ACC_PUBLIC)
+#endif
 
 	{ NULL, NULL, NULL }
 };

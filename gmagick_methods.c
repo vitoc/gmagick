@@ -62,7 +62,7 @@ PHP_METHOD(gmagick, readimage)
 	}
 
 	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
-#if GMAGICK_LIB_MASK >= 1004000 
+#if GMAGICK_LIB_MASK >= 1004000 && PHP_VERSION_ID <= 50399
 	GMAGICK_SAFEMODE_OPENBASEDIR_CONFIRMACCESS(filename);
 #else
 	GMAGICK_SAFEMODE_OPENBASEDIR_CHECK(filename);
@@ -82,7 +82,7 @@ PHP_METHOD(gmagick, __construct)
 	php_gmagick_object *intern;
 	char *filename = NULL;
 	int filename_len;
-	
+
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|s!", &filename, &filename_len) == FAILURE) {
 		return;
 	}
@@ -91,7 +91,7 @@ PHP_METHOD(gmagick, __construct)
 	}
 	
 	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
-#if GMAGICK_LIB_MASK >= 1004000
+#if GMAGICK_LIB_MASK >= 1004000 && PHP_VERSION_ID <= 50399
 	GMAGICK_SAFEMODE_OPENBASEDIR_CONFIRMACCESS(filename);
 #else
 	GMAGICK_SAFEMODE_OPENBASEDIR_CHECK(filename);
@@ -2213,6 +2213,7 @@ PHP_METHOD(gmagick, getimagemattecolor)
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	tmp_wand = NewPixelWand();
+
 	status = MagickGetImageMatteColor(intern->magick_wand, tmp_wand);
 
 	if (tmp_wand == (PixelWand *)NULL) {
@@ -2231,7 +2232,7 @@ PHP_METHOD(gmagick, getimagemattecolor)
 }
 /* }}} */
 
-#if GMAGICK_LIB_MASK >= 1004000
+#if GMAGICK_LIB_MASK >= 1005000
 /* {{{ proto int Gmagick::getImageMatte()
 	Returns true if the image has a matte channel otherwise false
 */
@@ -2247,7 +2248,8 @@ PHP_METHOD(gmagick, getimagematte)
 	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
-	matte = MagickGetImageMatte(intern->magick_wand);
+	matte = MagickGetImageMatte(intern->magick_wand);	
+
 	RETVAL_LONG(matte);
 }
 /* }}} */
@@ -3654,7 +3656,8 @@ PHP_METHOD(gmagick, radialblurimage)
 
 	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
-#if GMAGICK_LIB_MASK >= 1004000
+	// MagickRadialBlurImageChannel still not available in 1.4 
+#if GMAGICK_LIB_MASK >= 1005000
 	status = MagickRadialBlurImageChannel(intern->magick_wand, channel, angle);	
 #else
 	status = MagickRadialBlurImage(intern->magick_wand, angle);

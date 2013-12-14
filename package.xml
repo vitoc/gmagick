@@ -19,10 +19,10 @@ This extension requires GraphicsMagick version 1.2.6+ and PHP 5.1.3+.
 		<email>mkoppanen@php.net</email>
 		<active>yes</active>
 	</lead>
-	<date>2013-11-05</date>
+	<date>2013-12-14</date>
 	<version>
-		<release>1.1.5RC1</release>
-		<api>1.1.5RC1</api>
+		<release>1.1.6RC1</release>
+		<api>1.1.6RC1</api>
 	</version>
 	<stability>
 		<release>beta</release>
@@ -30,12 +30,9 @@ This extension requires GraphicsMagick version 1.2.6+ and PHP 5.1.3+.
 	</stability>
 	<license uri="http://www.php.net/license">PHP License</license>
 <notes>
-Additional methods:
-Set and get stroke anti-alias.
-Set and get stroke dash offest.
-Set and get stroke line cap.
-Set and get stroke line join.
-Set and get stroke miter limit.
+Additional method: Set and get stroke dash array (on GmagickDraw)
+Update version checks for method availability
+Updated existing tests and added new test
 </notes>
 	<contents>
 		<dir name="/">
@@ -186,6 +183,11 @@ Set and get stroke miter limit.
 				<file role="test" name="gmagickdraw-024-scale.phpt"/>
 				<file role="test" name="gmagickdraw-025-affine.phpt"/>
 				<file role="test" name="gmagickdraw-026-setgravity_getgravity.phpt"/>
+				<file role="test" name="gmagickdraw-027-setantialias_getantialias.phpt"/>
+				<file role="test" name="gmagickdraw-028-setlinecap_getlinecap.phpt"/>
+				<file role="test" name="gmagickdraw-029-setlinejoin_getlinejoin.phpt"/>
+				<file role="test" name="gmagickdraw-030-setmiterlimit_getmiterlimit.phpt"/>
+				<file role="test" name="gmagickdraw-031-setdashstrokearray_getdashstrokearray.phpt"/>
 				<file role="test" name="gmagickpixel-001-setcolor_getcolor.phpt"/>
 				<file role="test" name="gmagickpixel-002-setcolorvalue_getcolorvalue.phpt"/>
 				<file role="test" name="gmagickpixel-003-getcolorcount.phpt"/>
