@@ -320,8 +320,6 @@ ZEND_BEGIN_ARG_INFO_EX(gmagick_chopimage_args, 0, 0, 4)
 	ZEND_ARG_INFO(0, y)
 ZEND_END_ARG_INFO()
 
-
-
 ZEND_BEGIN_ARG_INFO_EX(gmagick_commentimage_args, 0, 0, 1)
 	ZEND_ARG_INFO(0, comment)
 ZEND_END_ARG_INFO()
@@ -433,6 +431,10 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO_EX(gmagick_setimagecompose_args, 0, 0, 1)
 	ZEND_ARG_INFO(0, COMPOSITE)
 ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_setimagecompression_args, 0, 0, 1)
+		ZEND_ARG_INFO(0, COMPRESSION)
+	ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(gmagick_setimagedelay_args, 0, 0, 1)
 	ZEND_ARG_INFO(0, delay)
@@ -826,6 +828,8 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, getimagedepth,		gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getnumberimages,	gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagecompose,	gmagick_setimagecompose_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, setimagecompression, gmagick_setimagecompression_args, ZEND_ACC_PUBLIC)	
+	PHP_ME(gmagick, getimagecompression, gmagick_empty_args, ZEND_ACC_PUBLIC)		
 	PHP_ME(gmagick, setimagedelay,		gmagick_setimagedelay_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagedepth,		gmagick_setimagedepth_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimagedispose,	gmagick_empty_args, ZEND_ACC_PUBLIC)

@@ -1144,7 +1144,6 @@ PHP_METHOD(gmagickdraw, setstrokedasharray)
         double_array = php_gmagick_zval_to_double_array(param_array, &elements TSRMLS_CC);
 
         if (!double_array) {
-                //php_gmagick_throw_exception(GMAGICKDRAW_CLASS, "Cannot read stroke dash array parameter" TSRMLS_CC);
 				GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Cannot read stroke dash array parameter", 2);                
                 return;
         }
@@ -1154,7 +1153,7 @@ PHP_METHOD(gmagickdraw, setstrokedasharray)
         DrawSetStrokeDashArray(internd->drawing_wand, elements, double_array);
         efree(double_array);
 
-        RETURN_TRUE;
+        GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
