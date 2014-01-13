@@ -1562,36 +1562,6 @@ PHP_METHOD(gmagick, setimagecompression)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageCompression(int compression)
-    Sets the image compression.
-*/
-PHP_METHOD(gmagick, getimagecompression)
-{
-    php_gmagick_object *intern;
-    long compression;
-    MagickBool status;
-
-    /* Parse parameters given to function */
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &compression) == FAILURE) {
-        return;
-    }
-
-    intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
-
-    if (php_gmagick_ensure_not_empty (intern->magick_wand) == 0)
-        return;
-
-    status = MagickSetImageCompression(intern->magick_wand, compression);
-
-    /* No magick is going to happen */
-	if (status == MagickFalse) {
-		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to set image compression");
-	}    
-	GMAGICK_CHAIN_METHOD;
-}
-/* }}} */
-
-
 /* {{{ proto bool Gmagick::setImageDelay(int delay)
 	Sets the image delay.
 */
