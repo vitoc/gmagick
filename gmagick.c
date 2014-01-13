@@ -829,7 +829,6 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, getnumberimages,	gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagecompose,	gmagick_setimagecompose_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagecompression, gmagick_setimagecompression_args, ZEND_ACC_PUBLIC)	
-	PHP_ME(gmagick, getimagecompression, gmagick_empty_args, ZEND_ACC_PUBLIC)		
 	PHP_ME(gmagick, setimagedelay,		gmagick_setimagedelay_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagedepth,		gmagick_setimagedepth_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimagedispose,	gmagick_empty_args, ZEND_ACC_PUBLIC)
