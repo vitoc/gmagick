@@ -1562,6 +1562,23 @@ PHP_METHOD(gmagick, setimagecompression)
 }
 /* }}} */
 
+
+/* {{{ proto bool Gmagick::getImageCompression
+        Gets the image compression
+*/
+PHP_METHOD(gmagick, getimagecompression)
+{
+	php_gmagick_object *intern;
+
+	if (zend_parse_parameters_none() == FAILURE) {
+		return;
+	}
+
+	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	RETVAL_LONG(MagickGetImageCompression(intern->magick_wand));
+}
+/* }}} */
+
 /* {{{ proto bool Gmagick::setImageDelay(int delay)
 	Sets the image delay.
 */
@@ -2173,6 +2190,7 @@ PHP_METHOD(gmagick, setimageinterlacescheme)
 	if (status == MagickFalse) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to set image interlace scheme");
 	}
+	
 	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */

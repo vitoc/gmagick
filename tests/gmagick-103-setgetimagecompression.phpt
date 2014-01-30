@@ -8,7 +8,7 @@ if(!extension_loaded('gmagick')) die('skip');
 <?php
 $image = new Gmagick('magick:rose');
 $image->setImageCompression(Gmagick::COMPRESSION_JPEG);
-echo "ok";
+echo $image->getImageCompression();
 ?>
 --EXPECTF--
-ok
+5
