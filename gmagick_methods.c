@@ -1384,7 +1384,7 @@ PHP_METHOD(gmagick, setinterlacescheme)
 	if (status == MagickFalse) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to set interlace scheme");
 	}
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 

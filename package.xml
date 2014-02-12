@@ -19,10 +19,10 @@ This extension requires GraphicsMagick version 1.2.6+ and PHP 5.1.3+.
 		<email>mkoppanen@php.net</email>
 		<active>yes</active>
 	</lead>
-	<date>2014-01-31</date>
+	<date>2014-02-13</date>
 	<version>
-		<release>1.1.6RC3</release>
-		<api>1.1.6RC3</api>
+		<release>1.1.7RC1</release>
+		<api>1.1.7RC1</api>
 	</version>
 	<stability>
 		<release>beta</release>
@@ -30,7 +30,7 @@ This extension requires GraphicsMagick version 1.2.6+ and PHP 5.1.3+.
 	</stability>
 	<license uri="http://www.php.net/license">PHP License</license>
 <notes>
-Added set and get image compression with test.
+setInterlaceScheme now returns object itself instead of boolean
 </notes>
 	<contents>
 		<dir name="/">
