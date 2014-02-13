@@ -1364,7 +1364,7 @@ PHP_METHOD(gmagick, setimagecolorspace)
 /* }}} */
 
 /* {{{ proto bool Gmagick::setInterlaceScheme(INTERLACETYPE interlace_scheme)
-	Sets the image compression.
+	Sets the image interlace scheme.
 */
 PHP_METHOD(gmagick, setinterlacescheme)
 {

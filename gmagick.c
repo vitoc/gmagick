@@ -19,7 +19,6 @@
 
 #include "php_gmagick.h"
 #include "php_gmagick_macros.h"
-
 #include "php_gmagick_helpers.h"
 
 /* handlers */
