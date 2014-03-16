@@ -1232,7 +1232,11 @@ PHP_MINIT_FUNCTION(gmagick)
 		return FAILURE;
 	
 	InitializeMagick(cwd);
+#if PHP_VERSION_ID < 50600	
 	free(cwd);
+#else
+	efree(cwd);
+#endif
 
 	/* init constants */
 	php_gmagick_initialize_constants();
