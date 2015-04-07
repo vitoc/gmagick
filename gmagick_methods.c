@@ -196,9 +196,9 @@ PHP_METHOD(gmagick, writeimage)
 	}
 	
 	if (all_frames) {
-		status = MagickWriteImage(intern->magick_wand, filename);
-	} else {
 		status = MagickWriteImages(intern->magick_wand, filename, MagickTrue);
+	} else {
+		status = MagickWriteImage(intern->magick_wand, filename);
 	}
 	
 	if (status == MagickFalse) {
