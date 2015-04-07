@@ -2666,6 +2666,33 @@ PHP_METHOD(gmagick, setimagetype)
 }
 /* }}} */
 
+/* {{{ proto bool Imagick::setImagePage(int width, int height, int x, int y)
+	Sets the page geometry of the image.
+*/
+PHP_METHOD(gmagick, setimagepage)
+{
+	php_gmagick_object *intern;
+	long width, height, x, y;
+	MagickBool status;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "llll", &width, &height, &x, &y) == FAILURE) {
+		return;
+	}
+
+	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
+
+	status = MagickSetImagePage(intern->magick_wand, width, height, x, y);
+
+	/* No magick is going to happen */
+	if (status == MagickFalse) {
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to set image page");
+	}
+	RETURN_TRUE;
+}
+/* }}} */
+
 /* {{{ proto int Gmagick::getImageUnits()
 	Gets the image units of resolution.
 */
