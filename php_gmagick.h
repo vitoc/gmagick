@@ -22,7 +22,7 @@
 
 /* Define Extension Properties */
 #define PHP_GMAGICK_EXTNAME    "gmagick"
-#define PHP_GMAGICK_VERSION    "1.1.7RC2"
+#define PHP_GMAGICK_VERSION    "1.1.7RC3"
 #define PHP_GMAGICK_EXTNUM     00001
 #define MAX_BUFFER_SIZE        1024
 
@@ -214,6 +214,7 @@ PHP_METHOD(gmagick, getimagematte);
 #endif
 PHP_METHOD(gmagick, getimagegeometry);
 PHP_METHOD(gmagick, getimagemattecolor);
+PHP_METHOD(gmagick, getimagepage);
 PHP_METHOD(gmagick, getimageprofile);
 PHP_METHOD(gmagick, getimageredprimary);
 PHP_METHOD(gmagick, getimagerenderingintent);

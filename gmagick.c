@@ -864,6 +864,7 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, getimagematte,		gmagick_empty_args, ZEND_ACC_PUBLIC)
 #endif
 	PHP_ME(gmagick, getimagemattecolor,	gmagick_empty_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, getimagepage, gmagick_empty_args, ZEND_ACC_PUBLIC)	
 	PHP_ME(gmagick, getimageprofile,	gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimageredprimary,	gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimagerenderingintent,gmagick_empty_args, ZEND_ACC_PUBLIC)

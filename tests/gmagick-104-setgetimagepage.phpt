@@ -8,7 +8,11 @@ if(!extension_loaded('gmagick')) die('skip');
 <?php
 $image = new Gmagick('magick:rose');
 $image->setImagePage(10,10,10,10);
-echo "ok";
+$result = $image->getImagePage();
+if (($result['width'] === 10) && ($result['height'] === 10) 
+    && ($result['x'] === 10) && ($result['y'] === 10)) {
+    echo "ok";
+}
 ?>
 --EXPECTF--
 ok

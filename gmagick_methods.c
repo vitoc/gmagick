@@ -2302,6 +2302,42 @@ PHP_METHOD(gmagick, getimagematte)
 /* }}} */
 #endif
 
+/* {{{ proto array Gmagick::getImagePage()
+	Returns the page geometry associated with the image in an array with the keys "width", "height", "x", and "y".
+*/
+PHP_METHOD(gmagick, getimagepage)
+{
+	php_gmagick_object *intern;
+	MagickBool status;
+	unsigned long width, height;
+	long x, y;
+
+	if (zend_parse_parameters_none() == FAILURE) {
+		return;
+	}
+
+	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	if (php_gmagick_ensure_not_empty (intern->magick_wand) == 0)
+		return;
+
+	status = MagickGetImagePage(intern->magick_wand, &width, &height, &x, &y);
+
+	if (status == MagickFalse) {
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to get image page");
+		return;
+	}
+
+	array_init(return_value);
+
+	add_assoc_long(return_value, "width", width);
+	add_assoc_long(return_value, "height", height);
+	add_assoc_long(return_value, "x", x);
+	add_assoc_long(return_value, "y", y);
+
+	return;
+}
+/* }}} */
+
 /* {{{ proto string Gmagick::getImageProfile(string name)
 	Returns the named image profile.
 */
