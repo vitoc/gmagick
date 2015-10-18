@@ -11,6 +11,8 @@ Getting Started
 
 Download the stable from from http://www.graphicsmagick.org and build with --enable-shared option. If you do not need to work with perl, --without-perl.
 
+Remember to run ldconfig after building GraphicsMagick to update shared library cache for immediate use.
+
 2. Install Gmagick
 
 Typically, as with most extensions:
