@@ -227,6 +227,7 @@ PHP_METHOD(gmagick, setimageprofile);
 PHP_METHOD(gmagick, setimageredprimary);
 PHP_METHOD(gmagick, setimagerenderingintent);
 PHP_METHOD(gmagick, setimageresolution);
+PHP_METHOD(gmagick, setresolution);
 PHP_METHOD(gmagick, setimagescene);
 PHP_METHOD(gmagick, setimagetype);
 PHP_METHOD(gmagick, setimagepage);

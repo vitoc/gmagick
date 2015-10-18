@@ -4532,3 +4532,28 @@ PHP_METHOD(gmagick, unsharpmaskimage)
         RETURN_TRUE;
 }
 /* }}} */
+
+/* {{{ proto bool Gmagick::setResolution(float x_resolution, float y_resolution, float amount, float threshold)
+	Sets the image resolution
+*/
+PHP_METHOD(gmagick, setresolution)
+{
+        php_gmagick_object *intern;
+        MagickBool status;
+        double x_resolution, y_resolution;
+
+        /* Parse parameters given to function */
+        if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd", &x_resolution, &y_resolution) == FAILURE) {
+                return;
+        }
+
+        intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+        status = MagickSetResolution(intern->magick_wand, x_resolution, y_resolution);
+
+        if (status == MagickFalse) {
+                GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to set resolution");
+                return;
+        }
+        RETURN_TRUE;
+}
+/* }}} */
