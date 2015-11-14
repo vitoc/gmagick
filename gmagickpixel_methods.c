@@ -19,6 +19,7 @@
 
 #include "php_gmagick.h"
 #include "php_gmagick_macros.h"
+#include "php_gmagick_helpers.h"
 
 /* {{{ GmagickPixel Gmagick::__construct([string filename])
 	Constructs a new Gmagick object
@@ -28,13 +29,13 @@ PHP_METHOD(gmagickpixel, __construct)
 	php_gmagickpixel_object *internp;
 	MagickBool status; // Graphicmagick's boolean type
 	char *color_name = NULL;
-	int color_name_len = 0;
+	size_t color_name_len = 0;
 	
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|s!", &color_name, &color_name_len) == FAILURE) {
 		return;
 	}
 
-	internp = (php_gmagickpixel_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internp = Z_GMAGICKPIXEL_OBJ_P(getThis());
 	
 	/* If color was given as parameter, set it here.*/
 	if (color_name != NULL && internp->pixel_wand != NULL) {
@@ -55,14 +56,14 @@ PHP_METHOD(gmagickpixel, setcolor)
 {
 	php_gmagickpixel_object *internp;
 	char *color_name;
-	int color_name_len;
+	size_t color_name_len;
 	MagickBool status;
 	
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &color_name, &color_name_len) == FAILURE) {
 		return;
 	}
 
-	internp = (php_gmagickpixel_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internp = Z_GMAGICKPIXEL_OBJ_P(getThis());
 	status = PixelSetColor(internp->pixel_wand, color_name);
 
 	if(status == MagickFalse) {
@@ -86,7 +87,7 @@ PHP_METHOD(gmagickpixel, getcolor)
 		return;
 	}
 
-	internp = (php_gmagickpixel_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internp = Z_GMAGICKPIXEL_OBJ_P(getThis());
 
 	if (!as_array) {
 		char *buffer, *color_string;
@@ -96,7 +97,8 @@ PHP_METHOD(gmagickpixel, getcolor)
 		
 		len = spprintf(&buffer, 50, "rgb(%s)", color_string);
 		GMAGICK_FREE_MEMORY(char *, color_string);
-		RETVAL_STRINGL(buffer, len, 0);
+		RETVAL_STRINGL(buffer, len);
+		efree(buffer);
 		return;
 	} else {
 		array_init(return_value);
@@ -133,7 +135,7 @@ PHP_METHOD(gmagickpixel, getcolorcount)
 		return;
 	}
 
-	internp = (php_gmagickpixel_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internp = Z_GMAGICKPIXEL_OBJ_P(getThis());
 
 	color_count = PixelGetColorCount(internp->pixel_wand);
 	RETVAL_LONG(color_count);
@@ -154,7 +156,7 @@ PHP_METHOD(gmagickpixel, getcolorvalue)
 		return;
 	}
 
-	internp = (php_gmagickpixel_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internp = Z_GMAGICKPIXEL_OBJ_P(getThis());
 
 	switch (color) {
 
@@ -212,7 +214,7 @@ PHP_METHOD(gmagickpixel, setcolorvalue)
 		return;
 	}
 
-	internp = (php_gmagickpixel_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internp = Z_GMAGICKPIXEL_OBJ_P(getThis());
 
 	switch (color) {
 

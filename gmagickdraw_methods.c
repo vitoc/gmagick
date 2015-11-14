@@ -34,7 +34,7 @@ PHP_METHOD(gmagickdraw, setstrokecolor)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	
 	GMAGICK_CAST_PARAMETER_TO_COLOR(param, internp, 2);
 
@@ -58,7 +58,7 @@ PHP_METHOD(gmagickdraw, setstrokewidth)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	if (internd->drawing_wand != NULL) {
 		DrawSetStrokeWidth(internd->drawing_wand, width);
 	}
@@ -67,7 +67,7 @@ PHP_METHOD(gmagickdraw, setstrokewidth)
 /* }}} */
 
 /* {{{ proto GmagickDraw GmagickDraw::ellipse(float ox, float oy, float rx, float ry, float start, float end)
-        Draws an ellipse on the image.
+	Draws an ellipse on the image.
 */
 PHP_METHOD(gmagickdraw, ellipse)
 {
@@ -76,10 +76,10 @@ PHP_METHOD(gmagickdraw, ellipse)
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddddd", &ox, &oy, &rx, &ry, &start, &end) == FAILURE) {
-	        return;
+		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawEllipse(internd->drawing_wand, ox, oy, rx, ry, start, end);
 
@@ -95,14 +95,14 @@ PHP_METHOD(gmagickdraw, annotate)
 	php_gmagickdraw_object *internd;
 	double x, y;
 	unsigned char *text;
-	int text_len;
+	size_t text_len;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dds", &x, &y, &text, &text_len) == FAILURE) {
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	DrawAnnotation(internd->drawing_wand, x, y, text);
 
 	GMAGICK_CHAIN_METHOD;
@@ -115,11 +115,11 @@ PHP_METHOD(gmagickdraw, annotate)
 PHP_METHOD(gmagickdraw, affine)
 {
 	php_gmagickdraw_object *internd;
-	zval *affine_matrix, **ppzval;
+	zval *affine_matrix, *current;
 	HashTable *affine;
 	char *matrix_elements[] = { "sx", "rx", "ry",
-						        "sy", "tx", "ty" };
-	int i;
+							"sy", "tx", "ty" };
+	int i = 0;
 	double value;
 	AffineMatrix *pmatrix;
 
@@ -131,24 +131,16 @@ PHP_METHOD(gmagickdraw, affine)
 	/* Allocate space to build matrix */
 	pmatrix = emalloc(sizeof(AffineMatrix));
 
-	affine = Z_ARRVAL_P(affine_matrix);
-	zend_hash_internal_pointer_reset_ex(affine, (HashPosition *) 0);
+	affine = HASH_OF(affine_matrix);
 
-	for (i = 0; i < 6 ; i++) {
-
-		if (zend_hash_find(affine, matrix_elements[i], 3, (void**)&ppzval) == FAILURE) {
+	ZEND_HASH_FOREACH_VAL(affine, current) {
+		if (i >= 6) {
+			break;
+		} else if (!current) {
 			efree(pmatrix);
-            GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "AffineMatrix should contain keys: sx, rx, ry, sy, tx and ty", 2);
+			GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "AffineMatrix should contain keys: sx, rx, ry, sy, tx and ty", 2);
 		} else {
-			
-			zval tmp_zval, *tmp_pzval;
-
-			tmp_zval = **ppzval;
-			zval_copy_ctor(&tmp_zval);
-			tmp_pzval = &tmp_zval;
-			convert_to_double(tmp_pzval);
-
-			value = Z_DVAL(tmp_zval);
+			value = zval_get_double(current);
 
 			if (strcmp(matrix_elements[i], "sx") == 0) {
 				pmatrix->sx = value;
@@ -164,9 +156,11 @@ PHP_METHOD(gmagickdraw, affine)
 				pmatrix->ty = value;
 			}
 		}
-	}
+
+		i++;
+	} ZEND_HASH_FOREACH_END();
 	
-	internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawAffine(internd->drawing_wand, pmatrix);
 	efree(pmatrix);
@@ -187,7 +181,7 @@ PHP_METHOD(gmagickdraw, arc)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawArc(internd->drawing_wand, sx, sy, ex, ey, sd, ed);
 	GMAGICK_CHAIN_METHOD;
@@ -215,7 +209,7 @@ PHP_METHOD(gmagickdraw, bezier)
 		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Unable to read coordinate array", 2);
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	DrawBezier(internd->drawing_wand, num_elements, coordinates);
 
 	efree(coordinates);
@@ -236,13 +230,13 @@ PHP_METHOD(gmagickdraw, getfillcolor)
 		return;
 	}
 	
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	
 	tmp_wand = NewPixelWand();
 	DrawGetFillColor(internd->drawing_wand, tmp_wand);
 
 	object_init_ex(return_value, php_gmagickpixel_sc_entry);
-	internp = (php_gmagickpixel_object *) zend_object_store_get_object(return_value TSRMLS_CC);
+	internp = Z_GMAGICKPIXEL_OBJ_P(return_value);
 	GMAGICKPIXEL_REPLACE_PIXELWAND(internp, tmp_wand);
 
 	return;
@@ -250,7 +244,7 @@ PHP_METHOD(gmagickdraw, getfillcolor)
 /* }}} */
 
 /* {{{ proto float GmagickDraw::getFillOpacity()
-	Returns the opacity used when drawing using the fill color or fill texture.  Fully opaque is 1.0.
+	Returns the opacity used when drawing using the fill color or fill texture. Fully opaque is 1.0.
 */
 PHP_METHOD(gmagickdraw, getfillopacity)
 {
@@ -261,7 +255,7 @@ PHP_METHOD(gmagickdraw, getfillopacity)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	opacity = DrawGetFillOpacity(internd->drawing_wand);
 
 	RETVAL_DOUBLE(opacity);
@@ -280,13 +274,13 @@ PHP_METHOD(gmagickdraw, getfont)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	font = DrawGetFont(internd->drawing_wand);
 	if(font == (char *)NULL || *font == '\0') {
 		RETURN_FALSE;
 	} else {
-		ZVAL_STRING(return_value, font, 1);
+		ZVAL_STRING(return_value, font);
 		GMAGICK_FREE_MEMORY(char *, font);
 		return;
 	}
@@ -305,7 +299,7 @@ PHP_METHOD(gmagickdraw, getfontsize)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	font_size = DrawGetFontSize(internd->drawing_wand);
 	ZVAL_DOUBLE(return_value, font_size);
@@ -325,7 +319,7 @@ PHP_METHOD(gmagickdraw, getfontstyle)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	font_style = DrawGetFontStyle(internd->drawing_wand);
 	ZVAL_LONG(return_value, font_style);
@@ -345,7 +339,7 @@ PHP_METHOD(gmagickdraw, getfontweight)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	weight = DrawGetFontWeight(internd->drawing_wand);
 	ZVAL_LONG(return_value, weight);
@@ -365,7 +359,7 @@ PHP_METHOD(gmagickdraw, getstrokeopacity)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	opacity = DrawGetStrokeOpacity(internd->drawing_wand);
 
 	RETVAL_DOUBLE(opacity);
@@ -385,13 +379,13 @@ PHP_METHOD(gmagickdraw, getstrokecolor)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	tmp_wand = NewPixelWand();
 	DrawGetStrokeColor(internd->drawing_wand, tmp_wand);
 
 	object_init_ex(return_value, php_gmagickpixel_sc_entry);
-	internp = (php_gmagickpixel_object *) zend_object_store_get_object(return_value TSRMLS_CC);
+	internp = Z_GMAGICKPIXEL_OBJ_P(return_value);
 	GMAGICKPIXEL_REPLACE_PIXELWAND(internp, tmp_wand);
 
 	return;
@@ -410,7 +404,7 @@ PHP_METHOD(gmagickdraw, getstrokewidth)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	width = DrawGetStrokeWidth(internd->drawing_wand);
 
 	RETVAL_DOUBLE(width);
@@ -429,7 +423,7 @@ PHP_METHOD(gmagickdraw, gettextdecoration)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	decoration = DrawGetTextDecoration(internd->drawing_wand);
 	ZVAL_LONG(return_value, decoration);
@@ -449,13 +443,13 @@ PHP_METHOD(gmagickdraw, gettextencoding)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	encoding = DrawGetTextEncoding(internd->drawing_wand);
 
 	if(encoding == (char *)NULL || *encoding == '\0') {
 		RETURN_FALSE;
 	} else {
-		ZVAL_STRING(return_value, encoding, 1);
+		ZVAL_STRING(return_value, encoding);
 		GMAGICK_FREE_MEMORY(char *, encoding);
 		return;
 	}
@@ -474,7 +468,7 @@ PHP_METHOD(gmagickdraw, line)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawLine(internd->drawing_wand, sx, sy, ex, ey);
 	GMAGICK_CHAIN_METHOD;
@@ -495,7 +489,7 @@ PHP_METHOD(gmagickdraw, point)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	DrawPoint(internd->drawing_wand, x, y);
 
 	GMAGICK_CHAIN_METHOD;
@@ -523,7 +517,7 @@ PHP_METHOD(gmagickdraw, polygon)
 		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Unable to read coordinate array", 2);
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	DrawPolygon(internd->drawing_wand, num_elements, coordinates);
 
 	efree(coordinates);
@@ -553,7 +547,7 @@ PHP_METHOD(gmagickdraw, polyline)
 		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Unable to read coordinate array", 2);
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	DrawPolyline(internd->drawing_wand, num_elements, coordinates);
 
 	efree(coordinates);
@@ -575,7 +569,7 @@ PHP_METHOD(gmagickdraw, rectangle)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	DrawRectangle(internd->drawing_wand, x1, y1, x2, y2);
 
 	GMAGICK_CHAIN_METHOD;
@@ -595,7 +589,7 @@ PHP_METHOD(gmagickdraw, rotate)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawRotate(internd->drawing_wand, degrees);
 	GMAGICK_CHAIN_METHOD;
@@ -615,7 +609,7 @@ PHP_METHOD(gmagickdraw, roundrectangle)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawRoundRectangle(internd->drawing_wand, x1, y1, x2, y2, rx, ry);
 	GMAGICK_CHAIN_METHOD;
@@ -635,7 +629,7 @@ PHP_METHOD(gmagickdraw, scale)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawScale(internd->drawing_wand, x, y);
 	GMAGICK_CHAIN_METHOD;
@@ -653,7 +647,7 @@ PHP_METHOD(gmagickdraw, setfillcolor)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	GMAGICK_CAST_PARAMETER_TO_COLOR(param, internp, 2);
 	DrawSetFillColor(internd->drawing_wand, internp->pixel_wand);
@@ -663,7 +657,7 @@ PHP_METHOD(gmagickdraw, setfillcolor)
 /* }}} */
 
 /* {{{ proto bool GmagickDraw::setFillOpacity(float fillOpacity)
-	Sets the opacity to use when drawing using the fill color or fill texture.  Fully opaque is 1.0.
+	Sets the opacity to use when drawing using the fill color or fill texture. Fully opaque is 1.0.
 */
 PHP_METHOD(gmagickdraw, setfillopacity)
 {
@@ -675,7 +669,7 @@ PHP_METHOD(gmagickdraw, setfillopacity)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawSetFillOpacity(internd->drawing_wand, fillOpacity);
 	GMAGICK_CHAIN_METHOD;
@@ -689,7 +683,8 @@ PHP_METHOD(gmagickdraw, setfont)
 {
 	php_gmagickdraw_object *internd;
 	char *font, *absolute;
-	int font_len, error = 0;
+	size_t font_len;
+	int error = 0;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &font, &font_len) == FAILURE) {
@@ -701,7 +696,7 @@ PHP_METHOD(gmagickdraw, setfont)
 		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Can not set empty font", 2);
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	/* And if it wasn't */
 	if (!check_configured_font(font, font_len TSRMLS_CC)) {
@@ -746,7 +741,7 @@ PHP_METHOD(gmagickdraw, setfontsize)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawSetFontSize(internd->drawing_wand, font_size);
 	GMAGICK_CHAIN_METHOD;
@@ -766,7 +761,7 @@ PHP_METHOD(gmagickdraw, setfontstyle)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawSetFontStyle(internd->drawing_wand, style_id);
 	GMAGICK_CHAIN_METHOD;
@@ -788,7 +783,7 @@ PHP_METHOD(gmagickdraw, setfontweight)
 
 	if (weight >= 100 && weight <= 900) {
 
-		internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+		internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 		DrawSetFontWeight(internd->drawing_wand, weight);
 		GMAGICK_CHAIN_METHOD;
@@ -812,7 +807,7 @@ PHP_METHOD(gmagickdraw, setstrokeopacity)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawSetStrokeOpacity(internd->drawing_wand, opacity);
 	GMAGICK_CHAIN_METHOD;
@@ -832,7 +827,7 @@ PHP_METHOD(gmagickdraw, settextdecoration)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawSetTextDecoration(internd->drawing_wand, decoration);
 	GMAGICK_CHAIN_METHOD;
@@ -852,7 +847,7 @@ PHP_METHOD(gmagickdraw, setgravity)
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawSetGravity(internd->drawing_wand, gravity);
 
@@ -865,15 +860,15 @@ PHP_METHOD(gmagickdraw, setgravity)
 */
 PHP_METHOD(gmagickdraw, getgravity)
 {
-   php_gmagickdraw_object *internd;
+	php_gmagickdraw_object *internd;
 
-   if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-      return;
-   }
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+		return;
+	}
 
-   internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
-   RETVAL_LONG(DrawGetGravity(internd->drawing_wand));
+	RETVAL_LONG(DrawGetGravity(internd->drawing_wand));
 }
 /* }}} */
 
@@ -884,13 +879,13 @@ PHP_METHOD(gmagickdraw, settextencoding)
 {
 	php_gmagickdraw_object *internd;
 	char *encoding;
-	int encoding_len;
+	size_t encoding_len;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &encoding, &encoding_len) == FAILURE) {
 		return;
 	}
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawSetTextEncoding(internd->drawing_wand, encoding);
 	GMAGICK_CHAIN_METHOD;
@@ -898,262 +893,262 @@ PHP_METHOD(gmagickdraw, settextencoding)
 /* }}} */
 
 /* {{{ proto bool GmagickDraw::setStrokeAntialias(bool stroke_antialias)
-        Controls whether stroked outlines are antialiased. Stroked outlines are antialiased by default.  When antialiasing is disabled stroked pixels are thresholded to determine if the stroke color or underlying canvas color should be used.
+	Controls whether stroked outlines are antialiased. Stroked outlines are antialiased by default.  When antialiasing is disabled stroked pixels are thresholded to determine if the stroke color or underlying canvas color should be used.
 */
 PHP_METHOD(gmagickdraw, setstrokeantialias)
 {
-        php_gmagickdraw_object *internd;
-        zend_bool antialias;
+	php_gmagickdraw_object *internd;
+	zend_bool antialias;
 
-        /* Parse parameters given to function */
-        if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "b", &antialias) == FAILURE) {
-                return;
-        }
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "b", &antialias) == FAILURE) {
+		return;
+	}
 
-        internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
-        DrawSetStrokeAntialias(internd->drawing_wand, antialias);
+	DrawSetStrokeAntialias(internd->drawing_wand, antialias);
 		GMAGICK_CHAIN_METHOD;
 
 }
 /* }}} */
 
 /* {{{ proto bool GmagickDraw::setStrokeDashOffset(float dash_offset)
-        Specifies the offset into the dash pattern to start the dash.
+	Specifies the offset into the dash pattern to start the dash.
 */
 PHP_METHOD(gmagickdraw, setstrokedashoffset)
 {
-        php_gmagickdraw_object *internd;
-        double offset;
+	php_gmagickdraw_object *internd;
+	double offset;
 
-        /* Parse parameters given to function */
-        if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &offset) == FAILURE) {
-                return;
-        }
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &offset) == FAILURE) {
+		return;
+	}
 
-        internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
-        DrawSetStrokeDashOffset(internd->drawing_wand, offset);
-        GMAGICK_CHAIN_METHOD;
+	DrawSetStrokeDashOffset(internd->drawing_wand, offset);
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 /* {{{ proto bool GmagickDraw::setStrokeLineCap(int linecap)
-        Specifies the shape to be used at the end of open subpaths when they are stroked. Values of LineCap are UndefinedCap, ButtCap, RoundCap, and SquareCap.
+	Specifies the shape to be used at the end of open subpaths when they are stroked. Values of LineCap are UndefinedCap, ButtCap, RoundCap, and SquareCap.
 */
 PHP_METHOD(gmagickdraw, setstrokelinecap)
 {
-        php_gmagickdraw_object *internd;
-        long line_cap;
+	php_gmagickdraw_object *internd;
+	long line_cap;
 
-        /* Parse parameters given to function */
-        if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &line_cap) == FAILURE) {
-                return;
-        }
-        
-        internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &line_cap) == FAILURE) {
+		return;
+	}
+	
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
-        DrawSetStrokeLineCap(internd->drawing_wand, line_cap);
-        GMAGICK_CHAIN_METHOD;
+	DrawSetStrokeLineCap(internd->drawing_wand, line_cap);
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 /* {{{ proto bool GmagickDraw::setStrokeLineJoin(int linejoin)
-        Specifies the shape to be used at the corners of paths (or other vector shapes) when they are stroked. Values of LineJoin are UndefinedJoin, MiterJoin, RoundJoin, and BevelJoin.
+	Specifies the shape to be used at the corners of paths (or other vector shapes) when they are stroked. Values of LineJoin are UndefinedJoin, MiterJoin, RoundJoin, and BevelJoin.
 */
 PHP_METHOD(gmagickdraw, setstrokelinejoin)
-{        
-        php_gmagickdraw_object *internd;
-        long line_join;
+{	
+	php_gmagickdraw_object *internd;
+	long line_join;
 
-        /* Parse parameters given to function */
-        if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &line_join) == FAILURE) {
-                return;
-        }
-        
-        internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &line_join) == FAILURE) {
+		return;
+	}
+	
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
-        DrawSetStrokeLineJoin(internd->drawing_wand, line_join);
-        GMAGICK_CHAIN_METHOD;
+	DrawSetStrokeLineJoin(internd->drawing_wand, line_join);
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 /* {{{ proto bool GmagickDraw::setStrokeMiterLimit(int miterlimit)
-        Specifies the miter limit. When two line segments meet at a sharp angle and miter joins have been specified for 'lineJoin', it is possible for the miter to extend far beyond the thickness of the line stroking the path. The miterLimit' imposes a limit on the ratio of the miter length to the 'lineWidth'.
+	Specifies the miter limit. When two line segments meet at a sharp angle and miter joins have been specified for 'lineJoin', it is possible for the miter to extend far beyond the thickness of the line stroking the path. The miterLimit' imposes a limit on the ratio of the miter length to the 'lineWidth'.
 */
 PHP_METHOD(gmagickdraw, setstrokemiterlimit)
 {
-        php_gmagickdraw_object *internd;
-        long miter_limit;
+	php_gmagickdraw_object *internd;
+	long miter_limit;
 
-        /* Parse parameters given to function */
-        if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &miter_limit) == FAILURE) {
-                return;
-        }
-        
-        internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &miter_limit) == FAILURE) {
+		return;
+	}
+	
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
-        DrawSetStrokeMiterLimit(internd->drawing_wand, miter_limit);
-        GMAGICK_CHAIN_METHOD;
+	DrawSetStrokeMiterLimit(internd->drawing_wand, miter_limit);
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 /* {{{ proto bool GmagickDraw::getStrokeAntialias()
-        Returns the current stroke antialias setting. Stroked outlines are antialiased by default.  When antialiasing is disabled stroked pixels are thresholded to determine if the stroke color or underlying canvas color should be used.
+	Returns the current stroke antialias setting. Stroked outlines are antialiased by default.  When antialiasing is disabled stroked pixels are thresholded to determine if the stroke color or underlying canvas color should be used.
 */
 PHP_METHOD(gmagickdraw, getstrokeantialias)
 {
-        php_gmagickdraw_object *internd;
-        MagickBool status;
+	php_gmagickdraw_object *internd;
+	MagickBool status;
 
-        if (zend_parse_parameters_none() == FAILURE) {
-                return;
-        }
-        
-        internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
-        status = DrawGetStrokeAntialias(internd->drawing_wand);
+	if (zend_parse_parameters_none() == FAILURE) {
+		return;
+	}
+	
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
+	status = DrawGetStrokeAntialias(internd->drawing_wand);
 
-        if (status == MagickFalse) {
-                RETURN_FALSE;
-        } else {
-                RETURN_TRUE;
-        }
+	if (status == MagickFalse) {
+		RETURN_FALSE;
+	} else {
+		RETURN_TRUE;
+	}
 }
 /* }}} */
 
 /* {{{ proto float GmagickDraw::getStrokeDashOffset()
-        Returns the offset into the dash pattern to start the dash.
+	Returns the offset into the dash pattern to start the dash.
 */
 PHP_METHOD(gmagickdraw, getstrokedashoffset)
 {
-        php_gmagickdraw_object *internd;
-        double offset;
+	php_gmagickdraw_object *internd;
+	double offset;
 
-        if (zend_parse_parameters_none() == FAILURE) {
-                return;
-        }
-        
-        internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
-        offset = DrawGetStrokeDashOffset(internd->drawing_wand);
+	if (zend_parse_parameters_none() == FAILURE) {
+		return;
+	}
+	
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
+	offset = DrawGetStrokeDashOffset(internd->drawing_wand);
 
-        RETVAL_DOUBLE(offset);
+	RETVAL_DOUBLE(offset);
 }
 /* }}} */
 
 /* {{{ proto int GmagickDraw::getStrokeLineCap()
-        Returns the shape to be used at the end of open subpaths when they are stroked. Values of LineCap are UndefinedCap, ButtCap, RoundCap, and SquareCap.
+	Returns the shape to be used at the end of open subpaths when they are stroked. Values of LineCap are UndefinedCap, ButtCap, RoundCap, and SquareCap.
 */
 PHP_METHOD(gmagickdraw, getstrokelinecap)
 {
-        php_gmagickdraw_object *internd;
-        long line_cap;
+	php_gmagickdraw_object *internd;
+	long line_cap;
 
-        if (zend_parse_parameters_none() == FAILURE) {
-                return;
-        }
-        
-        internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
-        line_cap = DrawGetStrokeLineCap(internd->drawing_wand);
+	if (zend_parse_parameters_none() == FAILURE) {
+		return;
+	}
+	
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
+	line_cap = DrawGetStrokeLineCap(internd->drawing_wand);
 
-        RETVAL_LONG(line_cap);
+	RETVAL_LONG(line_cap);
 }
 /* }}} */
 
 /* {{{ proto int GmagickDraw::getStrokeLineJoin()
-        Returns the shape to be used at the corners of paths (or other vector shapes) when they are stroked. Values of LineJoin are UndefinedJoin, MiterJoin, RoundJoin, and BevelJoin.
+	Returns the shape to be used at the corners of paths (or other vector shapes) when they are stroked. Values of LineJoin are UndefinedJoin, MiterJoin, RoundJoin, and BevelJoin.
 */
 PHP_METHOD(gmagickdraw, getstrokelinejoin)
 {
-        php_gmagickdraw_object *internd;
-        long line_join;
+	php_gmagickdraw_object *internd;
+	long line_join;
 
-        if (zend_parse_parameters_none() == FAILURE) {
-                return;
-        }
-        
-        internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
-        line_join = DrawGetStrokeLineJoin(internd->drawing_wand);
+	if (zend_parse_parameters_none() == FAILURE) {
+		return;
+	}
+	
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
+	line_join = DrawGetStrokeLineJoin(internd->drawing_wand);
 
-        RETVAL_LONG(line_join);
+	RETVAL_LONG(line_join);
 }
 /* }}} */
 
 /* {{{ proto int GmagickDraw::getStrokeMiterLimit()
-        Returns the miter limit. When two line segments meet at a sharp angle and miter joins have been specified for 'lineJoin', it is possible for the miter to extend far beyond the thickness of the line stroking the path. The miterLimit' imposes a limit on the ratio of the miter length to the 'lineWidth'.
+	Returns the miter limit. When two line segments meet at a sharp angle and miter joins have been specified for 'lineJoin', it is possible for the miter to extend far beyond the thickness of the line stroking the path. The miterLimit' imposes a limit on the ratio of the miter length to the 'lineWidth'.
 */
 PHP_METHOD(gmagickdraw, getstrokemiterlimit)
 {
-        php_gmagickdraw_object *internd;
-        unsigned long miter_limit;
+	php_gmagickdraw_object *internd;
+	unsigned long miter_limit;
 
-        if (zend_parse_parameters_none() == FAILURE) {
-                return;
-        }
-        
-        internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
-        miter_limit = DrawGetStrokeMiterLimit(internd->drawing_wand);
+	if (zend_parse_parameters_none() == FAILURE) {
+		return;
+	}
+	
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
+	miter_limit = DrawGetStrokeMiterLimit(internd->drawing_wand);
 
-        RETVAL_LONG(miter_limit);
+	RETVAL_LONG(miter_limit);
 }
 /* }}} */
 
 
 #if GMAGICK_LIB_MASK >= 1003000 
 /* {{{ proto array GmagickDraw::getStrokeDashArray()
-        Returns an array representing the pattern of dashes and gaps used to stroke paths (see DrawSetStrokeDashArray). The array must be freed once it is no longer required by the user.
+	Returns an array representing the pattern of dashes and gaps used to stroke paths (see DrawSetStrokeDashArray). The array must be freed once it is no longer required by the user.
 */
 PHP_METHOD(gmagickdraw, getstrokedasharray)
 {
-        php_gmagickdraw_object *internd;
-        double *stroke_array;
-        unsigned long num_elements, i;
+	php_gmagickdraw_object *internd;
+	double *stroke_array;
+	unsigned long num_elements, i;
 
-        if (zend_parse_parameters_none() == FAILURE) {
-                return;
-        }
+	if (zend_parse_parameters_none() == FAILURE) {
+		return;
+	}
 
-        internd = (php_gmagickdraw_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
-        stroke_array = DrawGetStrokeDashArray(internd->drawing_wand, &num_elements);
-        array_init(return_value);
+	stroke_array = DrawGetStrokeDashArray(internd->drawing_wand, &num_elements);
+	array_init(return_value);
 
-        for (i = 0; i < num_elements ; i++) {
-                add_next_index_double(return_value, stroke_array[i]);
-        }
+	for (i = 0; i < num_elements ; i++) {
+		add_next_index_double(return_value, stroke_array[i]);
+	}
 
-		GMAGICK_FREE_MEMORY(double *, stroke_array);        
-        return;
+		GMAGICK_FREE_MEMORY(double *, stroke_array);	
+	return;
 }
 /* }}} */
 
 /* {{{ proto bool GmagickDraw::setStrokeDashArray(array dashArray)
-        Specifies the pattern of dashes and gaps used to stroke paths. The strokeDashArray represents an array of numbers that specify the lengths of alternating dashes and gaps in pixels. If an odd number of values is provided, then the list of values is repeated to yield an even number of values. To remove an existing dash array, pass a zero number_elements argument and null dash_array. A typical strokeDashArray_ array might contain the members 5 3 2.
+	Specifies the pattern of dashes and gaps used to stroke paths. The strokeDashArray represents an array of numbers that specify the lengths of alternating dashes and gaps in pixels. If an odd number of values is provided, then the list of values is repeated to yield an even number of values. To remove an existing dash array, pass a zero number_elements argument and null dash_array. A typical strokeDashArray_ array might contain the members 5 3 2.
 */
 PHP_METHOD(gmagickdraw, setstrokedasharray)
 {
-        zval *param_array;
-        double *double_array;
-        long elements;
-        php_gmagickdraw_object *internd;
+	zval *param_array;
+	double *double_array;
+	long elements;
+	php_gmagickdraw_object *internd;
 
-        /* Parse parameters given to function */
-        if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a", &param_array) == FAILURE) {
-                return;
-        }
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a", &param_array) == FAILURE) {
+		return;
+	}
 
-        double_array = php_gmagick_zval_to_double_array(param_array, &elements TSRMLS_CC);
+	double_array = php_gmagick_zval_to_double_array(param_array, &elements TSRMLS_CC);
 
-        if (!double_array) {
-				GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Cannot read stroke dash array parameter", 2);                
-                return;
-        }
+	if (!double_array) {
+				GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Cannot read stroke dash array parameter", 2);		
+		return;
+	}
 
-        internd = (php_gmagickdraw_object *) zend_object_store_get_object(getThis() TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
-        DrawSetStrokeDashArray(internd->drawing_wand, elements, double_array);
-        efree(double_array);
+	DrawSetStrokeDashArray(internd->drawing_wand, elements, double_array);
+	efree(double_array);
 
-        GMAGICK_CHAIN_METHOD;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 

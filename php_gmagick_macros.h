@@ -22,6 +22,15 @@
 
 /* {{{ GMAGICK_CHAIN_METHOD */
 #define GMAGICK_CHAIN_METHOD RETURN_ZVAL(getThis(), 1, 0);
+
+#define GMAGICK_FETCH_OBJECT(zv_p) (php_gmagick_object *)((char*)(zv_p) - XtOffsetOf(php_gmagick_object, zo))
+#define Z_GMAGICK_OBJ_P(zv) GMAGICK_FETCH_OBJECT(Z_OBJ_P((zv)))
+
+#define GMAGICKDRAW_FETCH_OBJECT(zv_p) (php_gmagickdraw_object *)((char*)(zv_p) - XtOffsetOf(php_gmagickdraw_object, zo))
+#define Z_GMAGICKDRAW_OBJ_P(zv) GMAGICKDRAW_FETCH_OBJECT(Z_OBJ_P((zv)))
+
+#define GMAGICKPIXEL_FETCH_OBJECT(zv_p) (php_gmagickpixel_object *)((char*)(zv_p) - XtOffsetOf(php_gmagickpixel_object, zo))
+#define Z_GMAGICKPIXEL_OBJ_P(zv) GMAGICKPIXEL_FETCH_OBJECT(Z_OBJ_P((zv)))
 	
 /* }}} */
 
@@ -227,22 +236,20 @@
 	switch (Z_TYPE_P(param)) { \
 		case IS_STRING: \
 		{ \
-			zval *object; \
+			zval object; \
 			PixelWand *pixel_wand = NewPixelWand(); \
 			if (!PixelSetColor(pixel_wand, Z_STRVAL_P(param))) { \
 				GMAGICK_THROW_GMAGICKPIXEL_EXCEPTION(pixel_wand, "Unrecognized color string"); \
 				return; \
 			} \
-			MAKE_STD_ZVAL(object); \
-			object_init_ex(object, php_gmagickpixel_sc_entry); \
-			internp = (php_gmagickpixel_object *)zend_object_store_get_object(object TSRMLS_CC); \
-			efree(object); \
+			object_init_ex(&object, php_gmagickpixel_sc_entry); \
+			internp = Z_GMAGICKPIXEL_OBJ_P(&object); \
 			GMAGICKPIXEL_REPLACE_PIXELWAND(internp, pixel_wand); \
 		} \
 		break; \
 		case IS_OBJECT: \
 			if (instanceof_function_ex(Z_OBJCE_P(param), php_gmagickpixel_sc_entry, 0 TSRMLS_CC)) { \
-				internp = (php_gmagickpixel_object *)zend_object_store_get_object(param TSRMLS_CC); \
+				internp = Z_GMAGICKPIXEL_OBJ_P(param); \
 			} else { \
 				GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(caller, "The parameter must be an instance of GmagickPixel or a string", (long)caller); \
 			} \
@@ -317,19 +324,17 @@
 		case IS_LONG: \
 		case IS_DOUBLE: \
 		{ \
-			zval *object; \
+			zval object; \
 			PixelWand *pixel_wand = NewPixelWand(); \
 			PixelSetOpacity(pixel_wand, Z_DVAL_P(param)); \
-			MAKE_STD_ZVAL(object); \
-			object_init_ex(object, php_gmagickpixel_sc_entry); \
-			internp = (php_gmagickpixel_object *)zend_object_store_get_object(object TSRMLS_CC); \
-			efree(object); \
+			object_init_ex(&object, php_gmagickpixel_sc_entry); \
+			internp = Z_GMAGICKPIXEL_OBJ_P(&object); \
 			GMAGICKPIXEL_REPLACE_PIXELWAND(internp, pixel_wand); \
 		} \
 		break; \
 		case IS_OBJECT: \
 			if (instanceof_function_ex(Z_OBJCE_P(param), php_gmagickpixel_sc_entry, 0 TSRMLS_CC)) { \
-				internp = (php_gmagickpixel_object *)zend_object_store_get_object(param TSRMLS_CC); \
+				internp = Z_GMAGICKPIXEL_OBJ_P(param); \
 			} else { \
 				GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(caller, "The parameter must be an instance of GmagickPixel or a string", (long)caller); \
 			} \

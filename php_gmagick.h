@@ -59,20 +59,20 @@ typedef long ssize_t;
 
 /* Objects */
 typedef struct _php_gmagick_object  {
-	zend_object zo;
 	MagickWand *magick_wand;
 	int next_out_of_bound;
+	zend_object zo;
 } php_gmagick_object;
 
 /* Structure for GmagickDraw object. */
 typedef struct _php_gmagickdraw_object  {
-	zend_object zo;
 	DrawingWand *drawing_wand;
+	zend_object zo;
 } php_gmagickdraw_object;
 
 typedef struct _php_gmagickpixel_object  {
-	zend_object zo;
 	PixelWand *pixel_wand;
+	zend_object zo;
 } php_gmagickpixel_object;
 
 extern zend_module_entry gmagick_module_entry;
