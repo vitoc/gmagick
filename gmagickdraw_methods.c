@@ -1116,7 +1116,7 @@ PHP_METHOD(gmagickdraw, getstrokedasharray)
 		add_next_index_double(return_value, stroke_array[i]);
 	}
 
-		GMAGICK_FREE_MEMORY(double *, stroke_array);	
+	GMAGICK_FREE_MEMORY(double *, stroke_array);	
 	return;
 }
 /* }}} */
@@ -1139,7 +1139,7 @@ PHP_METHOD(gmagickdraw, setstrokedasharray)
 	double_array = php_gmagick_zval_to_double_array(param_array, &elements TSRMLS_CC);
 
 	if (!double_array) {
-				GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Cannot read stroke dash array parameter", 2);		
+		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Cannot read stroke dash array parameter", 2);		
 		return;
 	}
 

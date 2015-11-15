@@ -601,9 +601,8 @@ double *php_gmagick_zval_to_double_array(zval *param_array, long *num_elements T
 	double *double_array;
 	long elements_count, i = 0;
 
-	*num_elements = 0;
 	ht = HASH_OF(param_array);
-	elements_count = zend_hash_num_elements(ht);
+	*num_elements = elements_count = zend_hash_num_elements(ht);
 
 	if (elements_count == 0) {
 		return NULL;
