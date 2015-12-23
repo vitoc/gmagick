@@ -20,7 +20,7 @@
 #include "php_gmagick.h"
 #include "php_gmagick_macros.h"
 #include "php_gmagick_helpers.h"
-                        
+			
 #if GMAGICK_LIB_MASK >= 1004000 
 #if PHP_VERSION_ID < 50399
 static MagickBool SafeModeMonitor(const ConfirmAccessMode mode,
@@ -38,8 +38,8 @@ static MagickBool SafeModeMonitor(const ConfirmAccessMode mode,
 }
 #endif
 static MagickBool OpenBaseDirMonitor(const ConfirmAccessMode mode,
-				       const char *path,
-				       ExceptionInfo *exception)
+					const char *path,
+					ExceptionInfo *exception)
 {
 	ARG_NOT_USED(exception);
 	if (php_check_open_basedir_ex(path, 0 TSRMLS_CC)) {
@@ -56,12 +56,12 @@ PHP_METHOD(gmagick, readimage)
 {
 	php_gmagick_object *intern;
 	char *filename = NULL;
-	int filename_len;
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &filename, &filename_len) == FAILURE) {
+	size_t filename_len;
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &filename, &filename_len) == FAILURE) {
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 #if GMAGICK_LIB_MASK >= 1004000 && PHP_VERSION_ID <= 50399
 	GMAGICK_SAFEMODE_OPENBASEDIR_CONFIRMACCESS(filename);
 #else
@@ -81,7 +81,7 @@ PHP_METHOD(gmagick, __construct)
 {
 	php_gmagick_object *intern;
 	char *filename = NULL;
-	int filename_len;
+	size_t filename_len;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|s!", &filename, &filename_len) == FAILURE) {
 		return;
@@ -90,7 +90,7 @@ PHP_METHOD(gmagick, __construct)
 		return;
 	}
 	
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 #if GMAGICK_LIB_MASK >= 1004000 && PHP_VERSION_ID <= 50399
 	GMAGICK_SAFEMODE_OPENBASEDIR_CONFIRMACCESS(filename);
 #else
@@ -114,17 +114,17 @@ PHP_METHOD(gmagick, annotateimage)
 	php_gmagickdraw_object *internd;
 	double x, y, angle;
 	char *text;
-	int text_len;
+	size_t text_len;
 	zval *objvar;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "Oddds", &objvar, php_gmagickdraw_sc_entry, &x, &y, &angle, &text, &text_len) == FAILURE) {
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(objvar TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(objvar);
 	status = MagickAnnotateImage(intern->magick_wand, internd->drawing_wand, x, y, angle, text);
 
 	/* No magick is going to happen */
@@ -150,7 +150,7 @@ PHP_METHOD(gmagick, blurimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickBlurImage(intern->magick_wand, radius, sigma);
@@ -172,14 +172,14 @@ PHP_METHOD(gmagick, writeimage)
 	MagickBool status;
 	php_gmagick_object *intern;
 	char *filename = NULL;
-	int filename_len;
+	size_t filename_len;
 	zend_bool all_frames = 0;
 	
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s|b", &filename, &filename_len, &all_frames) == FAILURE) {
 		return;
 	}
 	
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
@@ -222,7 +222,7 @@ PHP_METHOD(gmagick, thumbnailimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	if (MagickStripImage(intern->magick_wand) == MagickFalse) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to strip image");
@@ -254,7 +254,7 @@ PHP_METHOD(gmagick, resizeimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	
 	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, width, height, &new_width, &new_height)) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to calculate image dimensions");
@@ -283,7 +283,7 @@ PHP_METHOD(gmagick, clear)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	image_count = MagickGetNumberImages(intern->magick_wand);
 
 	for (i = 0; i < image_count; i++) {
@@ -312,7 +312,7 @@ PHP_METHOD(gmagick, cropimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	
 	if (MagickCropImage(intern->magick_wand, width, height, x, y) == MagickFalse) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Failed to crop the image");
@@ -335,7 +335,7 @@ PHP_METHOD(gmagick, cropthumbnailimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	if (!crop_thumbnail_image(intern->magick_wand, crop_width, crop_height TSRMLS_CC)) {
@@ -354,26 +354,26 @@ PHP_METHOD(gmagick, cropthumbnailimage)
 */
 PHP_METHOD(gmagick, coalesceimages)
 {
-    MagickWand *tmp_wand;
-    php_gmagick_object *intern, *intern_return;
+	MagickWand *tmp_wand;
+	php_gmagick_object *intern, *intern_return;
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-        return;
-    }
-    
-    intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
-    GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+		return;
+	}
 
-    tmp_wand = MagickCoalesceImages(intern->magick_wand);
+	intern = Z_GMAGICK_OBJ_P(getThis());
+	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
-    if (tmp_wand == (MagickWand *)NULL) {
-        GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Coalesce image failed");
-    }
+	tmp_wand = MagickCoalesceImages(intern->magick_wand);
 
-    object_init_ex(return_value, php_gmagick_sc_entry);
-    intern_return = (php_gmagick_object *)zend_object_store_get_object(return_value TSRMLS_CC);
-    GMAGICK_REPLACE_MAGICKWAND(intern_return, tmp_wand);
-    return;
+	if (tmp_wand == (MagickWand *)NULL) {
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Coalesce image failed");
+	}
+
+	object_init_ex(return_value, php_gmagick_sc_entry);
+	intern_return = Z_GMAGICK_OBJ_P(return_value);
+	GMAGICK_REPLACE_MAGICKWAND(intern_return, tmp_wand);
+	return;
 
 }
 /* }}} */
@@ -391,8 +391,8 @@ PHP_METHOD(gmagick, compositeimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
-	source = (php_gmagick_object *)zend_object_store_get_object(source_obj TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
+	source = Z_GMAGICK_OBJ_P(source_obj);
 
 	/*
 		Causes a bug with some GraphicsMagick versions where the exception is 
@@ -423,11 +423,11 @@ PHP_METHOD(gmagick, drawimage)
 		return;
 	}
 	
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(objvar TSRMLS_CC);
+	internd = Z_GMAGICKDRAW_OBJ_P(objvar);
 
 	status = MagickDrawImage(intern->magick_wand, internd->drawing_wand);
 
@@ -454,8 +454,8 @@ PHP_METHOD(gmagick, addimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
-	intern_add = (php_gmagick_object *)zend_object_store_get_object(add_obj TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
+	intern_add = Z_GMAGICK_OBJ_P(add_obj);
 
 	GMAGICK_CHECK_NOT_EMPTY(intern_add->magick_wand, 1, 1);
 
@@ -482,7 +482,7 @@ PHP_METHOD(gmagick, addnoiseimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
@@ -511,7 +511,7 @@ PHP_METHOD(gmagick, borderimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 	GMAGICK_CAST_PARAMETER_TO_COLOR(param, internp, 1);
@@ -541,7 +541,7 @@ PHP_METHOD(gmagick, thresholdimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
@@ -571,7 +571,7 @@ PHP_METHOD(gmagick, charcoalimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickCharcoalImage(intern->magick_wand, sigma, radius);
@@ -598,7 +598,7 @@ PHP_METHOD(gmagick, chopimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickChopImage(intern->magick_wand, width, height, x, y);
@@ -620,7 +620,7 @@ PHP_METHOD(gmagick, commentimage)
 {
 	php_gmagick_object *intern;
 	char *comment;
-	int comment_len;
+	size_t comment_len;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -628,7 +628,7 @@ PHP_METHOD(gmagick, commentimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
@@ -666,7 +666,7 @@ PHP_METHOD(gmagick, cyclecolormapimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickCycleColormapImage(intern->magick_wand, displace);
@@ -692,7 +692,7 @@ PHP_METHOD(gmagick, deconstructimages)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	tmp_wand = MagickDeconstructImages(intern->magick_wand);
@@ -702,7 +702,7 @@ PHP_METHOD(gmagick, deconstructimages)
 	}
 
 	object_init_ex(return_value, php_gmagick_sc_entry);
-	intern_return = (php_gmagick_object *)zend_object_store_get_object(return_value TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(return_value);
 	GMAGICK_REPLACE_MAGICKWAND(intern_return, tmp_wand);
 
 	return;
@@ -721,7 +721,7 @@ PHP_METHOD(gmagick, despeckleimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickDespeckleImage(intern->magick_wand);
@@ -746,7 +746,7 @@ PHP_METHOD(gmagick, destroy)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	if (intern->magick_wand == (MagickWand *)NULL) {
 		RETURN_FALSE;
@@ -774,7 +774,7 @@ PHP_METHOD(gmagick, edgeimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickEdgeImage(intern->magick_wand, radius);
@@ -803,7 +803,7 @@ PHP_METHOD(gmagick, embossimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickEmbossImage(intern->magick_wand, radius, sigma);
@@ -832,7 +832,7 @@ PHP_METHOD(gmagick, enhanceimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickEnhanceImage(intern->magick_wand);
@@ -858,7 +858,7 @@ PHP_METHOD(gmagick, equalizeimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickEqualizeImage(intern->magick_wand);
@@ -884,7 +884,7 @@ PHP_METHOD(gmagick, flipimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickFlipImage(intern->magick_wand);
@@ -909,7 +909,7 @@ PHP_METHOD(gmagick, flopimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickFlopImage(intern->magick_wand);
@@ -938,7 +938,7 @@ PHP_METHOD(gmagick, frameimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 	GMAGICK_CAST_PARAMETER_TO_COLOR(param, internp, 1);
@@ -966,7 +966,7 @@ PHP_METHOD(gmagick, gammaimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickGammaImage(intern->magick_wand, gamma);
@@ -992,7 +992,7 @@ PHP_METHOD(gmagick, getcopyright)
 	}
 
 	copyright = (char *)MagickGetCopyright();
-	ZVAL_STRING(return_value, copyright, 1);
+	ZVAL_STRING(return_value, copyright);
 
 	/* GMAGICK_FREE_MEMORY(char *, copyright); */
 	return;
@@ -1011,11 +1011,11 @@ PHP_METHOD(gmagick, getfilename)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	filename = (char *)MagickGetFilename(intern->magick_wand);
 
 	if (filename) {
-		ZVAL_STRING(return_value, filename, 1);
+		ZVAL_STRING(return_value, filename);
 		GMAGICK_FREE_MEMORY(char *, filename);
 	}
 	return;
@@ -1036,7 +1036,7 @@ PHP_METHOD(gmagick, getimagebackgroundcolor)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 	tmp_wand = NewPixelWand();
 	status = MagickGetImageBackgroundColor(intern->magick_wand, tmp_wand);
@@ -1050,7 +1050,7 @@ PHP_METHOD(gmagick, getimagebackgroundcolor)
 	}
 
 	object_init_ex(return_value, php_gmagickpixel_sc_entry);
-	internp = (php_gmagickpixel_object *)zend_object_store_get_object(return_value TSRMLS_CC);
+	internp = Z_GMAGICKPIXEL_OBJ_P(return_value);
 	GMAGICKPIXEL_REPLACE_PIXELWAND(internp, tmp_wand);
 
 	return;
@@ -1062,29 +1062,29 @@ Returns the current image sequence as a string
 */
 PHP_METHOD(gmagick, getimageblob)
 {
-    php_gmagick_object *intern;
-    unsigned char *image_contents;
-    size_t image_size;
-    char *buffer;
+	php_gmagick_object *intern;
+	unsigned char *image_contents;
+	size_t image_size;
+	char *buffer;
 
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-        return;
-    }
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+		return;
+	}
 
-    intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
-    GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
-    GMAGICK_HAS_FORMAT(buffer, intern->magick_wand, 1);
+	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
+	GMAGICK_HAS_FORMAT(buffer, intern->magick_wand, 1);
 
-    MagickResetIterator(intern->magick_wand);
-    image_contents = MagickWriteImageBlob(intern->magick_wand, &image_size);
-    if (!image_contents) {
-        return;
-    }
+	MagickResetIterator(intern->magick_wand);
+	image_contents = MagickWriteImageBlob(intern->magick_wand, &image_size);
+	if (!image_contents) {
+		return;
+	}
 
-    ZVAL_STRINGL(return_value, (char *)image_contents, image_size, 1);
-    GMAGICK_FREE_MEMORY(unsigned char *, image_contents);
-    return;
+	ZVAL_STRINGL(return_value, (char *)image_contents, image_size);
+	GMAGICK_FREE_MEMORY(unsigned char *, image_contents);
+	return;
 }
 /* }}} */ 
 
@@ -1097,14 +1097,14 @@ PHP_METHOD(gmagick, getimagesblob)
 	unsigned char *image_contents;
 	size_t image_size;
 	char *buffer;
-	int current;
+	size_t current;
 	MagickBool status;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
 		return;
 	}
 	
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	/* Get the current iterator position */
@@ -1130,7 +1130,7 @@ PHP_METHOD(gmagick, getimagesblob)
 		return;
 	}
 
-	ZVAL_STRINGL(return_value, (char *)image_contents, image_size, 1);
+	ZVAL_STRINGL(return_value, (char *)image_contents, image_size);
 	GMAGICK_FREE_MEMORY(unsigned char *, image_contents);
 	return;
 }
@@ -1150,7 +1150,7 @@ PHP_METHOD(gmagick, setimagebackgroundcolor)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 	GMAGICK_CAST_PARAMETER_TO_COLOR(param, internp, 1);
@@ -1179,7 +1179,7 @@ PHP_METHOD(gmagick, getimageblueprimary)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickGetImageBluePrimary(intern->magick_wand, &x, &y);
@@ -1210,7 +1210,7 @@ PHP_METHOD(gmagick, getimagebordercolor)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	tmp_wand = NewPixelWand();
@@ -1225,7 +1225,7 @@ PHP_METHOD(gmagick, getimagebordercolor)
 	}
 
 	object_init_ex(return_value, php_gmagickpixel_sc_entry);
-	internp = (php_gmagickpixel_object *)zend_object_store_get_object(return_value TSRMLS_CC);
+	internp = Z_GMAGICKPIXEL_OBJ_P(return_value);
 	GMAGICKPIXEL_REPLACE_PIXELWAND(internp, tmp_wand);
 
 	return;
@@ -1245,7 +1245,7 @@ PHP_METHOD(gmagick, getimagechanneldepth)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	channel_depth = MagickGetImageChannelDepth(intern->magick_wand, channel_type);
@@ -1267,7 +1267,7 @@ PHP_METHOD(gmagick, setimageblueprimary)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageBluePrimary(intern->magick_wand, x, y);
@@ -1294,7 +1294,7 @@ PHP_METHOD(gmagick, setimagebordercolor)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 	GMAGICK_CAST_PARAMETER_TO_COLOR(param, internp, 1);
@@ -1323,7 +1323,7 @@ PHP_METHOD(gmagick, setimagechanneldepth)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageChannelDepth(intern->magick_wand, channel_type, depth);
@@ -1350,7 +1350,7 @@ PHP_METHOD(gmagick, setimagecolorspace)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageColorspace(intern->magick_wand, colorspace);
@@ -1377,7 +1377,7 @@ PHP_METHOD(gmagick, setinterlacescheme)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	status = MagickSetInterlaceScheme(intern->magick_wand, schema);
 
 	/* No magick is going to happen */
@@ -1400,7 +1400,7 @@ PHP_METHOD(gmagick, getimagecolorspace)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	colorSpace = MagickGetImageColorspace(intern->magick_wand);
@@ -1419,7 +1419,7 @@ PHP_METHOD(gmagick, getimagecolors)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	ZVAL_LONG(return_value, (long)MagickGetImageColors(intern->magick_wand));
@@ -1439,7 +1439,7 @@ PHP_METHOD(gmagick, getimagecompose)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	composite = MagickGetImageCompose(intern->magick_wand);
@@ -1459,7 +1459,7 @@ PHP_METHOD(gmagick, getimagedelay)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	delay = MagickGetImageDelay(intern->magick_wand);
@@ -1479,7 +1479,7 @@ PHP_METHOD(gmagick, getimagedepth)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	depth = MagickGetImageDepth(intern->magick_wand);
@@ -1499,7 +1499,7 @@ PHP_METHOD(gmagick, getnumberimages)
 		return;
 	}
 	
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	num_images = MagickGetNumberImages(intern->magick_wand);
 	RETVAL_LONG(num_images);
@@ -1520,7 +1520,7 @@ PHP_METHOD(gmagick, setimagecompose)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageCompose(intern->magick_wand, compose);
@@ -1538,33 +1538,34 @@ PHP_METHOD(gmagick, setimagecompose)
 */
 PHP_METHOD(gmagick, setimagecompression)
 {
-    php_gmagick_object *intern;
-    long compression;
-    MagickBool status;
+	php_gmagick_object *intern;
+	long compression;
+	MagickBool status;
 
-    /* Parse parameters given to function */
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &compression) == FAILURE) {
-        return;
-    }
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &compression) == FAILURE) {
+		return;
+	}
 
-    intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
-    if (php_gmagick_ensure_not_empty (intern->magick_wand) == 0)
-        return;
+	if (php_gmagick_ensure_not_empty (intern->magick_wand) == 0) {
+		return;
+	}
 
-    status = MagickSetImageCompression(intern->magick_wand, compression);
+	status = MagickSetImageCompression(intern->magick_wand, compression);
 
-    /* No magick is going to happen */
+	/* No magick is going to happen */
 	if (status == MagickFalse) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to set image compression");
-	}    
+	}
 	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 
 /* {{{ proto bool Gmagick::getImageCompression
-        Gets the image compression
+	Gets the image compression
 */
 PHP_METHOD(gmagick, getimagecompression)
 {
@@ -1574,7 +1575,7 @@ PHP_METHOD(gmagick, getimagecompression)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	RETVAL_LONG(MagickGetImageCompression(intern->magick_wand));
 }
 /* }}} */
@@ -1593,7 +1594,7 @@ PHP_METHOD(gmagick, setimagedelay)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageDelay(intern->magick_wand, delay);
@@ -1620,7 +1621,7 @@ PHP_METHOD(gmagick, setimagedepth)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageDepth(intern->magick_wand, depth);
@@ -1645,7 +1646,7 @@ PHP_METHOD(gmagick, getimagedispose)
 		return;
 	}
 	
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	dispose = MagickGetImageDispose(intern->magick_wand);
@@ -1667,7 +1668,7 @@ PHP_METHOD(gmagick, setimagedispose)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageDispose(intern->magick_wand, dispose);
@@ -1687,7 +1688,7 @@ PHP_METHOD(gmagick, setfilename)
 {
 	php_gmagick_object *intern;
 	char *filename;
-	int filename_len;
+	size_t filename_len;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -1695,7 +1696,7 @@ PHP_METHOD(gmagick, setfilename)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	status = MagickSetFilename(intern->magick_wand, filename);
 
 	/* No magick is going to happen */
@@ -1719,7 +1720,7 @@ PHP_METHOD(gmagick, getimage)
 		return;
 	}
 	
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	tmp_wand = MagickGetImage(intern->magick_wand);
@@ -1729,7 +1730,7 @@ PHP_METHOD(gmagick, getimage)
 	}
 
 	object_init_ex(return_value, php_gmagick_sc_entry);
-	intern_return = (php_gmagick_object *)zend_object_store_get_object(return_value TSRMLS_CC);
+	intern_return = Z_GMAGICK_OBJ_P(return_value);
 	GMAGICK_REPLACE_MAGICKWAND(intern_return, tmp_wand);
 
 	return;
@@ -1750,10 +1751,10 @@ PHP_METHOD(gmagick, setimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
-	replace = (php_gmagick_object *)zend_object_store_get_object(objvar TSRMLS_CC);
+	replace = Z_GMAGICK_OBJ_P(objvar);
 	GMAGICK_CHECK_NOT_EMPTY(replace->magick_wand, 1, 1);
 
 	status = MagickSetImage(intern->magick_wand, replace->magick_wand);
@@ -1780,7 +1781,7 @@ PHP_METHOD(gmagick, getimageextrema)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickGetImageExtrema(intern->magick_wand, &min, &max);
@@ -1810,7 +1811,7 @@ PHP_METHOD(gmagick, getimagefilename)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	filename = MagickGetImageFilename(intern->magick_wand);
@@ -1819,7 +1820,7 @@ PHP_METHOD(gmagick, getimagefilename)
 		return;
 	}
 
-	ZVAL_STRING(return_value, filename, 1);
+	ZVAL_STRING(return_value, filename);
 	GMAGICK_FREE_MEMORY(char *, filename);
 	return;
 }
@@ -1832,7 +1833,7 @@ PHP_METHOD(gmagick, setimagefilename)
 {
 	php_gmagick_object *intern;
 	char *filename;
-	int filename_len;
+	size_t filename_len;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -1840,7 +1841,7 @@ PHP_METHOD(gmagick, setimagefilename)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageFilename(intern->magick_wand, filename);
@@ -1866,7 +1867,7 @@ PHP_METHOD(gmagick, getimageformat)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
@@ -1875,7 +1876,7 @@ PHP_METHOD(gmagick, getimageformat)
 		return;
 	}
 
-	ZVAL_STRING(return_value, format, 1);
+	ZVAL_STRING(return_value, format);
 	GMAGICK_FREE_MEMORY(char *, format);
 	return;
 }
@@ -1887,7 +1888,7 @@ PHP_METHOD(gmagick, getimageformat)
 PHP_METHOD(gmagick, setimageformat)
 {
 	char *format;
-	int format_len;
+	size_t format_len;
 	MagickBool status;
 	php_gmagick_object *intern;
 
@@ -1896,7 +1897,7 @@ PHP_METHOD(gmagick, setimageformat)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageFormat(intern->magick_wand, format);
@@ -1925,7 +1926,7 @@ PHP_METHOD(gmagick, setcompressionquality)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetCompressionQuality(intern->magick_wand, compression_quality);
@@ -1951,7 +1952,7 @@ PHP_METHOD(gmagick, getimagegamma)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	gamma = MagickGetImageGamma(intern->magick_wand);
@@ -1973,7 +1974,7 @@ PHP_METHOD(gmagick, setimagegamma)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageGamma(intern->magick_wand, gamma);
@@ -1999,7 +2000,7 @@ PHP_METHOD(gmagick, getimagegreenprimary)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickGetImageGreenPrimary(intern->magick_wand, &x, &y);
@@ -2030,7 +2031,7 @@ PHP_METHOD(gmagick, setimagegreenprimary)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageGreenPrimary(intern->magick_wand, x, y);
@@ -2056,7 +2057,7 @@ PHP_METHOD(gmagick, getimageheight)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	height = MagickGetImageHeight(intern->magick_wand);
@@ -2074,24 +2075,23 @@ PHP_METHOD(gmagick, getimagehistogram)
 	PixelWand **wand_array;
 	unsigned long colors = 0;
 	unsigned long i;
-	zval *tmp_pixelwand;
+	zval tmp_pixelwand;
 	
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	wand_array = MagickGetImageHistogram(intern->magick_wand, &colors);
 	array_init(return_value);
 
 	for (i = 0; i < colors; i++) {
-		MAKE_STD_ZVAL(tmp_pixelwand);
-		object_init_ex(tmp_pixelwand, php_gmagickpixel_sc_entry);
-		internp = (php_gmagickpixel_object *)zend_object_store_get_object(tmp_pixelwand TSRMLS_CC);
+		object_init_ex(&tmp_pixelwand, php_gmagickpixel_sc_entry);
+		internp = Z_GMAGICKPIXEL_OBJ_P(&tmp_pixelwand);
 		GMAGICKPIXEL_REPLACE_PIXELWAND(internp, wand_array[i]);
-		add_next_index_zval(return_value, tmp_pixelwand);
+		add_next_index_zval(return_value, &tmp_pixelwand);
 	}
 
 	GMAGICK_FREE_MEMORY(PixelWand **, wand_array);
@@ -2111,7 +2111,7 @@ PHP_METHOD(gmagick, getimageindex)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	status = MagickGetImageIndex(intern->magick_wand);
 	ZVAL_LONG(return_value, (long)status);
@@ -2133,7 +2133,7 @@ PHP_METHOD(gmagick, setimageindex)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	status = MagickSetImageIndex(intern->magick_wand, index);
 
 	/* No magick is going to happen */
@@ -2159,7 +2159,7 @@ PHP_METHOD(gmagick, getimageinterlacescheme)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	interlace = MagickGetImageInterlaceScheme(intern->magick_wand);
@@ -2181,7 +2181,7 @@ PHP_METHOD(gmagick, setimageinterlacescheme)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageInterlaceScheme(intern->magick_wand, interlace);
@@ -2207,7 +2207,7 @@ PHP_METHOD(gmagick, getimageiterations)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	iterations = MagickGetImageIterations(intern->magick_wand);
@@ -2227,7 +2227,7 @@ PHP_METHOD(gmagick, getimagegeometry)
 		return;
 	}
 	
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
@@ -2256,7 +2256,7 @@ PHP_METHOD(gmagick, getimagemattecolor)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	tmp_wand = NewPixelWand();
@@ -2272,7 +2272,7 @@ PHP_METHOD(gmagick, getimagemattecolor)
 	}
 
 	object_init_ex(return_value, php_gmagickpixel_sc_entry);
-	internp = (php_gmagickpixel_object *)zend_object_store_get_object(return_value TSRMLS_CC);
+	internp = Z_GMAGICKPIXEL_OBJ_P(return_value);
 	GMAGICKPIXEL_REPLACE_PIXELWAND(internp, tmp_wand);
 
 	return;
@@ -2292,7 +2292,7 @@ PHP_METHOD(gmagick, getimagematte)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	matte = MagickGetImageMatte(intern->magick_wand);	
@@ -2316,7 +2316,7 @@ PHP_METHOD(gmagick, getimagepage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	if (php_gmagick_ensure_not_empty (intern->magick_wand) == 0)
 		return;
 
@@ -2345,7 +2345,7 @@ PHP_METHOD(gmagick, getimageprofile)
 {
 	php_gmagick_object *intern;
 	char *profile, *name;
-	int name_len;
+	size_t name_len;
 
 	unsigned long length;
 
@@ -2353,13 +2353,13 @@ PHP_METHOD(gmagick, getimageprofile)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	profile = (char *)MagickGetImageProfile(intern->magick_wand, name, &length);
 
 	if (profile != (char *)NULL) {
-		ZVAL_STRINGL(return_value, profile, length, 1);
+		ZVAL_STRINGL(return_value, profile, length);
 		GMAGICK_FREE_MEMORY(char *, profile);
 		return;
 	}
@@ -2381,7 +2381,7 @@ PHP_METHOD(gmagick, getimageredprimary)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickGetImageRedPrimary(intern->magick_wand, &x, &y);
@@ -2410,7 +2410,7 @@ PHP_METHOD(gmagick, getimagerenderingintent)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	renderingIntent = MagickGetImageRenderingIntent(intern->magick_wand);
@@ -2432,7 +2432,7 @@ PHP_METHOD(gmagick, getimageresolution)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickGetImageResolution(intern->magick_wand, &x, &y);
@@ -2461,7 +2461,7 @@ PHP_METHOD(gmagick, getimagescene)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	scene = MagickGetImageScene(intern->magick_wand);
@@ -2481,11 +2481,11 @@ PHP_METHOD(gmagick, getimagesignature)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	signature = MagickGetImageSignature(intern->magick_wand);
-	ZVAL_STRING(return_value, signature, 1);
+	ZVAL_STRING(return_value, signature);
 	GMAGICK_FREE_MEMORY(char *, signature);
 	return;
 }
@@ -2503,7 +2503,7 @@ PHP_METHOD(gmagick, getimagetype)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	imageType = MagickGetImageType(intern->magick_wand);
@@ -2525,7 +2525,7 @@ PHP_METHOD(gmagick, setimageiterations)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageIterations(intern->magick_wand, iterations);
@@ -2546,7 +2546,7 @@ PHP_METHOD(gmagick, setimageprofile)
 	php_gmagick_object *intern;
 	char *name;
 	unsigned char*profile;
-	int profile_len, name_len;
+	size_t profile_len, name_len;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -2554,7 +2554,7 @@ PHP_METHOD(gmagick, setimageprofile)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageProfile(intern->magick_wand, name, profile, profile_len);
@@ -2581,7 +2581,7 @@ PHP_METHOD(gmagick, setimageredprimary)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageRedPrimary(intern->magick_wand, x, y);
@@ -2608,7 +2608,7 @@ PHP_METHOD(gmagick, setimagerenderingintent)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageRenderingIntent(intern->magick_wand, rendering_intent);
@@ -2635,7 +2635,7 @@ PHP_METHOD(gmagick, setimageresolution)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageResolution(intern->magick_wand, x_res, y_res);
@@ -2662,7 +2662,7 @@ PHP_METHOD(gmagick, setimagescene)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageScene(intern->magick_wand, scene);
@@ -2689,7 +2689,7 @@ PHP_METHOD(gmagick, setimagetype)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageType(intern->magick_wand, image_type);
@@ -2716,7 +2716,7 @@ PHP_METHOD(gmagick, setimagepage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImagePage(intern->magick_wand, width, height, x, y);
@@ -2741,7 +2741,7 @@ PHP_METHOD(gmagick, getimageunits)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	resolutionType = MagickGetImageUnits(intern->magick_wand);
@@ -2762,7 +2762,7 @@ PHP_METHOD(gmagick, getimagewhitepoint)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickGetImageWhitePoint(intern->magick_wand, &x, &y);
@@ -2791,7 +2791,7 @@ PHP_METHOD(gmagick, getimagewidth)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	width = MagickGetImageWidth(intern->magick_wand);
@@ -2811,7 +2811,7 @@ PHP_METHOD(gmagick, getpackagename)
 	}
 
 	package_name = (char *)MagickGetPackageName();
-	ZVAL_STRING(return_value, package_name, 1);
+	ZVAL_STRING(return_value, package_name);
 
 	/* GMAGICK_FREE_MEMORY(char *, packageName); */
 	return;
@@ -2834,7 +2834,7 @@ PHP_METHOD(gmagick, getquantumdepth)
 
 	array_init(return_value);
 	add_assoc_long(return_value, "quantumDepthLong", depth);
-	add_assoc_string(return_value, "quantumDepthString", quantum_depth, 1);
+	add_assoc_string(return_value, "quantumDepthString", quantum_depth);
 
 	return;
 }
@@ -2852,7 +2852,7 @@ PHP_METHOD(gmagick, getreleasedate)
 	}
 
 	release_date = (char *)MagickGetReleaseDate();
-	ZVAL_STRING(return_value, release_date, 1);
+	ZVAL_STRING(return_value, release_date);
 
 	/* GMAGICK_FREE_MEMORY(char *, releaseDate); */
 	return;
@@ -2887,7 +2887,7 @@ PHP_METHOD(gmagick, getsamplingfactors)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	sampling_factors = (double *)MagickGetSamplingFactors(intern->magick_wand, &number_factors);
 
@@ -2914,7 +2914,7 @@ PHP_METHOD(gmagick, getsize)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	status = MagickGetSize(intern->magick_wand, &columns, &rows);
 
 	if (status == MagickFalse) {
@@ -2943,7 +2943,7 @@ PHP_METHOD(gmagick, setimageunits)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
@@ -2973,7 +2973,7 @@ PHP_METHOD(gmagick, setimagewhitepoint)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSetImageWhitePoint(intern->magick_wand, x, y);
@@ -3008,7 +3008,7 @@ PHP_METHOD(gmagick, setsamplingfactors)
 		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICK_CLASS, "Can't read array", 1);
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	status = MagickSetSamplingFactors(intern->magick_wand, elements, double_array);
 	efree(double_array);
@@ -3058,7 +3058,7 @@ PHP_METHOD(gmagick, setsize)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	status = MagickSetSize(intern->magick_wand, columns, rows);
 
 	/* No magick is going to happen */
@@ -3085,7 +3085,7 @@ PHP_METHOD(gmagick, getversion)
 	array_init(return_value);
 
 	add_assoc_long(return_value, "versionNumber", version_number);
-	add_assoc_string(return_value, "versionString", version_string, 1);
+	add_assoc_string(return_value, "versionString", version_string);
 
 	/* GMAGICK_FREE_MEMORY(char *, versionString); */
 	return;
@@ -3104,7 +3104,7 @@ PHP_METHOD(gmagick, hasnextimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	status = MagickHasNextImage(intern->magick_wand);
 
 	/* No magick is going to happen */
@@ -3128,7 +3128,7 @@ PHP_METHOD(gmagick, haspreviousimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	status = MagickHasPreviousImage(intern->magick_wand);
 
 	/* No magick is going to happen */
@@ -3154,7 +3154,7 @@ PHP_METHOD(gmagick, implodeimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickImplodeImage(intern->magick_wand, radius);
@@ -3173,7 +3173,7 @@ PHP_METHOD(gmagick, implodeimage)
 PHP_METHOD(gmagick, labelimage)
 {
 	char *label;
-	int label_len;
+	size_t label_len;
 	MagickBool status;
 	php_gmagick_object *intern;
 
@@ -3182,7 +3182,7 @@ PHP_METHOD(gmagick, labelimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 	status = MagickLabelImage(intern->magick_wand, label);
@@ -3211,7 +3211,7 @@ PHP_METHOD(gmagick, levelimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	if (channel == DefaultChannels) {
@@ -3241,7 +3241,7 @@ PHP_METHOD(gmagick, magnifyimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickMagnifyImage(intern->magick_wand);
@@ -3269,10 +3269,10 @@ PHP_METHOD(gmagick, mapimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
-	intern_map = (php_gmagick_object *)zend_object_store_get_object(map_obj TSRMLS_CC);
+	intern_map = Z_GMAGICK_OBJ_P(map_obj);
 	status = MagickMapImage(intern->magick_wand, intern_map->magick_wand, dither);
 
 	/* No magick is going to happen */
@@ -3297,7 +3297,7 @@ PHP_METHOD(gmagick, medianfilterimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickMedianFilterImage(intern->magick_wand, radius);
@@ -3325,7 +3325,7 @@ PHP_METHOD(gmagick, negateimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickNegateImageChannel(intern->magick_wand, channel, gray);
@@ -3350,7 +3350,7 @@ PHP_METHOD(gmagick, minifyimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickMinifyImage(intern->magick_wand);
@@ -3378,7 +3378,7 @@ PHP_METHOD(gmagick, modulateimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickModulateImage(intern->magick_wand, brightness, saturation, hue);
@@ -3404,7 +3404,7 @@ PHP_METHOD(gmagick, motionblurimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickMotionBlurImage(intern->magick_wand, radius, sigma, angle);
@@ -3432,7 +3432,7 @@ PHP_METHOD(gmagick, nextimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	status = MagickNextImage(intern->magick_wand);
 
 	/* No magick is going to happen */
@@ -3453,16 +3453,16 @@ PHP_METHOD(gmagick, newimage)
 	php_gmagick_object *intern;
 	long columns, rows;
 	char *param;
-	int param_len = 0;
+	size_t param_len = 0;
 	char *format = NULL;
- 	int format_len = 0;
+ 	size_t format_len = 0;
 	char xc_str[MAX_BUFFER_SIZE];
 
  	/* Parse parameters given to function */
  	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lls|s", &columns, &rows, &param, &param_len, &format, &format_len) == FAILURE) {
  		return;
 	}
- 	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+ 	intern = Z_GMAGICK_OBJ_P(getThis());
  	
 	if (!param_len) {
 		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICK_CLASS, "The color must not be empty", 1);
@@ -3499,7 +3499,7 @@ PHP_METHOD(gmagick, normalizeimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickNormalizeImage(intern->magick_wand);
@@ -3526,7 +3526,7 @@ PHP_METHOD(gmagick, oilpaintimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickOilPaintImage(intern->magick_wand, radius);
@@ -3552,7 +3552,7 @@ PHP_METHOD(gmagick, previousimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	status = MagickPreviousImage(intern->magick_wand);
 
 	/* No magick is going to happen */
@@ -3572,7 +3572,7 @@ PHP_METHOD(gmagick, profileimage)
 	php_gmagick_object *intern;
 	char *name;
 	unsigned char *profile;
-	int name_len, profile_len;
+	size_t name_len, profile_len;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -3580,7 +3580,7 @@ PHP_METHOD(gmagick, profileimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickProfileImage(intern->magick_wand, name, profile, profile_len);
@@ -3609,7 +3609,7 @@ PHP_METHOD(gmagick, quantizeimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickQuantizeImage(intern->magick_wand, number_colors, colorspace, tree_depth, dither, measure_error);
@@ -3639,7 +3639,7 @@ PHP_METHOD(gmagick, quantizeimages)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickQuantizeImages(intern->magick_wand, number_colors, colorspace, tree_depth, dither, measure_error);
@@ -3662,14 +3662,14 @@ PHP_METHOD(gmagick, queryfontmetrics)
 	php_gmagick_object *intern;
 	php_gmagickdraw_object *internd;
 	char *text;
-	int text_len;
+	size_t text_len;
 	double *metrics;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "Os", &objvar, php_gmagickdraw_sc_entry, &text, &text_len) == FAILURE) {
 		return;
 	}
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
-	internd = (php_gmagickdraw_object *)zend_object_store_get_object(objvar TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
+	internd = Z_GMAGICKDRAW_OBJ_P(objvar);
 	if (MagickGetNumberImages(intern->magick_wand) == 0) {
 		MagickReadImage(intern->magick_wand, "XC:white");
 		MagickScaleImage(intern->magick_wand, 1, 1);
@@ -3704,7 +3704,7 @@ PHP_METHOD(gmagick, queryfonts)
 	char **fonts;
 	unsigned long num_fonts = 0, i;
 	char *pattern = "*";
-	int pattern_len = 1;
+	size_t pattern_len = 1;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|s", &pattern, &pattern_len) == FAILURE) {
 		return;
@@ -3714,7 +3714,7 @@ PHP_METHOD(gmagick, queryfonts)
 	array_init(return_value);
 
 	for (i = 0 ; i < num_fonts ; i++) {
-		add_next_index_string(return_value, fonts[i], 1);
+		add_next_index_string(return_value, fonts[i]);
 		GMAGICK_FREE_MEMORY(char *, fonts[i]);
 	}
 
@@ -3731,7 +3731,7 @@ PHP_METHOD(gmagick, queryformats)
 	char **supported_formats;
 	unsigned long num_formats = 0, i;
 	char *pattern = "*";
-	int pattern_len = 1;
+	size_t pattern_len = 1;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|s", &pattern, &pattern_len) == FAILURE) {
 		return;
@@ -3741,7 +3741,7 @@ PHP_METHOD(gmagick, queryformats)
 	array_init(return_value);
 
 	for (i = 0 ; i < num_formats ; i++) {
-		add_next_index_string(return_value, supported_formats[i], 1);
+		add_next_index_string(return_value, supported_formats[i]);
 		GMAGICK_FREE_MEMORY(char *, supported_formats[i]);
 	}
 
@@ -3764,7 +3764,7 @@ PHP_METHOD(gmagick, radialblurimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 	// MagickRadialBlurImageChannel still not available in 1.4 
 #if GMAGICK_LIB_MASK >= 1005000
@@ -3795,7 +3795,7 @@ PHP_METHOD(gmagick, raiseimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickRaiseImage(intern->magick_wand, width, height, x, y, raise);
@@ -3817,7 +3817,7 @@ PHP_METHOD(gmagick, readimageblob)
 	unsigned char *image_string;
 	char *filename = NULL;
 	long filename_len;
-	int image_string_len;
+	size_t image_string_len;
 	MagickBool status;
 	php_gmagick_object *intern;
 
@@ -3830,7 +3830,7 @@ PHP_METHOD(gmagick, readimageblob)
 		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICK_CLASS, "Zero size image string passed", 1);
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	status = MagickReadImageBlob(intern->magick_wand, image_string, image_string_len);
 
 	/* No magick is going to happen */
@@ -3854,7 +3854,7 @@ PHP_METHOD(gmagick, readimagefile)
 {
 	FILE *fp;
 	char *filename = NULL;
-	int filename_len;
+	size_t filename_len;
 	MagickBool status;
 	php_gmagick_object *intern;
 	zval *zstream;
@@ -3864,7 +3864,7 @@ PHP_METHOD(gmagick, readimagefile)
 		return;
 	}
 
-	php_stream_from_zval(stream, &zstream);
+	php_stream_from_zval(stream, zstream);
 
 	if (php_stream_can_cast(stream, PHP_STREAM_AS_STDIO | PHP_STREAM_CAST_INTERNAL) == FAILURE) {
 		RETURN_FALSE;
@@ -3874,7 +3874,7 @@ PHP_METHOD(gmagick, readimagefile)
 		RETURN_FALSE;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	status = MagickReadImageFile(intern->magick_wand, fp);
 
 	if (status == MagickFalse) {
@@ -3901,7 +3901,7 @@ PHP_METHOD(gmagick, reducenoiseimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickReduceNoiseImage(intern->magick_wand, radius);
@@ -3922,7 +3922,7 @@ PHP_METHOD(gmagick, removeimage)
 	MagickBool status;
 	php_gmagick_object *intern;
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickRemoveImage(intern->magick_wand);
@@ -3944,7 +3944,7 @@ PHP_METHOD(gmagick, removeimageprofile)
 	php_gmagick_object *intern;
 	char *name;
 	unsigned char *profile;
-	int name_len;
+	size_t name_len;
 	unsigned long profile_len;
 
 	/* Parse parameters given to function */
@@ -3952,7 +3952,7 @@ PHP_METHOD(gmagick, removeimageprofile)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	profile = MagickRemoveImageProfile(intern->magick_wand, name, &profile_len);
@@ -3961,7 +3961,7 @@ PHP_METHOD(gmagick, removeimageprofile)
 		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICK_CLASS, "The image profile does not exist", 1);
 	}
 
-	ZVAL_STRING(return_value, (char *)profile, 1);
+	ZVAL_STRING(return_value, (char *)profile);
 	GMAGICK_FREE_MEMORY(unsigned char *, profile);
 	return;
 }
@@ -3981,7 +3981,7 @@ PHP_METHOD(gmagick, resampleimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 	status = MagickResampleImage(intern->magick_wand, xRes, yRes, filter, blur);
 
@@ -4007,7 +4007,7 @@ PHP_METHOD(gmagick, rollimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 	status = MagickRollImage(intern->magick_wand, x, y);
 
@@ -4035,7 +4035,7 @@ PHP_METHOD(gmagick, rotateimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	GMAGICK_CAST_PARAMETER_TO_COLOR(param, internp, 1);
@@ -4067,7 +4067,7 @@ PHP_METHOD(gmagick, scaleimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 	
@@ -4100,7 +4100,7 @@ PHP_METHOD(gmagick, separateimagechannel)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSeparateImageChannel(intern->magick_wand, channel);
@@ -4118,24 +4118,24 @@ PHP_METHOD(gmagick, separateimagechannel)
 */
 PHP_METHOD(gmagick, sharpenimage)
 {
-    double sigma, radius;
-    MagickBool status;
-    php_gmagick_object *intern;
+	double sigma, radius;
+	MagickBool status;
+	php_gmagick_object *intern;
 
-    /* Parse parameters given to function */
-    if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd|l", &radius, &sigma) == FAILURE) {
-        return;
-    }
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd|l", &radius, &sigma) == FAILURE) {
+		return;
+	}
 	
-    intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
-    GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
+	intern = Z_GMAGICK_OBJ_P(getThis());
+	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
-    status = MagickSharpenImage(intern->magick_wand, radius, sigma);
+	status = MagickSharpenImage(intern->magick_wand, radius, sigma);
 	
-    /* No magick is going to happen */
-    if (status == MagickFalse) { 
-        GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to sharpen image");
-    }
+	/* No magick is going to happen */
+	if (status == MagickFalse) { 
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to sharpen image");
+	}
 	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
@@ -4155,7 +4155,7 @@ PHP_METHOD(gmagick, shearimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	GMAGICK_CAST_PARAMETER_TO_COLOR(param, internp, 1);
@@ -4184,7 +4184,7 @@ PHP_METHOD(gmagick, solarizeimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSolarizeImage(intern->magick_wand, threshold);
@@ -4213,7 +4213,7 @@ PHP_METHOD(gmagick, spreadimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSpreadImage(intern->magick_wand, radius);
@@ -4239,7 +4239,7 @@ PHP_METHOD(gmagick, stripimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickStripImage(intern->magick_wand);
@@ -4267,7 +4267,7 @@ PHP_METHOD(gmagick, swirlimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSwirlImage(intern->magick_wand, degrees);
@@ -4295,10 +4295,10 @@ PHP_METHOD(gmagick, textureimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
-	intern_second = (php_gmagick_object *)zend_object_store_get_object(magick_object TSRMLS_CC);
+	intern_second = Z_GMAGICK_OBJ_P(magick_object);
 	GMAGICK_CHECK_NOT_EMPTY(intern_second->magick_wand, 1, 1);
 
 	tmp_wand = MagickTextureImage(intern->magick_wand, intern_second->magick_wand);
@@ -4308,7 +4308,7 @@ PHP_METHOD(gmagick, textureimage)
 	}
 
 	object_init_ex(return_value, php_gmagick_sc_entry);
-	intern_return = (php_gmagick_object *)zend_object_store_get_object(return_value TSRMLS_CC);
+	intern_return = Z_GMAGICK_OBJ_P(return_value);
 	GMAGICK_REPLACE_MAGICKWAND(intern_return, tmp_wand);
 
 	return;
@@ -4329,7 +4329,7 @@ PHP_METHOD(gmagick, trimimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickTrimImage(intern->magick_wand, fuzz);
@@ -4357,17 +4357,17 @@ PHP_METHOD(gmagick, __tostring)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	if(MagickGetNumberImages(intern->magick_wand) == 0) {
-		ZVAL_STRING(return_value, "", 1);
+		ZVAL_STRING(return_value, "");
 		return;
 	}
 
 	buffer = MagickGetImageFormat(intern->magick_wand);
 
 	if(!buffer) {
-		ZVAL_STRING(return_value, "", 1);
+		ZVAL_STRING(return_value, "");
 		return;
 	} else {
 		GMAGICK_FREE_MEMORY(char *, buffer);
@@ -4375,7 +4375,7 @@ PHP_METHOD(gmagick, __tostring)
 
 	image = MagickWriteImageBlob(intern->magick_wand, &image_size);
 
-	ZVAL_STRINGL(return_value, (char *)image, image_size, 1);
+	ZVAL_STRINGL(return_value, (char *)image, image_size);
 	GMAGICK_FREE_MEMORY(unsigned char *, image);
 	return;
 }
@@ -4393,7 +4393,7 @@ PHP_METHOD(gmagick, flattenimages)
 		return;
 	}
 	
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	MagickResetIterator(intern->magick_wand);
@@ -4405,7 +4405,7 @@ PHP_METHOD(gmagick, flattenimages)
 	}
 
 	object_init_ex(return_value, php_gmagick_sc_entry);
-	intern_return = (php_gmagick_object *)zend_object_store_get_object(return_value TSRMLS_CC);
+	intern_return = Z_GMAGICK_OBJ_P(return_value);
 	GMAGICK_REPLACE_MAGICKWAND(intern_return, tmp_wand);
 	return;
 }
@@ -4427,7 +4427,7 @@ PHP_METHOD(gmagick, sampleimage)
 		return;
 	}
 
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 	
@@ -4458,7 +4458,7 @@ PHP_METHOD(gmagick, cloneimage)
 		return;
 	}
 	
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	tmp_wand = CloneMagickWand(intern->magick_wand);
@@ -4468,7 +4468,7 @@ PHP_METHOD(gmagick, cloneimage)
 	}
 
 	object_init_ex(return_value, php_gmagick_sc_entry);
-	intern_return = (php_gmagick_object *)zend_object_store_get_object(return_value TSRMLS_CC);
+	intern_return = Z_GMAGICK_OBJ_P(return_value);
 	GMAGICK_REPLACE_MAGICKWAND(intern_return, tmp_wand);
 
 	return;
@@ -4488,7 +4488,7 @@ PHP_METHOD(gmagick, appendimages)
 		return;
 	}
 	
-	intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	tmp_wand = MagickAppendImages(intern->magick_wand, stack);
@@ -4498,7 +4498,7 @@ PHP_METHOD(gmagick, appendimages)
 	}
 
 	object_init_ex(return_value, php_gmagick_sc_entry);
-	intern_return = (php_gmagick_object *)zend_object_store_get_object(return_value TSRMLS_CC);
+	intern_return = Z_GMAGICK_OBJ_P(return_value);
 	GMAGICK_REPLACE_MAGICKWAND(intern_return, tmp_wand);
 
 	return;
@@ -4506,35 +4506,35 @@ PHP_METHOD(gmagick, appendimages)
 /* }}} */
 
 /* {{{ proto bool Gmagick::unsharpMaskImage(float radius, float sigma, float amount, float threshold)
-        We convolve the image with a Gaussian operator of the given radius and standard deviation (sigma). For reasonable results, radius should be larger than sigma.  Use a radius of 0 and Imagick::UnsharpMaskImage() selects a suitable radius for you.
+	We convolve the image with a Gaussian operator of the given radius and standard deviation (sigma). For reasonable results, radius should be larger than sigma.  Use a radius of 0 and Imagick::UnsharpMaskImage() selects a suitable radius for you.
 */
 PHP_METHOD(gmagick, unsharpmaskimage)
 {
-        php_gmagick_object *intern;
-        double radius, sigma, amount, threshold;
-        MagickBool status;
+	php_gmagick_object *intern;
+	double radius, sigma, amount, threshold;
+	MagickBool status;
 
-        /* Parse parameters given to function */
-        if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddd", &radius, &sigma, &amount, &threshold) == FAILURE) {
-                return;
-        }
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddd", &radius, &sigma, &amount, &threshold) == FAILURE) {
+		return;
+	}
 
-        intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
-        if (php_gmagick_ensure_not_empty (intern->magick_wand) == 0)
-                return;
+	intern = Z_GMAGICK_OBJ_P(getThis());
+	if (php_gmagick_ensure_not_empty (intern->magick_wand) == 0)
+		return;
 
 		status = MagickUnsharpMaskImage(intern->magick_wand, radius, sigma, amount, threshold);
 
-        if (status == MagickFalse) {
-			GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to unsharp mask image");        	
-            return;
-        }
-        RETURN_TRUE;
+	if (status == MagickFalse) {
+			GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to unsharp mask image");		
+		return;
+	}
+	RETURN_TRUE;
 }
 /* }}} */
 
 /* {{{ proto bool Gmagick::setResolution(float x_resolution, float y_resolution, float amount, float threshold)
-	Sets the image resolution
+        Sets the image resolution
 */
 PHP_METHOD(gmagick, setresolution)
 {
@@ -4547,7 +4547,7 @@ PHP_METHOD(gmagick, setresolution)
                 return;
         }
 
-        intern = (php_gmagick_object *)zend_object_store_get_object(getThis() TSRMLS_CC);
+	intern = Z_GMAGICK_OBJ_P(getThis());
         status = MagickSetResolution(intern->magick_wand, x_resolution, y_resolution);
 
         if (status == MagickFalse) {

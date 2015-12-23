@@ -35,9 +35,9 @@ zend_class_entry *php_gmagickpixel_exception_class_entry;
 
 /* {{{ static void php_gmagick_object_free_storage(void *object TSRMLS_DC)
 */
-static void php_gmagick_object_free_storage(void *object TSRMLS_DC)
+static void php_gmagick_object_free_storage(zend_object *object TSRMLS_DC)
 {
-	php_gmagick_object *intern = (php_gmagick_object *)object;
+	php_gmagick_object *intern = GMAGICK_FETCH_OBJECT(object);
 
 	if (!intern) {
 		return;
@@ -48,29 +48,16 @@ static void php_gmagick_object_free_storage(void *object TSRMLS_DC)
 	}
 
 	zend_object_std_dtor(&intern->zo TSRMLS_CC);
-
-	efree(intern);
 }
 /* }}} */
 
 
-/* {{{ static zend_object_value php_gmagick_object_new_ex(zend_class_entry *class_type, php_gmagick_object **ptr, zend_bool init_wand TSRMLS_DC)
+/* {{{ static zend_object *php_gmagick_object_new_ex(zend_class_entry *class_type, zend_bool init_wand)
 */
-static zend_object_value php_gmagick_object_new_ex(zend_class_entry *class_type, php_gmagick_object **ptr, zend_bool init_wand TSRMLS_DC)
+static zend_object *php_gmagick_object_new_ex(zend_class_entry *class_type, zend_bool init_wand)
 {
-#if PHP_VERSION_ID < 50399
-	zval *tmp;
-#endif
-	zend_object_value retval;
-	php_gmagick_object *intern;
-
 	/* Allocate memory for it */
-	intern = (php_gmagick_object *) emalloc(sizeof(php_gmagick_object));
-	memset(&intern->zo, 0, sizeof(zend_object));
-
-	if (ptr) {
-		*ptr = intern;
-	}
+	php_gmagick_object *intern = ecalloc(1, sizeof(php_gmagick_object) + zend_object_properties_size(class_type));
 
 	/* Set the magickwand */
 	if (init_wand) {
@@ -79,51 +66,46 @@ static zend_object_value php_gmagick_object_new_ex(zend_class_entry *class_type,
 		intern->magick_wand = NULL;
 	}
 
-	zend_object_std_init(&intern->zo, class_type TSRMLS_CC);
-#if PHP_VERSION_ID < 50399
-	zend_hash_copy(intern->zo.properties, &class_type->default_properties, (copy_ctor_func_t) zval_add_ref,(void *) &tmp, sizeof(zval *));
-#else
-        object_properties_init( (zend_object*)intern, class_type );
-#endif
+        zend_object_std_init(&(intern->zo), class_type);
+        object_properties_init(&intern->zo, class_type);
 
-	retval.handle = zend_objects_store_put(intern, NULL, (zend_objects_free_object_storage_t) php_gmagick_object_free_storage, NULL TSRMLS_CC);
-	retval.handlers = (zend_object_handlers *) &gmagick_object_handlers;
-	return retval;
+	intern->zo.handlers = &gmagick_object_handlers;
+
+	return &intern->zo;
 }
 /* }}} */
 
-/* {{{ static zend_object_value php_gmagick_object_new(zend_class_entry *class_type TSRMLS_DC)
+/* {{{ static zend_object *php_gmagick_object_new(zend_class_entry *class_type)
 */
-static zend_object_value php_gmagick_object_new(zend_class_entry *class_type TSRMLS_DC)
+static zend_object *php_gmagick_object_new(zend_class_entry *class_type)
 {
-	return php_gmagick_object_new_ex(class_type, NULL, 1 TSRMLS_CC);
+	return php_gmagick_object_new_ex(class_type, 1);
 }
 /* }}} */
 
-/* {{{ static zend_object_value php_gmagick_clone_gmagick_object(zval *this_ptr TSRMLS_DC)
+/* {{{ static zend_object *php_gmagick_clone_gmagick_object(zval *this_ptr TSRMLS_DC)
 */
-static zend_object_value php_gmagick_clone_gmagick_object(zval *this_ptr TSRMLS_DC)
+static zend_object *php_gmagick_clone_gmagick_object(zval *this_ptr TSRMLS_DC)
 {
-	php_gmagick_object *new_obj = NULL;
-	php_gmagick_object *old_obj = (php_gmagick_object *) zend_object_store_get_object(this_ptr TSRMLS_CC);
-	zend_object_value new_ov = php_gmagick_object_new_ex(old_obj->zo.ce, &new_obj, 0 TSRMLS_CC);
+	php_gmagick_object *old_obj = Z_GMAGICK_OBJ_P(this_ptr);
+	php_gmagick_object *new_obj = GMAGICK_FETCH_OBJECT(php_gmagick_object_new_ex(old_obj->zo.ce, 0));
 	 
-	zend_objects_clone_members(&new_obj->zo, new_ov, &old_obj->zo, Z_OBJ_HANDLE_P(this_ptr) TSRMLS_CC);
+	zend_objects_clone_members(&new_obj->zo, &old_obj->zo);
 	
 	if (new_obj->magick_wand) {
 		DestroyMagickWand(new_obj->magick_wand);
 	}
 	
 	new_obj->magick_wand = CloneMagickWand(old_obj->magick_wand);
-	return new_ov;
+	return &new_obj->zo;
 }
 /* }}} */
 
-/* {{{ static void php_gmagickdraw_object_free_storage(void *object TSRMLS_DC)
+/* {{{ static void php_gmagickdraw_object_free_storage(zend_object *object)
 */
-static void php_gmagickdraw_object_free_storage(void *object TSRMLS_DC)
+static void php_gmagickdraw_object_free_storage(zend_object *object)
 {
-	php_gmagickdraw_object *intern = (php_gmagickdraw_object *)object;
+	php_gmagickdraw_object *intern = GMAGICKDRAW_FETCH_OBJECT(object);
 
 	if (!intern) {
 		return;
@@ -133,28 +115,16 @@ static void php_gmagickdraw_object_free_storage(void *object TSRMLS_DC)
 		DestroyDrawingWand(intern->drawing_wand);
 	}
 
-	zend_object_std_dtor(&intern->zo TSRMLS_CC);
-	efree(intern);
+	zend_object_std_dtor(&intern->zo);
 }
 /* }}} */
 
-/* {{{ static zend_object_value php_gmagickdraw_object_new_ex(zend_class_entry *class_type, php_gmagickdraw_object **ptr TSRMLS_DC)
+/* {{{ static zend_object *php_gmagickdraw_object_new_ex(zend_class_entry *class_type, zend_bool init_wand)
 */
-static zend_object_value php_gmagickdraw_object_new_ex(zend_class_entry *class_type, php_gmagickdraw_object **ptr, zend_bool init_wand TSRMLS_DC)
+static zend_object *php_gmagickdraw_object_new_ex(zend_class_entry *class_type, zend_bool init_wand)
 {
-#if PHP_VERSION_ID < 50399
-	zval *tmp;
-#endif
-	zend_object_value retval;
-	php_gmagickdraw_object *intern;
-
 	/* Allocate memory for it */
-	intern = (php_gmagickdraw_object *) emalloc(sizeof(php_gmagickdraw_object));
-	memset(&intern->zo, 0, sizeof(zend_object));
-
-	if (ptr) {
-		*ptr = intern;
-	}
+	php_gmagickdraw_object *intern = ecalloc(1, sizeof(php_gmagickdraw_object) + zend_object_properties_size(class_type));
 
 	/* Set the DrawingWand */
 	if (init_wand) {
@@ -163,65 +133,47 @@ static zend_object_value php_gmagickdraw_object_new_ex(zend_class_entry *class_t
 		intern->drawing_wand = NULL;
 	}
 
-	/* ALLOC_HASHTABLE(intern->zo.properties); */
+	zend_object_std_init(&intern->zo, class_type);
+	object_properties_init(&intern->zo, class_type );
 
-	zend_object_std_init(&intern->zo, class_type TSRMLS_CC);
-#if PHP_VERSION_ID < 50399
-	zend_hash_copy(intern->zo.properties, &class_type->default_properties, (copy_ctor_func_t) zval_add_ref,(void *) &tmp, sizeof(zval *));
-#else
-        object_properties_init( (zend_object*)intern, class_type );
-#endif
+	intern->zo.handlers = &gmagickdraw_object_handlers;
 
-	retval.handle = zend_objects_store_put(intern, NULL, (zend_objects_free_object_storage_t) php_gmagickdraw_object_free_storage, NULL TSRMLS_CC);
-	retval.handlers = (zend_object_handlers *) &gmagickdraw_object_handlers;
-	return retval;
+	return &intern->zo;
 }
 /* }}} */
 
-/* {{{ static zend_object_value php_gmagickdraw_object_new(zend_class_entry *class_type TSRMLS_DC)
+/* {{{ static zend_object *php_gmagickdraw_object_new(zend_class_entry *class_type)
 */
-static zend_object_value php_gmagickdraw_object_new(zend_class_entry *class_type TSRMLS_DC)
+static zend_object *php_gmagickdraw_object_new(zend_class_entry *class_type)
 {
-	return php_gmagickdraw_object_new_ex(class_type, NULL, 1 TSRMLS_CC);
+	return php_gmagickdraw_object_new_ex(class_type, 1);
 }
 /* }}} */
 
-/* {{{ static void php_gmagickpixel_object_free_storage(void *object TSRMLS_DC)
+/* {{{ static void php_gmagickpixel_object_free_storage(zend_object *object TSRMLS_DC)
 */
-static void php_gmagickpixel_object_free_storage(void *object TSRMLS_DC)
+static void php_gmagickpixel_object_free_storage(zend_object *object)
 {
-	php_gmagickpixel_object *intern = (php_gmagickpixel_object *)object;
+	php_gmagickpixel_object *intern = GMAGICKPIXEL_FETCH_OBJECT(object);
 
 	if (!intern) {
 		return;
 	}
 	
-	if(intern->pixel_wand != (PixelWand *)NULL) {
+	if(intern->pixel_wand) {
 		DestroyPixelWand(intern->pixel_wand);
 	}
 	
-	zend_object_std_dtor(&intern->zo TSRMLS_CC);
-	efree(intern);
+	zend_object_std_dtor(&intern->zo);
 }
 /* }}} */
 
-/* {{{ static zend_object_value php_gmagickpixel_object_new_ex(zend_class_entry *class_type, php_gmagickpixel_object **ptr, zend_bool init_wand TSRMLS_DC)
+/* {{{ static zend_object *php_gmagickpixel_object_new_ex(zend_class_entry *class_type, zend_bool init_wand)
 */
-static zend_object_value php_gmagickpixel_object_new_ex(zend_class_entry *class_type, php_gmagickpixel_object **ptr, zend_bool init_wand TSRMLS_DC)
+static zend_object *php_gmagickpixel_object_new_ex(zend_class_entry *class_type, zend_bool init_wand)
 {
-#if PHP_VERSION_ID < 50399
-	zval *tmp;
-#endif
-	zend_object_value retval;
-	php_gmagickpixel_object *intern;
-
 	/* Allocate memory for it */
-	intern = (php_gmagickpixel_object *) emalloc(sizeof(php_gmagickpixel_object));
-	memset(&intern->zo, 0, sizeof(zend_object));
-
-	if (ptr) {
-		*ptr = intern;
-	}
+	php_gmagickpixel_object *intern = ecalloc(1, sizeof(php_gmagickpixel_object) + zend_object_properties_size(class_type));
 
 	/* Set the pixelwand if requested */
 	if (init_wand) {
@@ -233,38 +185,33 @@ static zend_object_value php_gmagickpixel_object_new_ex(zend_class_entry *class_
 	/* ALLOC_HASHTABLE(intern->zo.properties); */
 
 	zend_object_std_init(&intern->zo, class_type TSRMLS_CC);
-#if PHP_VERSION_ID < 50399
-	zend_hash_copy(intern->zo.properties, &class_type->default_properties, (copy_ctor_func_t) zval_add_ref,(void *) &tmp, sizeof(zval *));
-#else
-        object_properties_init( (zend_object*)intern, class_type );
-#endif
+	object_properties_init(&intern->zo, class_type );
 
-	retval.handle = zend_objects_store_put(intern, NULL, (zend_objects_free_object_storage_t) php_gmagickpixel_object_free_storage, NULL TSRMLS_CC);
-	retval.handlers = (zend_object_handlers *) &gmagickpixel_object_handlers;
-	return retval;
+	intern->zo.handlers = &gmagickpixel_object_handlers;
+
+	return &intern->zo;
 }
 /* }}} */
 
-/* {{{ static zend_object_value php_gmagickpixel_object_new(zend_class_entry *class_type TSRMLS_DC)
+/* {{{ static zend_object *php_gmagickpixel_object_new(zend_class_entry *class_type)
 */
-static zend_object_value php_gmagickpixel_object_new(zend_class_entry *class_type TSRMLS_DC)
+static zend_object *php_gmagickpixel_object_new(zend_class_entry *class_type TSRMLS_DC)
 {
-	return php_gmagickpixel_object_new_ex(class_type, NULL, 1 TSRMLS_CC);
+	return php_gmagickpixel_object_new_ex(class_type, 1);
 }
 /* }}} */
 
-/* {{{ static zend_object_value php_gmagick_clone_gmagick_object(zval *this_ptr TSRMLS_DC)
+/* {{{ static zend_object *php_gmagick_clone_gmagickpixel_object(zval *this_ptr)
 */
-static zend_object_value php_gmagick_clone_gmagickpixel_object(zval *this_ptr TSRMLS_DC)
+static zend_object *php_gmagick_clone_gmagickpixel_object(zval *this_ptr)
 {
-	php_gmagickpixel_object *new_obj = NULL;
-	php_gmagickpixel_object *old_obj = (php_gmagickpixel_object *) zend_object_store_get_object(this_ptr TSRMLS_CC);
-	zend_object_value new_ov = php_gmagickpixel_object_new_ex(old_obj->zo.ce, &new_obj, 0 TSRMLS_CC);
+	php_gmagickpixel_object *old_obj = Z_GMAGICKPIXEL_OBJ_P(this_ptr);
+	php_gmagickpixel_object *new_obj = GMAGICKPIXEL_FETCH_OBJECT(php_gmagickpixel_object_new_ex(old_obj->zo.ce, 0));
 
-	zend_objects_clone_members(&new_obj->zo, new_ov, &old_obj->zo, Z_OBJ_HANDLE_P(this_ptr) TSRMLS_CC);
+	zend_objects_clone_members(&new_obj->zo, &old_obj->zo);
 	GMAGICK_CLONE_PIXELWAND(old_obj->pixel_wand, new_obj->pixel_wand);
 
-	return new_ov;
+	return &new_obj->zo;
 }
 /* }}} */
 
@@ -764,10 +711,10 @@ ZEND_END_ARG_INFO()
 
 
 ZEND_BEGIN_ARG_INFO_EX(gmagick_unsharpmaskimage_args, 0, 0, 4)
-        ZEND_ARG_INFO(0, radius)
-        ZEND_ARG_INFO(0, sigma)
-        ZEND_ARG_INFO(0, amount)
-        ZEND_ARG_INFO(0, threshold)
+	ZEND_ARG_INFO(0, radius)
+	ZEND_ARG_INFO(0, sigma)
+	ZEND_ARG_INFO(0, amount)
+	ZEND_ARG_INFO(0, threshold)
 ZEND_END_ARG_INFO()
 
 /* {{{ static zend_function_entry php_gmagick_functions[]
@@ -816,7 +763,7 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, flattenimages, gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, flipimage,		gmagick_empty_args,		ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, flopimage,		gmagick_empty_args,		ZEND_ACC_PUBLIC)
-	PHP_ME(gmagick, frameimage,		gmagick_frameimage_args,        ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, frameimage,		gmagick_frameimage_args,	ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, gammaimage,		gmagick_gammaimage_args,	ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getcopyright,		gmagick_empty_args,		ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getfilename,		gmagick_empty_args,		ZEND_ACC_PUBLIC)
@@ -882,7 +829,7 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, setimageredprimary,	gmagick_setimageredprimary_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagerenderingintent,gmagick_setimagerenderingintent_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimageresolution,	gmagick_setimageresolution_args, ZEND_ACC_PUBLIC)
-	PHP_ME(gmagick, setresolution,		gmagick_setresolution_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, setresolution,          gmagick_setresolution_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagescene,		gmagick_setimagescene_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagetype,		gmagick_setimagetype_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagepage,		gmagick_setimagepage_args, ZEND_ACC_PUBLIC)
@@ -972,12 +919,12 @@ ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setgravity_args, 0, 0, 1)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_ellipse_args, 0, 0, 6)
-                ZEND_ARG_INFO(0, ox)
-                ZEND_ARG_INFO(0, oy)
-                ZEND_ARG_INFO(0, px)
-                ZEND_ARG_INFO(0, py)
-                ZEND_ARG_INFO(0, start)
-                ZEND_ARG_INFO(0, end)
+		ZEND_ARG_INFO(0, ox)
+		ZEND_ARG_INFO(0, oy)
+		ZEND_ARG_INFO(0, px)
+		ZEND_ARG_INFO(0, py)
+		ZEND_ARG_INFO(0, start)
+		ZEND_ARG_INFO(0, end)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_affine_args, 0, 0, 1)
@@ -1081,28 +1028,28 @@ ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_settextencoding_args, 0, 0, 1)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setstrokeantialias_args, 0, 0, 1)
-        ZEND_ARG_INFO(0, antialias)
+	ZEND_ARG_INFO(0, antialias)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setstrokedashoffset_args, 0, 0, 1)
-        ZEND_ARG_INFO(0, offset)
+	ZEND_ARG_INFO(0, offset)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setstrokelinecap_args, 0, 0, 1)
-        ZEND_ARG_INFO(0, LINECAP)
+	ZEND_ARG_INFO(0, LINECAP)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setstrokelinejoin_args, 0, 0, 1)
-        ZEND_ARG_INFO(0, LINEJOIN)
+	ZEND_ARG_INFO(0, LINEJOIN)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setstrokemiterlimit_args, 0, 0, 1)
-        ZEND_ARG_INFO(0, miterLimit)
+	ZEND_ARG_INFO(0, miterLimit)
 ZEND_END_ARG_INFO()
 
 #if GMAGICK_LIB_MASK >= 1003000 
 ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setstrokedasharray_args, 0, 0, 1)
-        ZEND_ARG_INFO(0, dashArray)
+	ZEND_ARG_INFO(0, dashArray)
 ZEND_END_ARG_INFO()
 #endif
 
@@ -1211,47 +1158,49 @@ PHP_MINIT_FUNCTION(gmagick)
 	size_t cwd_len;
 	
 	zend_class_entry ce;
-	memcpy(&gmagick_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
-	memcpy(&gmagickdraw_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
-	memcpy(&gmagickpixel_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
 	
 	/* Exception */
 	INIT_CLASS_ENTRY(ce, "GmagickException", NULL);
-	php_gmagick_exception_class_entry = zend_register_internal_class_ex(&ce, zend_exception_get_default(TSRMLS_C), NULL TSRMLS_CC);
+	php_gmagick_exception_class_entry = zend_register_internal_class_ex(&ce, zend_exception_get_default());
 	php_gmagick_exception_class_entry->ce_flags |= ZEND_ACC_FINAL;
 
 	INIT_CLASS_ENTRY(ce, "GmagickPixelException", NULL);
-	php_gmagickpixel_exception_class_entry = zend_register_internal_class_ex(&ce, zend_exception_get_default(TSRMLS_C), NULL TSRMLS_CC);
+	php_gmagickpixel_exception_class_entry = zend_register_internal_class_ex(&ce, zend_exception_get_default());
 	php_gmagickpixel_exception_class_entry->ce_flags |= ZEND_ACC_FINAL;
 
 	/* Class entry */
 	INIT_CLASS_ENTRY(ce, "Gmagick", php_gmagick_class_methods);
-	ce.create_object = php_gmagick_object_new;
+	php_gmagick_sc_entry = zend_register_internal_class(&ce);
+	php_gmagick_sc_entry->create_object = php_gmagick_object_new;
+	memcpy(&gmagick_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
+        gmagick_object_handlers.offset = XtOffsetOf(php_gmagick_object, zo);
+        gmagick_object_handlers.free_obj = php_gmagick_object_free_storage;
 	gmagick_object_handlers.clone_obj = php_gmagick_clone_gmagick_object;
-	php_gmagick_sc_entry = zend_register_internal_class(&ce TSRMLS_CC);
 
 	INIT_CLASS_ENTRY(ce, "GmagickDraw", php_gmagickdraw_class_methods);
-	ce.create_object = php_gmagickdraw_object_new;
+	php_gmagickdraw_sc_entry = zend_register_internal_class(&ce);
+	php_gmagickdraw_sc_entry->create_object = php_gmagickdraw_object_new;
+	memcpy(&gmagickdraw_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
+	gmagickdraw_object_handlers.offset = XtOffsetOf(php_gmagickdraw_object, zo);
+	gmagickdraw_object_handlers.free_obj = php_gmagickdraw_object_free_storage;
 	gmagickdraw_object_handlers.clone_obj = NULL;
-	php_gmagickdraw_sc_entry = zend_register_internal_class(&ce TSRMLS_CC);
 	
 	INIT_CLASS_ENTRY(ce, "GmagickPixel", php_gmagickpixel_class_methods);
-	ce.create_object = php_gmagickpixel_object_new;
+	php_gmagickpixel_sc_entry = zend_register_internal_class(&ce);
+	php_gmagickpixel_sc_entry->create_object = php_gmagickpixel_object_new;
+	memcpy(&gmagickpixel_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
+	gmagickpixel_object_handlers.offset = XtOffsetOf(php_gmagickpixel_object, zo);
+	gmagickpixel_object_handlers.free_obj = php_gmagickpixel_object_free_storage;
 	gmagickpixel_object_handlers.clone_obj = php_gmagick_clone_gmagickpixel_object;
-	php_gmagickpixel_sc_entry = zend_register_internal_class(&ce TSRMLS_CC);
 
 	/* Initialize GraphicsMagick environment */
-	cwd = virtual_getcwd_ex(&cwd_len TSRMLS_CC);
+	cwd = virtual_getcwd_ex(&cwd_len);
 	
 	if (!cwd)
 		return FAILURE;
 	
 	InitializeMagick(cwd);
-#if PHP_VERSION_ID < 50600	
-	free(cwd);
-#else
 	efree(cwd);
-#endif
 
 	/* init constants */
 	php_gmagick_initialize_constants();
@@ -1288,16 +1237,16 @@ PHP_MINFO_FUNCTION(gmagick)
 */
 zend_module_entry gmagick_module_entry =
 {
-	STANDARD_MODULE_HEADER,         /* Standard module header */
-	"gmagick",                      /* Extension name */
-	php_gmagick_functions,          /* Functions */
-	PHP_MINIT(gmagick),             /* MINIT */
-	PHP_MSHUTDOWN(gmagick),         /* MSHUTDOWN */
-	NULL,                           /* RINIT */
-	NULL,                           /* RSHUTDOWN */
-	PHP_MINFO(gmagick),             /* MINFO */
-	PHP_GMAGICK_VERSION,            /* Version */
-	STANDARD_MODULE_PROPERTIES      /* Standard properties */
+	STANDARD_MODULE_HEADER,		/* Standard module header */
+	"gmagick",			/* Extension name */
+	php_gmagick_functions,		/* Functions */
+	PHP_MINIT(gmagick),		/* MINIT */
+	PHP_MSHUTDOWN(gmagick),		/* MSHUTDOWN */
+	NULL,				/* RINIT */
+	NULL,				/* RSHUTDOWN */
+	PHP_MINFO(gmagick),		/* MINFO */
+	PHP_GMAGICK_VERSION,		/* Version */
+	STANDARD_MODULE_PROPERTIES	/* Standard properties */
 };
 /* }}} */
 
