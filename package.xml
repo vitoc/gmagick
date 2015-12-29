@@ -5,7 +5,7 @@
 	<summary>Provides a wrapper to the GraphicsMagick library.</summary>
 <description>
 Gmagick is a php extension to create, modify and obtain meta information of images using the GraphicsMagick API.
-Version 2.0.0RC1 onwards requires GraphicsMagick version 1.3.22+ and PHP 7.0.1+
+Version 2.0.0RC1 onwards requires GraphicsMagick version 1.3.20+ and PHP 7.0.1+
 If you're using versions of PHP below 7.0.1 but above 5.1.3, please use version Gmagick 1.1.7RC3
 </description>
 	<lead>
