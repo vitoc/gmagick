@@ -371,7 +371,7 @@ void *get_pointinfo_array(zval *coordinate_array, int *num_elements TSRMLS_DC)
 		if (Z_TYPE_P(pz_x) == IS_LONG) {
 			coordinates[i].x = (double)Z_LVAL_P(pz_x);
 		} else {
-			coordinates[i].x = Z_DVAL_PP(pz_x);
+			coordinates[i].x = Z_DVAL_P(pz_x);
 		}
 
 		if (Z_TYPE_P(pz_y) == IS_LONG) {

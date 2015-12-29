@@ -7,16 +7,38 @@ if(!extension_loaded('gmagick')) die('skip');
 ?>
 --FILE--
 <?php
-$filename = dirname(__FILE__) . '/test_constructor.jpg';
-$gm = new GMagick();
-$gd = new GMagickDraw();
-$gm->read("magick:rose");
-$polArray = array( array( 'x' => 3, 'y' => 4 ), array( 'x' => 2, 'y' => 6 ) ,array( 'x' => 5, 'y' => 10 ), array( 'x' => 3, 'y' => 4 ));
-$gd->polyline($polArray);
-$gm->drawImage($gd);
-$gm->write($filename);
-unlink($filename);
-echo "ok";
+
+$intPoints = array(
+    array( 'x' => 3, 'y' => 4 ), 
+    array( 'x' => 2, 'y' => 6 ),
+    array( 'x' => 5, 'y' => 10 ),
+    array( 'x' => 3, 'y' => 4 )
+);
+
+$floatPoints = array(
+    array( 'x' => 3.5, 'y' => 4.5 ), 
+    array( 'x' => 2.5, 'y' => 6.5 ),
+    array( 'x' => 5.5, 'y' => 10.5 ),
+    array( 'x' => 3.5, 'y' => 4.5 )
+);
+
+$tests = array(
+    $intPoints,
+    $floatPoints
+);
+
+foreach ($tests as $polArray) {
+    $filename = dirname(__FILE__) . '/test_constructor.jpg';
+    $gm = new GMagick();
+    $gd = new GMagickDraw();
+    $gm->read("magick:rose");  
+    $gd->polyline($polArray);
+    $gm->drawImage($gd);
+    $gm->write($filename);
+    unlink($filename);
+    echo "ok".PHP_EOL;
+}
 ?>
 --EXPECT--
+ok
 ok
