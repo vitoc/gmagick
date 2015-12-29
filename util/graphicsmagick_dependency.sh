@@ -39,7 +39,9 @@ graphicsmagick_fetch_and_build () {
             mkdir -p "${hg_dir}"
             cd "${hg_dir}"
 
-            hg clone http://hg.code.sf.net/p/graphicsmagick/code GM
+            if [[ ! -d "GM" ]]; then
+                hg clone http://hg.code.sf.net/p/graphicsmagick/code GM
+            fi
             cd GM
             hg pull
             hg update
