@@ -47,7 +47,8 @@ PHP 7 compatibility, typo within get_pointinfo_array fixed. Tested ok on Graphic
 			<file name="php_gmagick.h" role="src" />
 			<file name="php_gmagick_helpers.h" role="src" />
 			<file name="php_gmagick_macros.h" role="src" />
-			<file name="README" role="doc" />
+			<file name="README.md" role="doc" />
+			<file name="CONTRIBUTORS.md" role="doc" />			
 			<file name="LICENSE" role="doc" />
 			<dir name="tests">
 				<file role="test" name="gmagick-001-read_and_write.phpt"/>
