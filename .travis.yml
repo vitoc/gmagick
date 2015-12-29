@@ -1,0 +1,59 @@
+language: php
+
+sudo: false
+
+cache:
+    directories:
+        - $HOME/gm
+
+php:
+    - 7.0
+    # - 5.6
+    
+
+env:
+    - GRAPHICSMAGICK_VERSION=dev QUANTUM=8
+    - GRAPHICSMAGICK_VERSION=1.3.23 QUANTUM=8
+    - GRAPHICSMAGICK_VERSION=1.3.22 QUANTUM=8
+    - GRAPHICSMAGICK_VERSION=1.3.19 QUANTUM=8
+    - GRAPHICSMAGICK_VERSION=1.3.17 QUANTUM=8
+    - GRAPHICSMAGICK_VERSION=dev QUANTUM=16
+    - GRAPHICSMAGICK_VERSION=1.3.23 QUANTUM=16
+    - GRAPHICSMAGICK_VERSION=1.3.22 QUANTUM=16
+    - GRAPHICSMAGICK_VERSION=1.3.19 QUANTUM=16
+    - GRAPHICSMAGICK_VERSION=1.3.17 QUANTUM=16
+  # For Github, you can include individual commits like this:
+  # - GRAPHICSMAGICK_VERSION=commit_25553302a6d5f736b55e60109600dfbce5fbea48
+  # not implemented for mercurial yet.
+
+  
+
+# If known versions are bad, don't build them.
+#matrix:
+#  exclude:
+#    - php: 5.3
+#      env: GRAPHICSMAGICK_VERSION=6.8.7-0
+
+
+before_script:
+    - for file in tests/*.phpt; do grep $(basename $file) package.xml >/dev/null || (echo "Missing $file from package.xml" ; exit 1); done
+    - bash ./util/graphicsmagick_dependency.sh "${GRAPHICSMAGICK_VERSION}" "${QUANTUM}"
+
+script:
+    - export NO_INTERACTION=1
+    - export REPORT_EXIT_STATUS=1
+    - export SKIP_SLOW_TESTS=1
+    - export TEST_PHP_EXECUTABLE=`which php`
+    - export PHP_IMAGICK_VERSION=$(php -r '$sxe = simplexml_load_file ("package.xml"); echo (string) $sxe->version->release;')
+    - . ./util/configure_cflags.sh
+    - phpize
+    - ./configure --with-gmagick="${HOME}/gm/graphicsmagick_${GRAPHICSMAGICK_VERSION}_${QUANTUM}"
+    - make
+    - php run-tests.php -d extension=gmagick.so -d extension_dir=modules -n ./tests/*.phpt
+    - for i in `ls tests/*.out 2>/dev/null`; do echo "-- START ${i}"; cat $i; echo "-- END"; done
+
+# 
+#matrix:
+#  allow_failures:
+#    - env: GRAPHICSMAGICK_VERSION=git6
+#    - env: GRAPHICSMAGICK_VERSION=git7
