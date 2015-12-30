@@ -2,7 +2,13 @@
 setImagePage test
 --SKIPIF--
 <?php
-if(!extension_loaded('gmagick')) die('skip');
+require_once(dirname(__FILE__) . '/skipif.inc');
+
+checkClassMethods(
+    'Gmagick',
+    array('setImagePage', 'getImagePage')
+);
+
 ?>
 --FILE--
 <?php
