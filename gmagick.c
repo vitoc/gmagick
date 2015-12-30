@@ -832,7 +832,9 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, setresolution,          gmagick_setresolution_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagescene,		gmagick_setimagescene_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagetype,		gmagick_setimagetype_args, ZEND_ACC_PUBLIC)
+#ifdef HAVE_MAGICK_SET_IMAGE_PAGE 
 	PHP_ME(gmagick, setimagepage,		gmagick_setimagepage_args, ZEND_ACC_PUBLIC)
+#endif //HAVE_MAGICK_SET_IMAGE_PAGE
 	PHP_ME(gmagick, getimageunits,		gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimagewhitepoint,	gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimagewidth,		gmagick_empty_args, ZEND_ACC_PUBLIC)

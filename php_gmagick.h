@@ -230,7 +230,9 @@ PHP_METHOD(gmagick, setimageresolution);
 PHP_METHOD(gmagick, setresolution);
 PHP_METHOD(gmagick, setimagescene);
 PHP_METHOD(gmagick, setimagetype);
+#ifdef HAVE_MAGICK_SET_IMAGE_PAGE
 PHP_METHOD(gmagick, setimagepage);
+#endif
 PHP_METHOD(gmagick, getimageunits);
 PHP_METHOD(gmagick, getimagewhitepoint);
 PHP_METHOD(gmagick, getimagewidth);
