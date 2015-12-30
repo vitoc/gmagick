@@ -22,11 +22,10 @@ if test $PHP_GMAGICK != "no"; then
 		GRAPHICSMAGICK_VERSION_ORIG=`$WAND_BINARY --version`
 		GRAPHICSMAGICK_VERSION_MASK=`echo ${GRAPHICSMAGICK_VERSION_ORIG} | awk 'BEGIN { FS = "."; } { printf "%d", ($1 * 1000 + $2) * 1000 + $3;}'`
 
-		# if test "$GRAPHICSMAGICK_VERSION_MASK" -ge 1003020; then
-		if test "$GRAPHICSMAGICK_VERSION_MASK" -ge 1001000; then
+		if test "$GRAPHICSMAGICK_VERSION_MASK" -ge 1003020; then
 			AC_MSG_RESULT(found version $GRAPHICSMAGICK_VERSION_ORIG)
 		else
-			AC_MSG_ERROR(no. You need at least GraphicsMagick version 1.1.0 to use Gmagick.)
+			AC_MSG_ERROR(no. You need at least GraphicsMagick version 1.3.20 to use Gmagick.)
 		fi
         LIB_DIR=$WAND_DIR/lib
         
