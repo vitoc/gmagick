@@ -655,7 +655,6 @@ zend_bool crop_thumbnail_image(MagickWand *magick_wand, long desired_width, long
 		return 0;
 	}
 
-	MagickSetImagePage(magick_wand, desired_width, desired_height, 0, 0);
 	return 1;
 }
 
