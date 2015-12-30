@@ -81,6 +81,45 @@ void php_gmagick_initialize_constants()
 	GMAGICK_REGISTER_CONST_LONG("COMPOSITE_SUBTRACT", SubtractCompositeOp);
 	GMAGICK_REGISTER_CONST_LONG("COMPOSITE_THRESHOLD", ThresholdCompositeOp);
 	GMAGICK_REGISTER_CONST_LONG("COMPOSITE_XOR", XorCompositeOp);
+
+#if defined(DivideCompositeOp)
+	GMAGICK_REGISTER_CONST_LONG("COMPOSITE_DIVIDE", DivideCompositeOp);
+#endif
+#if defined(HardLightCompositeOp)
+	GMAGICK_REGISTER_CONST_LONG("COMPOSITE_HARDLIGHT", HardLightCompositeOp);
+#endif
+#if defined(ExclusionCompositeOp)
+	GMAGICK_REGISTER_CONST_LONG("COMPOSITE_EXCLUSION", ExclusionCompositeOp);
+#endif
+#if defined(ColorDodgeCompositeOp)
+	GMAGICK_REGISTER_CONST_LONG("COMPOSITE_COLORDODGE", ColorDodgeCompositeOp);
+#endif
+#if defined(ColorBurnCompositeOp)
+	GMAGICK_REGISTER_CONST_LONG("COMPOSITE_COLORBURN", ColorBurnCompositeOp);
+#endif
+#if defined(SoftLightCompositeOp)
+	GMAGICK_REGISTER_CONST_LONG("COMPOSITE_SOFTLIGHT", SoftLightCompositeOp);
+#endif
+#if defined(LinearBurnCompositeOp)
+	GMAGICK_REGISTER_CONST_LONG("COMPOSITE_LINEARBURN", LinearBurnCompositeOp);
+#endif
+#if defined(LinearDodgeCompositeOp)
+	GMAGICK_REGISTER_CONST_LONG("COMPOSITE_LINEARDODGE", LinearDodgeCompositeOp);
+#endif
+#if defined(LinearLightCompositeOp)
+	GMAGICK_REGISTER_CONST_LONG("COMPOSITE_LINEARLIGHT", LinearLightCompositeOp);
+#endif
+#if defined(VividLightCompositeOp)
+	GMAGICK_REGISTER_CONST_LONG("COMPOSITE_VIVIDLIGHT", VividLightCompositeOp);
+#endif
+#if defined(PinLightCompositeOp)
+	GMAGICK_REGISTER_CONST_LONG("COMPOSITE_PINLIGHT", PinLightCompositeOp);
+#endif
+#if defined(HardMixCompositeOp)
+	GMAGICK_REGISTER_CONST_LONG("COMPOSITE_HARDMIX", HardMixCompositeOp);
+#endif
+
+
 	GMAGICK_REGISTER_CONST_LONG("MONTAGEMODE_FRAME", FrameMode);
 	GMAGICK_REGISTER_CONST_LONG("MONTAGEMODE_UNFRAME", UnframeMode);
 	GMAGICK_REGISTER_CONST_LONG("MONTAGEMODE_CONCATENATE", ConcatenateMode);
@@ -128,6 +167,23 @@ void php_gmagick_initialize_constants()
 	GMAGICK_REGISTER_CONST_LONG("COMPRESSION_LZW", LZWCompression);
 	GMAGICK_REGISTER_CONST_LONG("COMPRESSION_RLE", RLECompression);
 	GMAGICK_REGISTER_CONST_LONG("COMPRESSION_ZIP", ZipCompression);
+
+#if defined(Group3Compression)
+	GMAGICK_REGISTER_CONST_LONG("COMPRESSION_GROUP3", Group3Compression);
+#endif
+#if defined(LZMACompression)
+	GMAGICK_REGISTER_CONST_LONG("COMPRESSION_LZMA", LZMACompression);
+#endif
+#if defined(JPEG2000Compression)
+	GMAGICK_REGISTER_CONST_LONG("COMPRESSION_JPEG2000", JPEG2000Compression);
+#endif
+#if defined(JBIG1Compression)
+	GMAGICK_REGISTER_CONST_LONG("COMPRESSION_JBIG1", JBIG1Compression);
+#endif
+#if defined(JBIG2Compression)
+	GMAGICK_REGISTER_CONST_LONG("COMPRESSION_JBIG2", JBIG2Compression);
+#endif
+
 	GMAGICK_REGISTER_CONST_LONG("PAINT_POINT", PointMethod);
 	GMAGICK_REGISTER_CONST_LONG("PAINT_REPLACE", ReplaceMethod);
 	GMAGICK_REGISTER_CONST_LONG("PAINT_FLOODFILL", FloodfillMethod);
@@ -151,6 +207,11 @@ void php_gmagick_initialize_constants()
 	GMAGICK_REGISTER_CONST_LONG("STRETCH_EXTRAEXPANDED", ExtraExpandedStretch);
 	GMAGICK_REGISTER_CONST_LONG("STRETCH_ULTRAEXPANDED", UltraExpandedStretch);
 	GMAGICK_REGISTER_CONST_LONG("STRETCH_ANY", AnyStretch);
+#if defined(ExtraCondensedStretch)
+	GMAGICK_REGISTER_CONST_LONG("STRETCH_EXTRACONDENSED", ExtraCondensedStretch);
+#endif
+
+
 	GMAGICK_REGISTER_CONST_LONG("ALIGN_UNDEFINED", UndefinedAlign);
 	GMAGICK_REGISTER_CONST_LONG("ALIGN_LEFT", LeftAlign);
 	GMAGICK_REGISTER_CONST_LONG("ALIGN_CENTER", CenterAlign);
@@ -165,6 +226,11 @@ void php_gmagick_initialize_constants()
 	GMAGICK_REGISTER_CONST_LONG("NOISE_IMPULSE", ImpulseNoise);
 	GMAGICK_REGISTER_CONST_LONG("NOISE_LAPLACIAN", LaplacianNoise );
 	GMAGICK_REGISTER_CONST_LONG("NOISE_POISSON", PoissonNoise);
+
+#if defined(RandomNoise)
+	GMAGICK_REGISTER_CONST_LONG("NOISE_RANDOM", RandomNoise);
+#endif
+
 	GMAGICK_REGISTER_CONST_LONG("CHANNEL_UNDEFINED", UndefinedChannel);
 	GMAGICK_REGISTER_CONST_LONG("CHANNEL_RED", RedChannel);
 #if defined(GrayChannel)
@@ -217,6 +283,18 @@ void php_gmagick_initialize_constants()
 #if defined(Rec709LumaColorspace)
 	GMAGICK_REGISTER_CONST_LONG("COLORSPACE_REC709LUMA", Rec709LumaColorspace);
 #endif
+
+
+#if defined(CineonLogRGBColorspace)
+	GMAGICK_REGISTER_CONST_LONG("COLORSPACE_CINEONLOGRGB", CineonLogRGBColorspace);
+#endif
+#if defined(Rec601YCbCrColorspace)
+	GMAGICK_REGISTER_CONST_LONG("COLORSPACE_REC601YCBCR", Rec601YCbCrColorspace);
+#endif
+#if defined(Rec709YCbCrColorspace)
+	GMAGICK_REGISTER_CONST_LONG("COLORSPACE_REC709YCBCR", Rec709YCbCrColorspace);
+#endif
+
 	GMAGICK_REGISTER_CONST_LONG("VIRTUALPIXELMETHOD_UNDEFINED", UndefinedVirtualPixelMethod);
 	GMAGICK_REGISTER_CONST_LONG("VIRTUALPIXELMETHOD_CONSTANT", ConstantVirtualPixelMethod);  /* deprecated */
 	GMAGICK_REGISTER_CONST_LONG("VIRTUALPIXELMETHOD_EDGE", EdgeVirtualPixelMethod);
@@ -282,6 +360,20 @@ void php_gmagick_initialize_constants()
 	GMAGICK_REGISTER_CONST_LONG("RESOURCETYPE_FILE", FileResource);
 	GMAGICK_REGISTER_CONST_LONG("RESOURCETYPE_MAP", MapResource);
 	GMAGICK_REGISTER_CONST_LONG("RESOURCETYPE_MEMORY", MemoryResource);
+
+#if defined(PixelsResource)
+	GMAGICK_REGISTER_CONST_LONG("RESOURCETYPE_PIXELS", PixelsResource);
+#endif
+#if defined(ThreadsResource)
+	GMAGICK_REGISTER_CONST_LONG("RESOURCETYPE_THREADS", ThreadsResource);
+#endif
+#if defined(WidthResource)
+	GMAGICK_REGISTER_CONST_LONG("RESOURCETYPE_WIDTH", WidthResource);
+#endif
+#if defined(HeightResource)
+	GMAGICK_REGISTER_CONST_LONG("RESOURCETYPE_HEIGHT", HeightResource);
+#endif
+
 	GMAGICK_REGISTER_CONST_LONG("DISPOSE_UNDEFINED", UndefinedDispose);
 	GMAGICK_REGISTER_CONST_LONG("DISPOSE_NONE", NoneDispose);
 	GMAGICK_REGISTER_CONST_LONG("DISPOSE_BACKGROUND", BackgroundDispose);
