@@ -363,7 +363,7 @@ PHP_METHOD(gmagickdraw, getfontfamily);
 PHP_METHOD(gmagickdraw, setfontfamily);
 PHP_METHOD(gmagickdraw, getfontstretch);
 PHP_METHOD(gmagickdraw, setfontstretch);
-PHP_METHOD(gmagickdraw, composite);
+//PHP_METHOD(gmagickdraw, composite);
 PHP_METHOD(gmagickdraw, pathclose);
 PHP_METHOD(gmagickdraw, pathcurvetoabsolute);
 PHP_METHOD(gmagickdraw, pathcurvetorelative);

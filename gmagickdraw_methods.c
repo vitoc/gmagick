@@ -1523,8 +1523,8 @@ PHP_METHOD(gmagickdraw, setfontstretch)
 ///* {{{ proto bool GmagickDraw::composite(int compose, float x, float y, float width, float height, MagickWand magick_wand)
 //	Composites an image onto the current image, using the specified composition operator, specified position, and at the specified size.
 //*/
-PHP_METHOD(gmagickdraw, composite)
-{
+// PHP_METHOD(gmagickdraw, composite)
+// {
 //	php_gmagickdraw_object *internd;
 //	php_gmagick_object *other_image;
 //	zval *magick_obj;
@@ -1546,8 +1546,8 @@ PHP_METHOD(gmagickdraw, composite)
 //
 //	RETURN_TRUE;
 
-	RETURN_FALSE;
-}
+//	RETURN_FALSE;
+//}
 /* }}} */
 
 
