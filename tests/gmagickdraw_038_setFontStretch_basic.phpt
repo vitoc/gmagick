@@ -38,9 +38,9 @@ function setFontStretch($fillColor, $strokeColor, $backgroundColor) {
         $draw->annotate(50, 75 + $offset, "Lorem Ipsum!");
         $offset += 50;
         
-        $currentFontStretch = $draw->setFontStretch($fontStretch);
-        
-        if ($currentFontStretch != $fontStretch) {
+        $currentFontStretch = $draw->getFontStretch($fontStretch);
+
+        if ($currentFontStretch !== $fontStretch) {
             echo "Failed to get correct fontStretch $currentFontStretch != $fontStretch \n";
         }
     }

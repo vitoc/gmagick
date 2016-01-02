@@ -1155,7 +1155,7 @@ PHP_METHOD(gmagickdraw, setstrokedasharray)
 #endif //GMAGICK_LIB_MASK >= 1003000
 
 
-/* {{{ proto bool GmagickDraw::circle(float ox, float oy, float px, float py)
+/* {{{ proto GmagickDraw GmagickDraw::circle(float ox, float oy, float px, float py)
 	Draws a circle on the image.
 */
 PHP_METHOD(gmagickdraw, circle)
@@ -1171,7 +1171,7 @@ PHP_METHOD(gmagickdraw, circle)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 
 	DrawCircle(internd->drawing_wand, ox, oy, px, py);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
@@ -1201,7 +1201,7 @@ PHP_METHOD(gmagickdraw, getclippath)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setClipPath(string clip_mask)
+/* {{{ proto GmagickDraw GmagickDraw::setClipPath(string clip_mask)
 	Associates a named clipping path with the image.  Only the areas drawn on by the clipping path will be modified as long as it remains in effect.
 */
 PHP_METHOD(gmagickdraw, setclippath)
@@ -1241,7 +1241,7 @@ PHP_METHOD(gmagickdraw, getcliprule)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setClipRule(int fill_rule)
+/* {{{ proto GmagickDraw GmagickDraw::setClipRule(int fill_rule)
 	Set the polygon fill rule to be used by the clipping path.
 */
 PHP_METHOD(gmagickdraw, setcliprule)
@@ -1257,7 +1257,7 @@ PHP_METHOD(gmagickdraw, setcliprule)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawSetClipRule(internd->drawing_wand, fill_rule);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
@@ -1280,7 +1280,7 @@ PHP_METHOD(gmagickdraw, getclipunits)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setClipUnits(int clip_units)
+/* {{{ proto GmagickDraw GmagickDraw::setClipUnits(int clip_units)
 	Sets the interpretation of clip path units.
 */
 PHP_METHOD(gmagickdraw, setclipunits)
@@ -1296,11 +1296,11 @@ PHP_METHOD(gmagickdraw, setclipunits)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawSetClipUnits(internd->drawing_wand, units);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::color(float x, float y, int paintMethod)
+/* {{{ proto GmagickDraw GmagickDraw::color(float x, float y, int paintMethod)
 	Draws color on image using the current fill color, starting at specified position, and using specified paint method. The available paint methods are:
 */
 PHP_METHOD(gmagickdraw, color)
@@ -1317,7 +1317,7 @@ PHP_METHOD(gmagickdraw, color)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawColor(internd->drawing_wand, x, y, paint_method);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
@@ -1342,7 +1342,7 @@ PHP_METHOD(gmagickdraw, comment)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setFillPatternURL(string fill_url)
+/* {{{ proto GmagickDraw GmagickDraw::setFillPatternURL(string fill_url)
 	Sets the URL to use as a fill pattern for filling objects. Only local URLs ("#identifier") are supported at this time.
 	These local URLs are normally created by defining a named fill pattern with DrawPushPattern/DrawPopPattern.
 */
@@ -1384,7 +1384,7 @@ PHP_METHOD(gmagickdraw, getfillrule)
 /* }}} */
 
 
-/* {{{ proto bool GmagickDraw::setFillRule(int fill_rule)
+/* {{{ proto GmagickDraw GmagickDraw::setFillRule(int fill_rule)
 	Sets the fill rule to use while drawing polygons.
 */
 PHP_METHOD(gmagickdraw, setfillrule)
@@ -1400,7 +1400,7 @@ PHP_METHOD(gmagickdraw, setfillrule)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawSetFillRule(internd->drawing_wand, fill_rule);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
@@ -1453,7 +1453,7 @@ static zend_bool php_gmagick_check_font(char *font, int font_len TSRMLS_DC)
 }
 
 
-/* {{{ proto bool GmagickDraw::setFontFamily(string font_family)
+/* {{{ proto GmagickDraw GmagickDraw::setFontFamily(string font_family)
 	Sets the font family to use when annotating with text.
 */
 PHP_METHOD(gmagickdraw, setfontfamily)
@@ -1497,7 +1497,7 @@ PHP_METHOD(gmagickdraw, getfontstretch)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setFontStretch(int fontStretch)
+/* {{{ proto GmagickDraw GmagickDraw::setFontStretch(int fontStretch)
 	Sets the font stretch to use when annotating with text. The AnyStretch enumeration acts as a wild-card "don't care" option.
 */
 PHP_METHOD(gmagickdraw, setfontstretch)
@@ -1551,7 +1551,7 @@ PHP_METHOD(gmagickdraw, setfontstretch)
 /* }}} */
 
 
-/* {{{ proto bool GmagickDraw::pathClose()
+/* {{{ proto GmagickDraw GmagickDraw::pathClose()
 	Adds a path element to the current path which closes the current subpath by drawing a straight line from the current point to the current subpath's most recent starting point (usually, the most recent moveto point).
 */
 PHP_METHOD(gmagickdraw, pathclose)
@@ -1564,11 +1564,11 @@ PHP_METHOD(gmagickdraw, pathclose)
 	
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	DrawPathClose(internd->drawing_wand);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::pathCurveToAbsolute(float x1, float y1, float x2, float y2, float x, float y)
+/* {{{ proto GmagickDraw GmagickDraw::pathCurveToAbsolute(float x1, float y1, float x2, float y2, float x, float y)
 	Draws a cubic Bezier curve from the current point to (x,y) using (x1,y1) as the control point at the beginning of the curve and (x2,y2) as the control point at the end of the curve using absolute coordinates. At the end of the command, the new current point becomes the final (x,y) coordinate pair used in the polybezier.
 */
 PHP_METHOD(gmagickdraw, pathcurvetoabsolute)
@@ -1584,11 +1584,11 @@ PHP_METHOD(gmagickdraw, pathcurvetoabsolute)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathCurveToAbsolute(internd->drawing_wand, x1, y1, x2, y2, x, y);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::pathCurveToRelative(float x1, float y1, float x2, float y2, float x, float y)
+/* {{{ proto GmagickDraw GmagickDraw::pathCurveToRelative(float x1, float y1, float x2, float y2, float x, float y)
 	Draws a cubic Bezier curve from the current point to (x,y) using (x1,y1) as the control point at the beginning of the curve and (x2,y2) as the control point at the end of the curve using relative coordinates. At the end of the command, the new current point becomes the final (x,y) coordinate pair used in the polybezier.
 */
 PHP_METHOD(gmagickdraw, pathcurvetorelative)
@@ -1604,11 +1604,11 @@ PHP_METHOD(gmagickdraw, pathcurvetorelative)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathCurveToRelative(internd->drawing_wand, x1, y1, x2, y2, x, y);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::pathCurveToQuadraticBezierAbsolute(float x1, float y1, float x, float y)
+/* {{{ proto GmagickDraw GmagickDraw::pathCurveToQuadraticBezierAbsolute(float x1, float y1, float x, float y)
 	Draws a quadratic Bezier curve from the current point to (x,y) using (x1,y1) as the control point using absolute coordinates. At the end of the command, the new current point becomes the final (x,y) coordinate pair used in the polybezier.
 */
 PHP_METHOD(gmagickdraw, pathcurvetoquadraticbezierabsolute)
@@ -1624,11 +1624,11 @@ PHP_METHOD(gmagickdraw, pathcurvetoquadraticbezierabsolute)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathCurveToQuadraticBezierAbsolute(internd->drawing_wand, x1, y1, x, y);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::pathCurveToQuadraticBezierRelative(float x1, float y1, float x, float y)
+/* {{{ proto GmagickDraw GmagickDraw::pathCurveToQuadraticBezierRelative(float x1, float y1, float x, float y)
 	Draws a quadratic Bezier curve from the current point to (x,y) using (x1,y1) as the control point using relative coordinates. At the end of the command, the new current point becomes the final (x,y) coordinate pair used in the polybezier.
 */
 PHP_METHOD(gmagickdraw, pathcurvetoquadraticbezierrelative)
@@ -1644,11 +1644,11 @@ PHP_METHOD(gmagickdraw, pathcurvetoquadraticbezierrelative)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathCurveToQuadraticBezierRelative(internd->drawing_wand, x1, y1, x, y);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::pathCurveToQuadraticBezierSmoothAbsolute(float x, float y)
+/* {{{ proto GmagickDraw GmagickDraw::pathCurveToQuadraticBezierSmoothAbsolute(float x, float y)
 	Draws a quadratic Bezier curve (using relative coordinates) from the current point to (x,y). The control point is assumed to be the reflection of the control point on the previous command relative to the current point. (If there is no previous command or if the previous command was not a DrawPathCurveToQuadraticBezierAbsolute, DrawPathCurveToQuadraticBezierRelative, DrawPathCurveToQuadraticBezierSmoothAbsolut or DrawPathCurveToQuadraticBezierSmoothRelative, assume the control point is coincident with the current point.). At the end of the command, the new current point becomes the final (x,y) coordinate pair used in the polybezier.
 */
 PHP_METHOD(gmagickdraw, pathcurvetoquadraticbeziersmoothabsolute)
@@ -1664,11 +1664,11 @@ PHP_METHOD(gmagickdraw, pathcurvetoquadraticbeziersmoothabsolute)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathCurveToQuadraticBezierSmoothAbsolute(internd->drawing_wand, x, y);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::pathCurveToQuadraticBezierSmoothRelative(float x, float y)
+/* {{{ proto GmagickDraw GmagickDraw::pathCurveToQuadraticBezierSmoothRelative(float x, float y)
 	Draws a quadratic Bezier curve (using relative coordinates) from the current point to (x, y). The control point is assumed to be the reflection of the control point on the previous command relative to the current point. (If there is no previous command or if the previous command was not a DrawPathCurveToQuadraticBezierAbsolute, DrawPathCurveToQuadraticBezierRelative, DrawPathCurveToQuadraticBezierSmoothAbsolut or DrawPathCurveToQuadraticBezierSmoothRelative, assume the control point is coincident with the current point). At the end of the command, the new current point becomes the final (x, y) coordinate pair used in the polybezier.
 */
 PHP_METHOD(gmagickdraw, pathcurvetoquadraticbeziersmoothrelative)
@@ -1684,11 +1684,11 @@ PHP_METHOD(gmagickdraw, pathcurvetoquadraticbeziersmoothrelative)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathCurveToQuadraticBezierSmoothRelative(internd->drawing_wand, x, y);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::pathCurveToSmoothAbsolute(float x2, float y2, float x, float y)
+/* {{{ proto GmagickDraw GmagickDraw::pathCurveToSmoothAbsolute(float x2, float y2, float x, float y)
 	Draws a cubic Bezier curve from the current point to (x,y) using absolute coordinates. The first control point is assumed to be the reflection of the second control point on the previous command relative to the current point. (If there is no previous command or if the previous command was not an DrawPathCurveToAbsolute, DrawPathCurveToRelative, DrawPathCurveToSmoothAbsolute or DrawPathCurveToSmoothRelative, assume the first control point is coincident with the current point.) (x2,y2) is the second control point (i.e., the control point at the end of the curve). At the end of the command, the new current point becomes the final (x,y) coordinate pair used in the polybezier.
 */
 PHP_METHOD(gmagickdraw, pathcurvetosmoothabsolute)
@@ -1704,11 +1704,11 @@ PHP_METHOD(gmagickdraw, pathcurvetosmoothabsolute)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathCurveToSmoothAbsolute(internd->drawing_wand, x1, y1, x, y);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::pathCurveToSmoothRelative(float x2, float y2, float x, float y)
+/* {{{ proto GmagickDraw GmagickDraw::pathCurveToSmoothRelative(float x2, float y2, float x, float y)
 	Draws a cubic Bezier curve from the current point to (x,y) using relative coordinates. The first control point is assumed to be the reflection of the second control point on the previous command relative to the current point. (If there is no previous command or if the previous command was not an DrawPathCurveToAbsolute, DrawPathCurveToRelative, DrawPathCurveToSmoothAbsolute or DrawPathCurveToSmoothRelative, assume the first control point is coincident with the current point.) (x2,y2) is the second control point (i.e., the control point at the end of the curve). At the end of the command, the new current point becomes the final (x,y) coordinate pair used in the polybezier.
 */
 PHP_METHOD(gmagickdraw, pathcurvetosmoothrelative)
@@ -1724,11 +1724,11 @@ PHP_METHOD(gmagickdraw, pathcurvetosmoothrelative)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathCurveToSmoothRelative(internd->drawing_wand, x1, y1, x, y);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::pathEllipticArcAbsolute(float rx, float ry, float x_axis_rotation, bool large_arc_flag, bool sweep_flag, float x, float y)
+/* {{{ proto GmagickDraw GmagickDraw::pathEllipticArcAbsolute(float rx, float ry, float x_axis_rotation, bool large_arc_flag, bool sweep_flag, float x, float y)
 	Draws an elliptical arc from the current point to (x, y) using absolute coordinates. The size and orientation of the ellipse are defined by two radii (rx, ry) and an xAxisRotation, which indicates how the ellipse as a whole is rotated relative to the current coordinate system. The center (cx, cy) of the ellipse is calculated automatically to satisfy the constraints imposed by the other parameters. largeArcFlag and sweepFlag contribute to the automatic calculations and help determine how the arc is drawn. If largeArcFlag is true then draw the larger of the available arcs. If sweepFlag is true, then draw the arc matching a clock-wise rotation.
 */
 PHP_METHOD(gmagickdraw, pathellipticarcabsolute)
@@ -1745,11 +1745,11 @@ PHP_METHOD(gmagickdraw, pathellipticarcabsolute)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	DrawPathEllipticArcAbsolute(internd->drawing_wand, rx, ry, x_axis_rotation, large_arc, sweep, x, y);
 
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::pathEllipticArcRelative(float rx, float ry, float x_axis_rotation, bool large_arc_flag, bool sweep_flag, float x, float y)
+/* {{{ proto GmagickDraw GmagickDraw::pathEllipticArcRelative(float rx, float ry, float x_axis_rotation, bool large_arc_flag, bool sweep_flag, float x, float y)
 	Draws an elliptical arc from the current point to (x, y) using relative coordinates. The size and orientation of the ellipse are defined by two radii (rx, ry) and an xAxisRotation, which indicates how the ellipse as a whole is rotated relative to the current coordinate system. The center (cx, cy) of the ellipse is calculated automatically to satisfy the constraints imposed by the other parameters. largeArcFlag and sweepFlag contribute to the automatic calculations and help determine how the arc is drawn. If largeArcFlag is true then draw the larger of the available arcs. If sweepFlag is true, then draw the arc matching a clock-wise rotation.
 */
 PHP_METHOD(gmagickdraw, pathellipticarcrelative)
@@ -1766,12 +1766,12 @@ PHP_METHOD(gmagickdraw, pathellipticarcrelative)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	DrawPathEllipticArcRelative(internd->drawing_wand, rx, ry, x_axis_rotation, large_arc, sweep, x, y);
 
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 
-/* {{{ proto bool GmagickDraw::pathMoveToAbsolute(float x, float y)
+/* {{{ proto GmagickDraw GmagickDraw::pathMoveToAbsolute(float x, float y)
 	Starts a new sub-path at the given coordinate using absolute coordinates. The current point then becomes the specified coordinate.
 */
 PHP_METHOD(gmagickdraw, pathmovetoabsolute)
@@ -1787,11 +1787,11 @@ PHP_METHOD(gmagickdraw, pathmovetoabsolute)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathMoveToAbsolute(internd->drawing_wand, x, y);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::pathMoveToRelative(float x, float y)
+/* {{{ proto GmagickDraw GmagickDraw::pathMoveToRelative(float x, float y)
 	Starts a new sub-path at the given coordinate using relative coordinates. The current point then becomes the specified coordinate.
 */
 PHP_METHOD(gmagickdraw, pathmovetorelative)
@@ -1807,12 +1807,12 @@ PHP_METHOD(gmagickdraw, pathmovetorelative)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathMoveToRelative(internd->drawing_wand, x, y);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 
-/* {{{ proto bool GmagickDraw::pathLineToAbsolute(float x, float y)
+/* {{{ proto GmagickDraw GmagickDraw::pathLineToAbsolute(float x, float y)
 	Draws a line path from the current point to the given coordinate using absolute coordinates. The coordinate then becomes the new current point.
 */
 PHP_METHOD(gmagickdraw, pathlinetoabsolute)
@@ -1828,11 +1828,11 @@ PHP_METHOD(gmagickdraw, pathlinetoabsolute)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathLineToAbsolute(internd->drawing_wand, x, y);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::pathLineToRelative(float x, float y)
+/* {{{ proto GmagickDraw GmagickDraw::pathLineToRelative(float x, float y)
 	Draws a line path from the current point to the given coordinate using relative coordinates. The coordinate then becomes the new current point.
 */
 PHP_METHOD(gmagickdraw, pathlinetorelative)
@@ -1848,12 +1848,12 @@ PHP_METHOD(gmagickdraw, pathlinetorelative)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathLineToRelative(internd->drawing_wand, x, y);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 
-/* {{{ proto bool GmagickDraw::pathLineToHorizontalAbsolute(float x)
+/* {{{ proto GmagickDraw GmagickDraw::pathLineToHorizontalAbsolute(float x)
 	Draws a horizontal line path from the current point to the target point using absolute coordinates.  The target point then becomes the new current point.
 */
 PHP_METHOD(gmagickdraw, pathlinetohorizontalabsolute)
@@ -1869,11 +1869,11 @@ PHP_METHOD(gmagickdraw, pathlinetohorizontalabsolute)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathLineToHorizontalAbsolute(internd->drawing_wand, y);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::pathLineToHorizontalRelative(float x)
+/* {{{ proto GmagickDraw GmagickDraw::pathLineToHorizontalRelative(float x)
 	Draws a horizontal line path from the current point to the target point using relative coordinates.  The target point then becomes the new current point.
 */
 PHP_METHOD(gmagickdraw, pathlinetohorizontalrelative)
@@ -1889,13 +1889,13 @@ PHP_METHOD(gmagickdraw, pathlinetohorizontalrelative)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathLineToHorizontalRelative(internd->drawing_wand, x);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 
 
-/* {{{ proto bool GmagickDraw::pathLineToVerticalAbsolute(float y)
+/* {{{ proto GmagickDraw GmagickDraw::pathLineToVerticalAbsolute(float y)
 	Draws a vertical line path from the current point to the target point using absolute coordinates.  The target point then becomes the new current point.
 */
 PHP_METHOD(gmagickdraw, pathlinetoverticalabsolute)
@@ -1911,11 +1911,11 @@ PHP_METHOD(gmagickdraw, pathlinetoverticalabsolute)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathLineToVerticalAbsolute(internd->drawing_wand, y);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::pathLineToVerticalRelative(float y)
+/* {{{ proto GmagickDraw GmagickDraw::pathLineToVerticalRelative(float y)
 	Draws a vertical line path from the current point to the target point using relative coordinates.  The target point then becomes the new current point.
 */
 PHP_METHOD(gmagickdraw, pathlinetoverticalrelative)
@@ -1931,13 +1931,13 @@ PHP_METHOD(gmagickdraw, pathlinetoverticalrelative)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathLineToVerticalRelative(internd->drawing_wand, y);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 
 
-/* {{{ proto bool GmagickDraw::pathStart()
+/* {{{ proto GmagickDraw GmagickDraw::pathStart()
 	Declares the start of a path drawing list which is terminated by a matching DrawPathFinish() command. All other DrawPath commands must be enclosed between a and a DrawPathFinish() command. This is because path drawing commands are subordinate commands and they do not function by themselves.
 */
 PHP_METHOD(gmagickdraw, pathstart)
@@ -1950,11 +1950,11 @@ PHP_METHOD(gmagickdraw, pathstart)
 	
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	DrawPathStart(internd->drawing_wand);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool ImagickDraw::pathFinish()
+/* {{{ proto GmagickDraw GmagickDraw::pathFinish()
 	Terminates the current path.
 */  
 PHP_METHOD(gmagickdraw, pathfinish)
@@ -1967,13 +1967,13 @@ PHP_METHOD(gmagickdraw, pathfinish)
 	
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	DrawPathFinish(internd->drawing_wand);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 
 
-/* {{{ proto bool GmagickDraw::popClipPath()
+/* {{{ proto GmagickDraw GmagickDraw::popClipPath()
 	Terminates a clip path definition.
 */
 PHP_METHOD(gmagickdraw, popclippath)
@@ -1986,12 +1986,12 @@ PHP_METHOD(gmagickdraw, popclippath)
 	
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	DrawPopClipPath(internd->drawing_wand);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 
-/* {{{ proto bool GmagickDraw::popDefs()
+/* {{{ proto GmagickDraw GmagickDraw::popDefs()
 	Terminates a definition list
 */
 PHP_METHOD(gmagickdraw, popdefs)
@@ -2004,12 +2004,12 @@ PHP_METHOD(gmagickdraw, popdefs)
 	
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	DrawPopDefs(internd->drawing_wand);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 
-/* {{{ proto bool GmagickDraw::popPattern()
+/* {{{ proto GmagickDraw GmagickDraw::popPattern()
 	Terminates a pattern definition.
 */
 PHP_METHOD(gmagickdraw, poppattern)
@@ -2023,11 +2023,11 @@ PHP_METHOD(gmagickdraw, poppattern)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	DrawPopPattern(internd->drawing_wand);
 
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::pushClipPath(string clip_mask_id)
+/* {{{ proto GmagickDraw GmagickDraw::pushClipPath(string clip_mask_id)
 	Starts a clip path definition which is comprized of any number of drawing commands and terminated by a DrawPopClipPath() command.
 */
 PHP_METHOD(gmagickdraw, pushclippath)
@@ -2044,11 +2044,11 @@ PHP_METHOD(gmagickdraw, pushclippath)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPushClipPath(internd->drawing_wand, clip_mask);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::pushDefs()
+/* {{{ proto GmagickDraw GmagickDraw::pushDefs()
 	Indicates that commands up to a terminating DrawPopDefs() command create named elements (e.g. clip-paths, textures, etc.) which may safely be processed earlier for the sake of efficiency.
 */
 PHP_METHOD(gmagickdraw, pushdefs)
@@ -2061,11 +2061,11 @@ PHP_METHOD(gmagickdraw, pushdefs)
 	
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	DrawPushDefs(internd->drawing_wand);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::pushPattern(string pattern_id, float x, float y, float width, float height)
+/* {{{ proto GmagickDraw GmagickDraw::pushPattern(string pattern_id, float x, float y, float width, float height)
 	Indicates that subsequent commands up to a DrawPopPattern() command comprise the definition of a named pattern. The pattern space is assigned top left corner coordinates, a width and height, and becomes its own drawing space.  Anything which can be drawn may be used in a pattern definition. Named patterns may be used as stroke or brush definitions.
 */
 PHP_METHOD(gmagickdraw, pushpattern)
@@ -2083,12 +2083,12 @@ PHP_METHOD(gmagickdraw, pushpattern)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPushPattern(internd->drawing_wand, pattern_id, x, y, width, height);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 
-/* {{{ proto bool GmagickDraw::skewX(float degrees)
+/* {{{ proto GmagickDraw GmagickDraw::skewX(float degrees)
 	Skews the current coordinate system in the horizontal direction.
 */
 PHP_METHOD(gmagickdraw, skewx)
@@ -2104,11 +2104,11 @@ PHP_METHOD(gmagickdraw, skewx)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 
 	DrawSkewX(internd->drawing_wand, degrees);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::skewY(float degrees)
+/* {{{ proto GmagickDraw GmagickDraw::skewY(float degrees)
 	Skews the current coordinate system in the vertical direction.
 */
 PHP_METHOD(gmagickdraw, skewy)
@@ -2124,12 +2124,12 @@ PHP_METHOD(gmagickdraw, skewy)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 
 	DrawSkewY(internd->drawing_wand, degrees);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 
-/* {{{ proto bool GmagickDraw::setStrokePatternURL(string stroke_url)
+/* {{{ proto GmagickDraw GmagickDraw::setStrokePatternURL(string stroke_url)
 	Sets the pattern used for stroking object outlines.
 */
 PHP_METHOD(gmagickdraw, setstrokepatternurl)
@@ -2146,7 +2146,7 @@ PHP_METHOD(gmagickdraw, setstrokepatternurl)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	DrawSetStrokePatternURL(internd->drawing_wand, url);
 
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
@@ -2156,15 +2156,16 @@ PHP_METHOD(gmagickdraw, setstrokepatternurl)
 PHP_METHOD(gmagickdraw, gettextantialias)
 {
 	php_gmagickdraw_object *internd;
+	unsigned int text_anti_alias;
 
 	if (zend_parse_parameters_none() == FAILURE) {
 		return;
 	}
 
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
-	DrawGetTextAntialias(internd->drawing_wand);
+	text_anti_alias = DrawGetTextAntialias(internd->drawing_wand);
 
-	GMAGICK_CHAIN_METHOD;
+	RETURN_BOOL(text_anti_alias);
 }
 /* }}} */
 
@@ -2219,7 +2220,7 @@ PHP_METHOD(gmagickdraw, gettextundercolor)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setTextUnderColor(PixelWand under_wand)
+/* {{{ proto GmagickDraw GmagickDraw::setTextUnderColor(PixelWand under_wand)
 	Specifies the color of a background rectangle to place under text annotations.
 */
 PHP_METHOD(gmagickdraw, settextundercolor)
@@ -2238,13 +2239,13 @@ PHP_METHOD(gmagickdraw, settextundercolor)
 
 	DrawSetTextUnderColor(internd->drawing_wand, internp->pixel_wand);
 
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 
 
-/* {{{ proto bool GmagickDraw::translate(float x, float y)
+/* {{{ proto GmagickDraw GmagickDraw::translate(float x, float y)
 	Applies a translation to the current coordinate system which moves the coordinate system origin to the specified coordinate.
 */
 PHP_METHOD(gmagickdraw, translate)
@@ -2260,11 +2261,11 @@ PHP_METHOD(gmagickdraw, translate)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 
 	DrawTranslate(internd->drawing_wand, x, y);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setViewbox(float x1, float y1, float x2, float y2 )
+/* {{{ proto GmagickDraw GmagickDraw::setViewbox(float x1, float y1, float x2, float y2 )
 	Sets the overall canvas size to be recorded with the drawing vector data. Usually this will be specified using the same size as the canvas image. When the vector data is saved to SVG or MVG formats, the viewbox is use to specify the size of the canvas image that a viewer will render the vector data on.
 */
 PHP_METHOD(gmagickdraw, setviewbox)
@@ -2280,10 +2281,10 @@ PHP_METHOD(gmagickdraw, setviewbox)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 
 	DrawSetViewbox(internd->drawing_wand, x1, y1, x2, y2);
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 
-/* {{{ proto bool GmagickDraw::popGraphicContext()
+/* {{{ proto GmagickDraw GmagickDraw::popGraphicContext()
 	Destroys the current DrawingWand in the stack, and returns to the previously pushed DrawingWand. Multiple DrawingWands may exist. It is an error to attempt to pop more DrawingWands than have been pushed, and it is proper form to pop all DrawingWands which have been pushed.
 */
 PHP_METHOD(gmagickdraw, popGraphicContext)
@@ -2297,12 +2298,12 @@ PHP_METHOD(gmagickdraw, popGraphicContext)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	DrawPopGraphicContext(internd->drawing_wand);
 
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 
-/* {{{ proto bool GmagickDraw::pushGraphicContext()
+/* {{{ proto GmagickDraw GmagickDraw::pushGraphicContext()
 	Clones the current DrawingWand to create a new DrawingWand, which is then added to the DrawingWand stack. The original drawing DrawingWand(s) may be returned to by invoking PopDrawingWand(). The DrawingWands are stored on a DrawingWand stack. For every Pop there must have already been an equivalent Push.
 */
 PHP_METHOD(gmagickdraw, pushGraphicContext)
@@ -2316,6 +2317,6 @@ PHP_METHOD(gmagickdraw, pushGraphicContext)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	DrawPushGraphicContext(internd->drawing_wand);
 
-	RETURN_TRUE;
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */

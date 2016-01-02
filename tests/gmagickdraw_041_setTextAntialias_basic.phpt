@@ -24,8 +24,11 @@ function setTextAntialias($fillColor, $backgroundColor) {
     $draw->setTextAntialias(true);
     $draw->annotate(5, 65, "Lorem Ipsum!");
 
-    if ($draw->getTextAntialias() != true) {
-        echo "Failed to get textAntiAlias setting\n";
+    $currentValue = $draw->getTextAntialias();
+
+    if ($currentValue !== true) {
+        echo "Failed to get textAntiAlias setting, which should be true\n";
+        var_dump($currentValue);
     }
 
     $gmagick = new \Gmagick();

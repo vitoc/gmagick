@@ -31,7 +31,7 @@ function setClipRule($strokeColor, $fillColor, $backgroundColor) {
     $draw->rectangle(200, 200, 300, 300);
     
     $clipRule = $draw->getClipRule();
-    if ($clipRule != \Gmagick::FILLRULE_EVENODD) {
+    if ($clipRule !== \Gmagick::FILLRULE_EVENODD) {
         echo "Failed to get correct clipRule $clipRule != \Gmagick::FILLRULE_EVENODD \n";
     }
 

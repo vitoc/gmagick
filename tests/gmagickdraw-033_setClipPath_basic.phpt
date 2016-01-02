@@ -27,7 +27,7 @@ function setClipPath($strokeColor, $fillColor, $backgroundColor) {
     
     $storedPathName = $draw->getClipPath();
     
-    if (strcmp($storedPathName, $clipPathName) != 0) {
+    if (strcmp($storedPathName, $clipPathName) !== 0) {
         echo "Error retrieving clipPath: $storedPathName != $clipPathName \n";
     }
 

@@ -24,7 +24,7 @@ function setClipUnits($strokeColor, $fillColor, $backgroundColor) {
     $draw->popClipPath();
     $draw->setClipPath($clipPathName);
     $clipUnits = $draw->getClipUnits();
-    if ($clipUnits != \Gmagick::RESOLUTION_PIXELSPERINCH) {
+    if ($clipUnits !== \Gmagick::RESOLUTION_PIXELSPERINCH) {
         echo "Failed to get correct clipUnits $clipRule != \Gmagick::RESOLUTION_PIXELSPERINCH \n";
     }
 

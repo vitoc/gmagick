@@ -52,7 +52,7 @@ function setFillRule($fillColor, $strokeColor, $backgroundColor) {
         
         $currentFillRule = $draw->getFillRule();
         
-        if ($currentFillRule != $fillRules[$x]) {
+        if ($currentFillRule !== $fillRules[$x]) {
             echo "Failed to get correct fillRule $currentFillRule != ".$fillRules[$x]." \n";
         }
 
