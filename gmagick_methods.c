@@ -36,7 +36,7 @@ static MagickBool SafeModeMonitor(const ConfirmAccessMode mode,
 #endif	
 	return MagickPass;
 }
-#endif
+
 static MagickBool OpenBaseDirMonitor(const ConfirmAccessMode mode,
 					const char *path,
 					ExceptionInfo *exception)
@@ -47,7 +47,8 @@ static MagickBool OpenBaseDirMonitor(const ConfirmAccessMode mode,
 	}
 	return MagickPass;
 }
-#endif
+#endif // #if PHP_VERSION_ID < 50399 
+#endif // #if GMAGICK_LIB_MASK >= 1004000
 
 /* {{{ Gmagick Gmagick::read(string filename)
 	Reads image
