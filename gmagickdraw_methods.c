@@ -2214,7 +2214,7 @@ PHP_METHOD(gmagickdraw, gettextundercolor)
 
 	object_init_ex(return_value, php_gmagickpixel_sc_entry);
 	internp = Z_GMAGICKPIXEL_OBJ_P(return_value);
-	php_imagick_replace_pixelwand(internp, tmp_wand);
+	GMAGICKPIXEL_REPLACE_PIXELWAND(internp, tmp_wand);
 
 	return;
 }
@@ -2228,7 +2228,6 @@ PHP_METHOD(gmagickdraw, settextundercolor)
 	zval *param;
 	php_gmagickdraw_object *internd;
 	php_gmagickpixel_object *internp;
-	zend_bool allocated;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z", &param) == FAILURE) {
 		return;
