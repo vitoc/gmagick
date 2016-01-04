@@ -32,7 +32,7 @@ $gmagick->getImageIndex();
 $gmagick->getImageInterlaceScheme();
 $gmagick->getImageIterations();
 $gmagick->getImageMatteColor();
-$gmagick->getImagePage();
+
 $gmagick->getImageRedPrimary();
 $gmagick->getImageRenderingIntent();
 $gmagick->getImageResolution();
@@ -76,6 +76,10 @@ if (method_exists($gmagick, 'setImageGravity')) {
 
 if (method_exists($gmagick, 'getImageGravity')) {
 	$gmagick->getImageGravity();
+}
+
+if (method_exists($gmagick, 'getImagePage')) {
+	$gmagick->getImagePage();
 }
 
 
