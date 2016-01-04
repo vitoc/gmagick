@@ -2702,7 +2702,7 @@ PHP_METHOD(gmagick, setimagetype)
 }
 /* }}} */
 
-#ifdef HAVE_MAGICK_SET_IMAGE_PAGE
+#ifdef GMAGICK_HAVE_SET_IMAGE_PAGE
 /* {{{ proto bool Imagick::setImagePage(int width, int height, int x, int y)
 	Sets the page geometry of the image.
 */
@@ -2729,7 +2729,7 @@ PHP_METHOD(gmagick, setimagepage)
 	RETURN_TRUE;
 }
 /* }}} */
-#endif //HAVE_MAGICK_SET_IMAGE_PAGE 
+#endif //GMAGICK_HAVE_SET_IMAGE_PAGE 
 
 /* {{{ proto int Gmagick::getImageUnits()
 	Gets the image units of resolution.
