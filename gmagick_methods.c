@@ -5226,6 +5226,7 @@ PHP_METHOD(gmagick, getimagecolormapcolor)
 }
 /* }}} */
 
+#ifdef HAVE_GMAGICK_SET_IMAGE_GRAVITY
 /* {{{ proto int Gmagick::getImageGravity()
 	Gets the image gravity
 */
@@ -5243,6 +5244,7 @@ PHP_METHOD(gmagick, getimagegravity)
 	RETVAL_LONG(MagickGetImageGravity(intern->magick_wand));
 }
 /* }}} */
+#endif
 
 /* {{{ proto int Gmagick::getImageVirtualPixelMethod()
 	Returns the virtual pixel method for the sepcified image.
@@ -5501,7 +5503,7 @@ PHP_METHOD(gmagick, setimagecolormapcolor)
 
 }
 /* }}} */
-
+#ifdef HAVE_GMAGICK_SET_IMAGE_GRAVITY
 /* {{{ proto bool Gmagick::setImageGravity(int GRAVITY)
 	Sets the image gravity
 */
@@ -5528,6 +5530,7 @@ PHP_METHOD(gmagick, setimagegravity)
 	RETURN_TRUE;
 }
 /* }}} */
+#endif
 
 /* {{{ proto bool Gmagick::setImageMatteColor(GmagickPixel matte)
 	Sets the image matte color.

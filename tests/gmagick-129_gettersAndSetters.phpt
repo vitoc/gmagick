@@ -11,7 +11,7 @@ $gmagick = new \Gmagick("magick:logo");
 
 
 
-$gmagick->getImageGravity();
+
 $gmagick->getImageVirtualPixelMethod();
 $gmagick->getImageBackgroundColor();
 $gmagick->getImageBluePrimary();
@@ -50,7 +50,7 @@ $gmagick->getSize();
 $gmagick->getImageGeometry();
 $gmagick->setImageAttribute("comment", "this is a comment");
 $gmagick->setImageColormapColor(0, 'red');
-$gmagick->setImageGravity(\GMAGICK::GRAVITY_SOUTHWEST);
+
 $gmagick->setImageMatteColor('pink');
 $gmagick->setDepth(16);
 $gmagick->setImageFuzz(0.1 * \GMAGICK::QUANTUM);
@@ -69,6 +69,15 @@ $gmagick->getImageChannelMean(\GMAGICK::CHANNEL_RED);
 $gmagick->getImageColormapColor(0);
 $gmagick->getImageChannelDepth(\GMAGICK::CHANNEL_RED);
 $gmagick->getResourceLimit(\GMAGICK::RESOURCETYPE_MEMORY);
+
+if (method_exists($gmagick, 'setImageGravity')) {
+	$gmagick->setImageGravity(\GMAGICK::GRAVITY_SOUTHWEST);
+}
+
+if (method_exists($gmagick, 'getImageGravity')) {
+	$gmagick->getImageGravity();
+}
+
 
 // Don't know how to call this successfully.
 // $gmagick->get ImageProfile("ICC");
