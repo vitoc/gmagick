@@ -21,3 +21,20 @@ $ phpize
 $ ./configure
 $ make
 $ make install
+
+
+Functions not supported
+=======================
+
+The functions listed below are deliberately not part of the Gmagick extension. Other functions that are present in the GraphicsMagick library but not exposed by Gmagick are likely to be added in the future.
+
+MagickDisplayImage - only useful with X terminals.
+MagickDisplayImages - only useful with X terminals.
+MagickGetConfigureInfo - not implemented in GraphicsMagick
+MagickFxImage - not implemented in GraphicsMagick
+MagickFxImageChannel - not implemented in GraphicsMagick
+MagickGetImageSize - just get the image a string and do strlen
+MagickPreviewImages - not implemented in GraphicsMagick
+MagickSetPassphrase - use real encryption if you need to protect data
+MagickTintImage - not implemented in GraphicsMagick
+MagickTransformImage - this is a 'helper' function which duplicates other easier to use functions.

@@ -19,6 +19,7 @@
 
 #include "php_gmagick.h"
 #include "php_gmagick_macros.h"
+#include "php_gmagick_helpers.h"
 
 
 /* {{{ void php_gmagick_initialize_constants()
@@ -183,6 +184,11 @@ void php_gmagick_initialize_constants()
 #if defined(JBIG2Compression)
 	GMAGICK_REGISTER_CONST_LONG("COMPRESSION_JBIG2", JBIG2Compression);
 #endif
+ 
+	GMAGICK_REGISTER_CONST_LONG("INTERLACE_NONE", NoInterlace); //Don't interlace image (RGBRGBRGBRGBRGBRGB...)
+	GMAGICK_REGISTER_CONST_LONG("INTERLACE_LINE", LineInterlace); //Use scanline interlacing (RRR...GGG...BBB...RRR...GGG...BBB...)
+	GMAGICK_REGISTER_CONST_LONG("INTERLACE_PLANE", PlaneInterlace);//Use plane interlacing (RRRRRR...GGGGGG...BBBBBB...)
+	GMAGICK_REGISTER_CONST_LONG("INTERLACE_PARTITION", PartitionInterlace);//Similar to plane interlacing except that the different planes are saved to individual files (e.g. image.R, image.G, and image.B)
 
 	GMAGICK_REGISTER_CONST_LONG("PAINT_POINT", PointMethod);
 	GMAGICK_REGISTER_CONST_LONG("PAINT_REPLACE", ReplaceMethod);
@@ -391,6 +397,13 @@ void php_gmagick_initialize_constants()
 #endif
 #if defined(QuantumDepth)
 	GMAGICK_REGISTER_CONST_LONG("QUANTUM_DEPTH", QuantumDepth);
+
+#if QuantumDepth == 32
+	//Avoid overflowing on 32 bit systess
+	GMAGICK_REGISTER_CONST_LONG("QUANTUM", 0xffffffff);
+#else
+	GMAGICK_REGISTER_CONST_LONG("QUANTUM", ((2 << QuantumDepth) - 1));
+#endif
 #endif
 
 	/* from magick/version.h */
@@ -684,7 +697,7 @@ zend_bool php_gmagick_ensure_not_empty(MagickWand *magick_wand)
 	return 1;
 }
 
-/** double *php_imagick_zval_to_double_array(zval *param_array, long *num_elements TSRMLS_DC)
+/** double *php_gmagick_zval_to_double_array(zval *param_array, long *num_elements TSRMLS_DC)
 */
 double *php_gmagick_zval_to_double_array(zval *param_array, long *num_elements TSRMLS_DC)
 {
@@ -711,4 +724,54 @@ double *php_gmagick_zval_to_double_array(zval *param_array, long *num_elements T
 	double_array[elements_count] = 0.0;
 
 	return double_array;
+}
+
+
+zend_bool php_gmagick_stream_handler(php_gmagick_object *intern, php_stream *stream, GmagickOperationType type TSRMLS_DC)
+{
+	FILE *fp;
+	unsigned int status;
+
+	GMAGICK_INIT_ERROR_HANDLING;
+	GMAGICK_SET_ERROR_HANDLING_THROW;
+
+	if (php_stream_can_cast(stream, PHP_STREAM_AS_STDIO | PHP_STREAM_CAST_INTERNAL) == FAILURE ||
+		php_stream_cast(stream, PHP_STREAM_AS_STDIO | PHP_STREAM_CAST_INTERNAL, (void*)&fp, 0) == FAILURE) {
+		GMAGICK_RESTORE_ERROR_HANDLING;
+		return 0;
+	}
+
+	GMAGICK_RESTORE_ERROR_HANDLING;
+
+	/* php_stream_cast returns warning on some streams but still does not return FAILURE */
+	if (EG(exception)) {
+		return 0;
+	}
+
+	switch (type) {
+		case GmagickWriteImageFile:
+			status = MagickWriteImageFile(intern->magick_wand, fp);
+		break;
+
+		case GmagickWriteImagesFile:
+			//Adjoin needs passing.
+			status = MagickWriteImagesFile(intern->magick_wand, fp, 0);
+		break;
+
+		case GmagickReadImageFile:
+			status = MagickReadImageFile(intern->magick_wand, fp);
+		break;
+
+		case GmagickPingImageFile:
+			status = MagickPingImageFile(intern->magick_wand, fp);
+		break;
+
+		default:
+			return 0;
+		break;
+	}
+	if (status == MagickFalse) {
+		return 0;
+	}
+	return 1;
 }

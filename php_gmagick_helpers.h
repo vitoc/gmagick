@@ -20,6 +20,22 @@
 #ifndef PHP_GMAGICK_FUNCTIONS_H
 # define PHP_GMAGICK_FUNCTIONS_H
 
+typedef enum {
+	GmagickUndefinedOperation,
+	GmagickReadImage,
+	GmagickPingImage,
+	GmagickWriteImage,
+	GmagickWriteImages,
+	GmagickWriteImageFile,
+	GmagickWriteImagesFile,
+	GmagickReadImageFile,
+	GmagickPingImageFile,
+} GmagickOperationType;
+
+#define GMAGICK_INIT_ERROR_HANDLING  zend_error_handling error_handling
+#define GMAGICK_SET_ERROR_HANDLING_THROW zend_replace_error_handling(EH_THROW, php_gmagick_exception_class_entry, &error_handling TSRMLS_CC)
+#define GMAGICK_RESTORE_ERROR_HANDLING   zend_restore_error_handling(&error_handling TSRMLS_CC)
+
 /* {{{ void php_gmagick_initialize_constants() */
 void php_gmagick_initialize_constants();
 /* }}} */
@@ -51,5 +67,8 @@ zend_bool php_gmagick_ensure_not_empty (MagickWand *magick_wand);
 
 /* {{{ double *php_gmagick_zval_to_double_array(zval *param_array, long *num_elements TSRMLS_DC) */
 double *php_gmagick_zval_to_double_array(zval *param_array, long *num_elements TSRMLS_DC);
+
+
+zend_bool php_gmagick_stream_handler(php_gmagick_object *intern, php_stream *stream, GmagickOperationType type TSRMLS_DC);
 
 #endif
