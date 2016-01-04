@@ -222,7 +222,9 @@ PHP_METHOD(gmagick, getimagematte);
 #endif
 PHP_METHOD(gmagick, getimagegeometry);
 PHP_METHOD(gmagick, getimagemattecolor);
+#ifdef GMAGICK_HAVE_SET_IMAGE_PAGE
 PHP_METHOD(gmagick, getimagepage);
+#endif // GMAGICK_HAVE_SET_IMAGE_PAGE
 PHP_METHOD(gmagick, getimageprofile);
 PHP_METHOD(gmagick, getimageredprimary);
 PHP_METHOD(gmagick, getimagerenderingintent);
@@ -304,7 +306,6 @@ PHP_METHOD(gmagick, appendimages);
 PHP_METHOD(gmagick, unsharpmaskimage);
 PHP_METHOD(gmagick, adaptivethresholdimage);
 PHP_METHOD(gmagick, affinetransformimage);
-PHP_METHOD(gmagick, animateimages);
 PHP_METHOD(gmagick, averageimages);
 PHP_METHOD(gmagick, blackthresholdimage);
 PHP_METHOD(gmagick, colordecisionlist);

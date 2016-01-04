@@ -29,7 +29,6 @@ typedef enum {
 	GmagickWriteImageFile,
 	GmagickWriteImagesFile,
 	GmagickReadImageFile,
-	GmagickPingImageFile,
 } GmagickOperationType;
 
 #define GMAGICK_INIT_ERROR_HANDLING  zend_error_handling error_handling

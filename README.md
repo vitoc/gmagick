@@ -28,6 +28,7 @@ Functions not supported
 
 The functions listed below are deliberately not part of the Gmagick extension. Other functions that are present in the GraphicsMagick library but not exposed by Gmagick are likely to be added in the future.
 
+MagickAnimateImages - only useful with X terminals.
 MagickDisplayImage - only useful with X terminals.
 MagickDisplayImages - only useful with X terminals.
 MagickGetConfigureInfo - not implemented in GraphicsMagick

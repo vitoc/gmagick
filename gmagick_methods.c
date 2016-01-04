@@ -703,7 +703,7 @@ PHP_METHOD(gmagick, deconstructimages)
 	}
 
 	object_init_ex(return_value, php_gmagick_sc_entry);
-	intern = Z_GMAGICK_OBJ_P(return_value);
+	intern_return = Z_GMAGICK_OBJ_P(return_value);
 	GMAGICK_REPLACE_MAGICKWAND(intern_return, tmp_wand);
 
 	return;
@@ -2305,6 +2305,7 @@ PHP_METHOD(gmagick, getimagematte)
 /* }}} */
 #endif
 
+#ifdef GMAGICK_HAVE_SET_IMAGE_PAGE
 /* {{{ proto array Gmagick::getImagePage()
 	Returns the page geometry associated with the image in an array with the keys "width", "height", "x", and "y".
 */
@@ -2340,6 +2341,7 @@ PHP_METHOD(gmagick, getimagepage)
 	return;
 }
 /* }}} */
+#endif // GMAGICK_HAVE_SET_IMAGE_PAGE
 
 /* {{{ proto string Gmagick::getImageProfile(string name)
 	Returns the named image profile.
@@ -4584,7 +4586,7 @@ PHP_METHOD(gmagick, adaptivethresholdimage)
 
 	/* No magick is going to happen */
 	if (status == MagickFalse) {
-		php_gmagick_convert_gmagick_exception(intern->magick_wand, "Unable to adaptive threshold image" TSRMLS_CC);
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to adaptive threshold image" TSRMLS_CC);
 		return;
 	}
 
@@ -4615,39 +4617,10 @@ PHP_METHOD(gmagick, affinetransformimage)
 
 	/* No magick is going to happen */
 	if (status == MagickFalse) {
-		php_gmagick_convert_gmagick_exception(intern->magick_wand, "Unable to affine transform image" TSRMLS_CC);
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to affine transform image" TSRMLS_CC);
 		return;
 	}
 
-	RETURN_TRUE;
-}
-/* }}} */
-
-/* {{{ proto bool Gmagick::animateImages(string server_name)
-	Animates an image or image sequence
-*/
-PHP_METHOD(gmagick, animateimages)
-{
-	php_gmagick_object *intern;
-	unsigned int status;
-	char *server_name;
-	size_t server_name_len;
-
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &server_name, &server_name_len) == FAILURE) {
-		return;
-	}
-
-	intern = Z_GMAGICK_OBJ_P(getThis());
-	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
-
-	/* TODO: should this call be there? Not sure */
-	(void)MagickSetFirstIterator(intern->magick_wand);
-	status = MagickAnimateImages(intern->magick_wand, server_name);
-
-	if (status == MagickFalse) {
-		php_gmagick_convert_gmagick_exception(intern->magick_wand, "Unable to animate images" TSRMLS_CC);
-		return;
-	}
 	RETURN_TRUE;
 }
 /* }}} */
@@ -4670,7 +4643,7 @@ PHP_METHOD(gmagick, averageimages)
 	tmp_wand = MagickAverageImages(intern->magick_wand);
 
 	if (tmp_wand == NULL) {
-		php_gmagick_convert_gmagick_exception(intern->magick_wand, "Averaging images failed" TSRMLS_CC);
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Averaging images failed" TSRMLS_CC);
 		return;
 	}
 
@@ -4706,7 +4679,7 @@ PHP_METHOD(gmagick, blackthresholdimage)
 
 	/* No magick is going to happen */
 	if (status == MagickFalse) {
-		php_gmagick_convert_gmagick_exception(intern->magick_wand, "Unable to black threshold image" TSRMLS_CC);
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to black threshold image" TSRMLS_CC);
 		return;
 	}
 
@@ -4735,7 +4708,7 @@ PHP_METHOD(gmagick, colordecisionlist)
 	status = MagickCdlImage(intern->magick_wand, color_correction_collection);
 
 	if (status == MagickFalse) {
-		php_gmagick_convert_gmagick_exception(intern->magick_wand, "Unable to colorDecisionListImage" TSRMLS_CC);
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to colorDecisionListImage" TSRMLS_CC);
 		return;
 	}
 
@@ -4763,7 +4736,7 @@ PHP_METHOD(gmagick, clipimage)
 
 	/* No magick is going to happen */
 	if (status == MagickFalse) {
-		php_gmagick_convert_gmagick_exception(intern->magick_wand, "Unable to clip image" TSRMLS_CC);
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to clip image" TSRMLS_CC);
 		return;
 	}
 	RETURN_TRUE;
@@ -4788,15 +4761,11 @@ PHP_METHOD(gmagick, clippathimage)
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
-#if MagickLibVersion > 0x636
-	status = MagickClipImagePath(intern->magick_wand, clip_path, inside);
-#else
 	status = MagickClipPathImage(intern->magick_wand, clip_path, inside);
-#endif
 
 	/* No magick is going to happen */
 	if (status == MagickFalse) {
-		php_gmagick_convert_gmagick_exception(intern->magick_wand, "Unable to clip path image" TSRMLS_CC);
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to clip path image" TSRMLS_CC);
 		return;
 	}
 
@@ -4818,7 +4787,6 @@ PHP_METHOD(gmagick, colorfloodfillimage)
 	//PixelWand *fill_wand, *border_wand;
 	php_gmagickpixel_object *fill;
 	php_gmagickpixel_object *border;
-	zend_bool fill_allocated = 0, border_allocated = 0;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "zdzll", &fill_param, &fuzz, &border_param, &x, &y) == FAILURE) {
@@ -4835,7 +4803,7 @@ PHP_METHOD(gmagick, colorfloodfillimage)
 
 	/* No magick is going to happen */
 	if (status == MagickFalse) {
-		php_gmagick_convert_gmagick_exception(intern->magick_wand, "Unable to color floodfill image" TSRMLS_CC);
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to color floodfill image" TSRMLS_CC);
 		return;
 	}
 	RETURN_TRUE;
@@ -4843,7 +4811,7 @@ PHP_METHOD(gmagick, colorfloodfillimage)
 /* }}} */
 
 
-/* {{{ proto bool Gmagick::colorizeImage(GmagickPixel colorize, GmagickPixel opacity, bool legacy)
+/* {{{ proto bool Gmagick::colorizeImage(GmagickPixel colorize, GmagickPixel opacity)
 	Blends the fill color with each pixel in the image. The 'opacity' color is a 
 	per channel strength factor for how strongly the color should be applied. If
 	legacy is true, the behaviour of this function is incorrect, but consistent 
@@ -4851,18 +4819,14 @@ PHP_METHOD(gmagick, colorfloodfillimage)
 */
 PHP_METHOD(gmagick, colorizeimage)
 {
-	PixelWand *param_wand = NULL;
 	php_gmagick_object *intern;
 	zval *color_param, *opacity_param;
 	unsigned int status;
 	php_gmagickpixel_object *color;
 	php_gmagickpixel_object *opacity;
 
-	zend_bool color_allocated, opacity_allocated;
-	zend_bool legacy = 0;
-
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "zz|b", &color_param, &opacity_param, &legacy) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "zz", &color_param, &opacity_param) == FAILURE) {
 		return;
 	}
 
@@ -4876,7 +4840,7 @@ PHP_METHOD(gmagick, colorizeimage)
 
 	/* No magick is going to happen */
 	if (status == MagickFalse) {
-		php_gmagick_convert_gmagick_exception(intern->magick_wand, "Unable to colorize image" TSRMLS_CC);
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to colorize image" TSRMLS_CC);
 		return;
 	}
 	RETURN_TRUE;
@@ -4916,7 +4880,7 @@ PHP_METHOD(gmagick, compareimagechannels)
 	tmp_wand = MagickCompareImageChannels(intern->magick_wand, intern_second->magick_wand, channel_type, metric_type, &distortion);
 
 	if (!tmp_wand) {
-		php_gmagick_convert_gmagick_exception(intern->magick_wand, "Compare image channels failed" TSRMLS_CC);
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Compare image channels failed" TSRMLS_CC);
 		return;
 	}
 
@@ -4979,7 +4943,7 @@ PHP_METHOD(gmagick, compareimages)
 	tmp_wand = MagickCompareImages(intern->magick_wand, intern_second->magick_wand, metric_type, &distortion);
 
 	if (!tmp_wand) {
-		php_gmagick_convert_gmagick_exception(intern->magick_wand, "Compare images failed" TSRMLS_CC);
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Compare images failed" TSRMLS_CC);
 		return;
 	}
 
@@ -5015,7 +4979,7 @@ PHP_METHOD(gmagick, contrastimage)
 
 	/* No magick is going to happen */
 	if (status == MagickFalse) {
-		php_gmagick_convert_gmagick_exception(intern->magick_wand, "Unable to contrast image" TSRMLS_CC);
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to contrast image" TSRMLS_CC);
 		return;
 	}
 	RETURN_TRUE;
@@ -5055,8 +5019,7 @@ PHP_METHOD(gmagick, convolveimage)
 
 	/* No magick is going to happen */
 	if (status == MagickFalse) {
-		//php_gmagick_convert_gmagick_exception(intern->magick_wand, "Unable to convolve image" TSRMLS_CC);
-		zend_throw_exception(php_gmagick_exception_class_entry, "Unable to convolve image", 1 TSRMLS_CC);
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to convolve image" TSRMLS_CC);
 		return;
 	}
 
@@ -5085,7 +5048,7 @@ PHP_METHOD(gmagick, extentimage)
 	status = MagickExtentImage(intern->magick_wand, width, height, x, y);
 
 	if (status == MagickFalse) {
-		php_gmagick_convert_gmagick_exception(intern->magick_wand, "Unable to extent image" TSRMLS_CC);
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to extent image" TSRMLS_CC);
 		return;
 	}
 
@@ -5312,7 +5275,6 @@ PHP_METHOD(gmagick, mattefloodfillimage)
 	unsigned int status;
 	//PixelWand *color_wand;
 	php_gmagickpixel_object *color;
-	zend_bool allocated;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ddzll", &alpha, &fuzz, &param, &x, &y) == FAILURE) {
@@ -5426,8 +5388,6 @@ PHP_METHOD(gmagick, mosaicimages)
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
-	/* TODO: should this be here? */
-	MagickSetFirstIterator(intern->magick_wand);
 	tmp_wand = MagickMosaicImages(intern->magick_wand);
 
 	if (!tmp_wand) {
@@ -5481,7 +5441,6 @@ PHP_METHOD(gmagick, setimagecolormapcolor)
 	unsigned int status;
 	//PixelWand *color_wand;
 	php_gmagickpixel_object *color;
-	zend_bool allocated;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lz", &index, &param) == FAILURE) {
@@ -5541,7 +5500,6 @@ PHP_METHOD(gmagick, setimagemattecolor)
 	php_gmagick_object *intern;
 	unsigned int status;
 	php_gmagickpixel_object *color;
-	zend_bool allocated;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z", &param) == FAILURE) {
 		return;
@@ -5757,9 +5715,7 @@ PHP_METHOD(gmagick, whitethresholdimage)
 	php_gmagick_object *intern;
 	zval *param;
 	unsigned int status;
-	//PixelWand *color_wand;
 	php_gmagickpixel_object *color;
-	zend_bool allocated;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z", &param) == FAILURE) {
 		return;
@@ -5863,8 +5819,12 @@ PHP_METHOD(gmagick, getimagesavedtype)
 }
 /* }}} */
 
+#if !defined(MagickSetDepth)
+unsigned int MagickSetDepth(MagickWand *wand,const size_t depth);
+#endif //!defined(MagickSetDepth)
 
-/* {{{ proto bool Gmagick::setImageFuzz(int depth)
+
+/* {{{ proto bool Gmagick::setDepth(int depth)
 	MagickSetDepth() sets the sample depth to be used when reading from a raw image or a format which requires that the depth be specified in advance by the user.
 */
 PHP_METHOD(gmagick, setdepth)
@@ -5879,13 +5839,11 @@ PHP_METHOD(gmagick, setdepth)
 	}
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
-	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
-
 	status = MagickSetDepth(intern->magick_wand, depth);
 
 	/* No magick is going to happen */
 	if (status == MagickFalse) {
-		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to set image channel depth");
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to set depth");
 	}
 	GMAGICK_CHAIN_METHOD;
 }

@@ -761,10 +761,6 @@ zend_bool php_gmagick_stream_handler(php_gmagick_object *intern, php_stream *str
 			status = MagickReadImageFile(intern->magick_wand, fp);
 		break;
 
-		case GmagickPingImageFile:
-			status = MagickPingImageFile(intern->magick_wand, fp);
-		break;
-
 		default:
 			return 0;
 		break;

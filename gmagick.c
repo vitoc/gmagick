@@ -723,11 +723,7 @@ ZEND_BEGIN_ARG_INFO_EX(gmagick_affinetransformimage_args, 0, 0, 1)
 	ZEND_ARG_OBJ_INFO(0, GmagickDraw, GmagickDraw, 0)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(gmagick_animateimages_args, 0, 0, 1)
-	ZEND_ARG_INFO(0, server_name)
-ZEND_END_ARG_INFO()
-
-	ZEND_BEGIN_ARG_INFO_EX(gmagick_blackthresholdimage_args, 0, 0, 1)
+ZEND_BEGIN_ARG_INFO_EX(gmagick_blackthresholdimage_args, 0, 0, 1)
 	ZEND_ARG_INFO(0, color)
 ZEND_END_ARG_INFO()
 
@@ -751,7 +747,6 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO_EX(gmagick_colorizeimage_args, 0, 0, 2)
 	ZEND_ARG_INFO(0, colorize_color)
 	ZEND_ARG_INFO(0, opacity)
-	ZEND_ARG_INFO(0, legacy)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(gmagick_compareimagechannels_args, 0, 0, 3)
@@ -989,7 +984,9 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, getimagematte,		gmagick_empty_args, ZEND_ACC_PUBLIC)
 #endif
 	PHP_ME(gmagick, getimagemattecolor,	gmagick_empty_args, ZEND_ACC_PUBLIC)
-	PHP_ME(gmagick, getimagepage, gmagick_empty_args, ZEND_ACC_PUBLIC)	
+#ifdef GMAGICK_HAVE_SET_IMAGE_PAGE
+	PHP_ME(gmagick, getimagepage, gmagick_empty_args, ZEND_ACC_PUBLIC)
+#endif // GMAGICK_HAVE_SET_IMAGE_PAGE
 	PHP_ME(gmagick, getimageprofile,	gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimageredprimary,	gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimagerenderingintent,gmagick_empty_args, ZEND_ACC_PUBLIC)
@@ -1075,7 +1072,6 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_MALIAS(gmagick, write, writeimage,	gmagick_writeimage_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, adaptivethresholdimage, gmagick_adaptivethresholdimage_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, affinetransformimage, gmagick_affinetransformimage_args, ZEND_ACC_PUBLIC)
-	PHP_ME(gmagick, animateimages, gmagick_animateimages_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, averageimages, gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, blackthresholdimage, gmagick_blackthresholdimage_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, colordecisionlist, gmagick_colordecisionlist_args, ZEND_ACC_PUBLIC)
