@@ -35,7 +35,7 @@ strictGraphicsMagickVersions+=("1.3.17")
 echo "TRAVIS_PHP_VERSION is ${TRAVIS_PHP_VERSION}"
 echo "GRAPHICSMAGICK_VERSION is ${GRAPHICSMAGICK_VERSION}"
 
-strictGraphicsMagick=$(contains "${strictGraphicsMagickVersions[@]}" "${GraphicsMAGICK_VERSION}" )
+strictGraphicsMagick=$(contains "${strictGraphicsMagickVersions[@]}" "${GRAPHICSMAGICK_VERSION}" )
 strictPHP=$(contains "${strictPHPVersions[@]}" "${TRAVIS_PHP_VERSION}" )
 
 echo "strictGraphicsMagick is ${strictGraphicsMagick}"
