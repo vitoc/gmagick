@@ -63,12 +63,6 @@ $gmagick->setImageCompression(\GMAGICK::COMPRESSION_NO);
 $gmagick->setImageFormat("BMP");
 
 $gmagick->setResourceLimit(\GMAGICK::RESOURCETYPE_MEMORY, 16*1024*1024);
-$gmagick->setImagePage(
-    0, 0,
-    $gmagick->getImageWidth(),
-    $gmagick->getImageHeight()
-);
-
 $gmagick->getImageAttribute("comment");
 $gmagick->getImageChannelExtrema(\GMAGICK::CHANNEL_RED);
 $gmagick->getImageChannelMean(\GMAGICK::CHANNEL_RED);

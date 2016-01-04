@@ -1,5 +1,5 @@
 --TEST--
-setImagePage test
+Gmagick::readImageBlob
 --SKIPIF--
 <?php
 if(!extension_loaded('gmagick')) die('skip');

@@ -1,5 +1,5 @@
 --TEST--
-setImagePage test
+Test contants have symbols.
 --SKIPIF--
 <?php
 if(!extension_loaded('gmagick')) die('skip');
