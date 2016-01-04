@@ -1003,9 +1003,9 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, setresolution,          gmagick_setresolution_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagescene,		gmagick_setimagescene_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagetype,		gmagick_setimagetype_args, ZEND_ACC_PUBLIC)
-#ifdef HAVE_MAGICK_SET_IMAGE_PAGE 
+#ifdef GMAGICK_HAVE_SET_IMAGE_PAGE 
 	PHP_ME(gmagick, setimagepage,		gmagick_setimagepage_args, ZEND_ACC_PUBLIC)
-#endif //HAVE_MAGICK_SET_IMAGE_PAGE
+#endif //GMAGICK_HAVE_SET_IMAGE_PAGE
 	PHP_ME(gmagick, getimageunits,		gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimagewhitepoint,	gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimagewidth,		gmagick_empty_args, ZEND_ACC_PUBLIC)
@@ -1133,9 +1133,11 @@ ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setfillcolor_args, 0, 0, 1)
 	ZEND_ARG_INFO(0, color)
 ZEND_END_ARG_INFO()
 
+#ifdef HAVE_GMAGICK_SET_IMAGE_GRAVITY
 ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setgravity_args, 0, 0, 1)
 	ZEND_ARG_INFO(0, gravity)
 ZEND_END_ARG_INFO()
+#endif //HAVE_GMAGICK_SET_IMAGE_GRAVITY
 
 ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_ellipse_args, 0, 0, 6)
 		ZEND_ARG_INFO(0, ox)
@@ -1277,14 +1279,18 @@ static zend_function_entry php_gmagickdraw_class_methods[] =
 	PHP_ME(gmagickdraw, setstrokecolor,	gmagickdraw_setstrokecolor_args,	ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickdraw, setstrokewidth, gmagickdraw_setstrokewidth_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickdraw, setfillcolor, gmagickdraw_setfillcolor_args, ZEND_ACC_PUBLIC)
+#ifdef HAVE_GMAGICK_SET_IMAGE_GRAVITY
 	PHP_ME(gmagickdraw, setgravity, gmagickdraw_setgravity_args, ZEND_ACC_PUBLIC)
+#endif // HAVE_GMAGICK_SET_IMAGE_GRAVITY
 	PHP_ME(gmagickdraw, ellipse, gmagickdraw_ellipse_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickdraw, affine,	gmagickdraw_affine_args,	ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickdraw, annotate, gmagickdraw_annotate_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickdraw, arc, gmagickdraw_arc_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickdraw, bezier, gmagickdraw_bezier_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickdraw, getfillcolor, gmagick_empty_args, ZEND_ACC_PUBLIC)
+#ifdef HAVE_GMAGICK_SET_IMAGE_GRAVITY
 	PHP_ME(gmagickdraw, getgravity, gmagick_empty_args, ZEND_ACC_PUBLIC)
+#endif // HAVE_GMAGICK_SET_IMAGE_GRAVITY
 	PHP_ME(gmagickdraw, getfillopacity, gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickdraw, getfont, gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickdraw, getfontsize, gmagick_empty_args, ZEND_ACC_PUBLIC)

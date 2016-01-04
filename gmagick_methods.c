@@ -36,7 +36,7 @@ static MagickBool SafeModeMonitor(const ConfirmAccessMode mode,
 #endif	
 	return MagickPass;
 }
-#endif
+
 static MagickBool OpenBaseDirMonitor(const ConfirmAccessMode mode,
 					const char *path,
 					ExceptionInfo *exception)
@@ -47,7 +47,8 @@ static MagickBool OpenBaseDirMonitor(const ConfirmAccessMode mode,
 	}
 	return MagickPass;
 }
-#endif
+#endif // #if PHP_VERSION_ID < 50399 
+#endif // #if GMAGICK_LIB_MASK >= 1004000
 
 /* {{{ Gmagick Gmagick::read(string filename)
 	Reads image
@@ -2704,8 +2705,9 @@ PHP_METHOD(gmagick, setimagetype)
 }
 /* }}} */
 
-#ifdef HAVE_MAGICK_SET_IMAGE_PAGE
-/* {{{ proto bool Gmagick::setImagePage(int width, int height, int x, int y)
+
+#ifdef GMAGICK_HAVE_SET_IMAGE_PAGE
+/* {{{ proto bool Imagick::setImagePage(int width, int height, int x, int y)
 	Sets the page geometry of the image.
 */
 PHP_METHOD(gmagick, setimagepage)
@@ -2731,7 +2733,7 @@ PHP_METHOD(gmagick, setimagepage)
 	RETURN_TRUE;
 }
 /* }}} */
-#endif //HAVE_MAGICK_SET_IMAGE_PAGE 
+#endif //GMAGICK_HAVE_SET_IMAGE_PAGE 
 
 /* {{{ proto int Gmagick::getImageUnits()
 	Gets the image units of resolution.

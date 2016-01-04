@@ -57,6 +57,14 @@ typedef long ssize_t;
 #include "ext/standard/info.h"
 #include "ext/standard/php_filestat.h"
 
+#if GMAGICK_LIB_MASK >= 1003018
+	#define HAVE_GMAGICK_SET_IMAGE_PAGE 1
+#endif
+
+#if GMAGICK_LIB_MASK >= 1003020
+	#define HAVE_GMAGICK_SET_IMAGE_GRAVITY 1
+#endif
+
 /* Objects */
 typedef struct _php_gmagick_object  {
 	MagickWand *magick_wand;
@@ -230,7 +238,7 @@ PHP_METHOD(gmagick, setimageresolution);
 PHP_METHOD(gmagick, setresolution);
 PHP_METHOD(gmagick, setimagescene);
 PHP_METHOD(gmagick, setimagetype);
-#ifdef HAVE_MAGICK_SET_IMAGE_PAGE
+#ifdef GMAGICK_HAVE_SET_IMAGE_PAGE
 PHP_METHOD(gmagick, setimagepage);
 #endif
 PHP_METHOD(gmagick, getimageunits);
@@ -347,8 +355,10 @@ PHP_METHOD(gmagick, writeimagefile);
 PHP_METHOD(gmagickdraw, setstrokecolor);
 PHP_METHOD(gmagickdraw, setstrokewidth);
 PHP_METHOD(gmagickdraw, setfillcolor);
+#ifdef HAVE_GMAGICK_SET_IMAGE_GRAVITY
 PHP_METHOD(gmagickdraw, setgravity);
 PHP_METHOD(gmagickdraw, getgravity);
+#endif // HAVE_GMAGICK_SET_IMAGE_GRAVITY
 PHP_METHOD(gmagickdraw, ellipse);
 PHP_METHOD(gmagickdraw, annotate);
 PHP_METHOD(gmagickdraw, affine);
