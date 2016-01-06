@@ -564,12 +564,64 @@ int count_occurences_of(char needle, char *haystack TSRMLS_DC)
 	return occurances;
 }
 
+/* This is not universally safe to use, but is safe enough for values that will 
+   be encountered for image dimensions.
+*/
+static inline double gm_round_helper_class(double value) {
+	if (value >= 0.0) {
+		return floor(value + 0.5);
+	} else {
+		return ceil(value - 0.5);
+	}
+}
+
+static
+void s_calculate_crop(
+	long orig_width, long orig_height,
+	long desired_width, long desired_height,
+	long *new_width, long *new_height,
+	long *offset_x, long *offset_y,
+	zend_bool legacy
+) {
+	double ratio_x, ratio_y;
+	long temp_new_width, temp_new_height;
+
+	ratio_x = ((double) desired_width / (double) orig_width);
+	ratio_y = ((double) desired_height / (double) orig_height);
+
+	if (ratio_x > ratio_y) {
+		temp_new_width  = desired_width;
+
+		if (legacy) {
+			temp_new_height = (long)(ratio_x * (double)orig_height);
+		}
+		else {
+			temp_new_height = gm_round_helper_class(ratio_x * (double)orig_height);
+		}
+	} else {
+		temp_new_height = desired_height;
+		if (legacy) {
+			temp_new_width  = (long)(ratio_y * (double)orig_width);
+		}
+		else {
+			temp_new_width  = gm_round_helper_class(ratio_y * (double)orig_width);
+		}
+	}
+
+	*new_width = temp_new_width;
+	*new_height = temp_new_height;
+
+	*offset_x = (long) ((temp_new_width - desired_width) / 2);
+	*offset_y = (long) ((temp_new_height - desired_height) / 2);
+}
+
+
 /* {{{ zend_bool crop_thumbnail_image(MagickWand *magick_wand, long desired_width, long desired_height TSRMLS_DC)
 */
-zend_bool crop_thumbnail_image(MagickWand *magick_wand, long desired_width, long desired_height TSRMLS_DC)
+zend_bool crop_thumbnail_image(MagickWand *magick_wand, long desired_width, long desired_height, zend_bool legacy TSRMLS_DC)
 {
 	double ratio_x, ratio_y;
-	long crop_x = 0, crop_y = 0, new_width, new_height;
+	long offset_x = 0, offset_y = 0, new_width, new_height;
 
 	long orig_width  = MagickGetImageWidth(magick_wand);
 	long orig_height = MagickGetImageHeight(magick_wand);
@@ -582,16 +634,13 @@ zend_bool crop_thumbnail_image(MagickWand *magick_wand, long desired_width, long
 		return 1;
 	}
 
-	ratio_x = (double)desired_width / (double)orig_width; 
-	ratio_y = (double)desired_height / (double)orig_height; 
-
-	if (ratio_x > ratio_y) { 
-		new_width  = desired_width; 
-		new_height = ratio_x * (double)orig_height; 
-	} else { 
-		new_height = desired_height; 
-		new_width  = ratio_y * (double)orig_width; 
-	}
+	s_calculate_crop(
+		orig_width, orig_height,
+		desired_width, desired_height,
+		&new_width, &new_height,
+		&offset_x, &offset_y,
+		legacy
+	);
 
 	if (MagickResizeImage(magick_wand, new_width, new_height, UndefinedFilter, 0.5) == MagickFalse) {
 		return 0;
@@ -602,18 +651,16 @@ zend_bool crop_thumbnail_image(MagickWand *magick_wand, long desired_width, long
 		return 1;
 	}
 
-	crop_x = (new_width - desired_width) / 2;
-	crop_y = (new_height - desired_height) / 2;
-
-	if (MagickCropImage(magick_wand, desired_width, desired_height, crop_x, crop_y) == MagickFalse) {
+	if (MagickCropImage(magick_wand, desired_width, desired_height, offset_x, offset_y) == MagickFalse) {
 		return 0;
 	}
+
 	return 1;
 }
 
 /** zend_bool php_gmagick_thumbnail_dimensions(MagickWand *magick_wand, zend_bool bestfit, long desired_width, long desired_height, long *new_width, long *new_height)
 */
-zend_bool php_gmagick_thumbnail_dimensions(MagickWand *magick_wand, zend_bool bestfit, long desired_width, long desired_height, long *new_width, long *new_height)
+zend_bool php_gmagick_thumbnail_dimensions(MagickWand *magick_wand, zend_bool bestfit, long desired_width, long desired_height, long *new_width, long *new_height, zend_bool legacy)
 {
 	long orig_width, orig_height;
 	
@@ -638,10 +685,21 @@ zend_bool php_gmagick_thumbnail_dimensions(MagickWand *magick_wand, zend_bool be
 		
 		if (ratio_x < ratio_y) { 
 			*new_width  = desired_width; 
-			*new_height = ratio_x * (double)orig_height; 
+			if (legacy) {
+				*new_height = ratio_x * (double)orig_height;
+			}
+			else {
+				*new_height = gm_round_helper(ratio_x * ((double) orig_height));
+			}
 		} else { 
 			*new_height = desired_height; 
-			*new_width  = ratio_y * (double)orig_width; 
+			
+			 if (legacy) {
+				*new_width  = ratio_y * (double)orig_width;
+			}
+			else {
+				*new_width  = gm_round_helper(ratio_y * ((double) orig_width));
+			}
 		} 
 		
 		*new_width  = (*new_width < 1)  ? 1 : *new_width; 
@@ -654,14 +712,25 @@ zend_bool php_gmagick_thumbnail_dimensions(MagickWand *magick_wand, zend_bool be
 			return 0;
 		}
 		
-		if (desired_width <= 0 || desired_height <= 0) {		 
+		if (desired_width <= 0 || desired_height <= 0) {
 			if (desired_width <= 0) { 
-				ratio = (double)orig_height / (double)desired_height; 
-				*new_width  = orig_width / ratio;
+				ratio = (double)orig_height / (double)desired_height;
+				if (legacy) {
+					*new_width  = orig_width / ratio;
+				}
+				else {
+					*new_width  = gm_round_helper(((double) orig_width) / ratio);
+				}
+
 				*new_height = desired_height;
 			} else { 
 				ratio = (double)orig_width / (double)desired_width; 
-				*new_height = orig_height / ratio;
+				if (legacy) {
+					*new_height = orig_height / ratio;
+				}
+				else {
+					*new_height = gm_round_helper(((double) orig_height) / ratio);
+				}
 				*new_width  = desired_width;
 			}
 		} else {

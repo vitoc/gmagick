@@ -209,16 +209,19 @@ PHP_METHOD(gmagick, writeimage)
 }
 /* }}} */
 
-/* {{{ proto Gmagick Gmagick::thumbnail(int width, int height[, bool fit])
-	Scales an image to the desired dimensions
+/* {{{ proto Gmagick Gmagick::thumbnail(int width, int height[, bool fit[, bool legacy = false]])
+	Scales an image to the desired dimensions.  If legacy is true, uses the 
+	incorrect behaviour that was present until Gmagick 2.0.1. If false (default) it uses the correct
+	behaviour.
 */
 PHP_METHOD(gmagick, thumbnailimage)
 {
 	long columns, rows, width, height;
 	php_gmagick_object *intern;
 	zend_bool fit = 0;
+	zend_bool legacy = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll|b", &columns, &rows, &fit) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll|bl", &columns, &rows, &fit, &legacy) == FAILURE) {
 		return;
 	}
 
@@ -228,7 +231,7 @@ PHP_METHOD(gmagick, thumbnailimage)
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to strip image");
 	}
 
-	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, columns, rows, &width, &height)) {
+	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, columns, rows, &width, &height, legacy)) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to calculate image dimensions");
 	}
 
@@ -240,8 +243,10 @@ PHP_METHOD(gmagick, thumbnailimage)
 }
 /* }}} */
 
-/* {{{ proto Gmagick Gmagick::resize(int width, int height, int filter, float blur[, bool fit = false])
-	Scales an image to the desired dimensions
+/* {{{ proto Gmagick Gmagick::resize(int width, int height, int filter, float blur[, bool fit = false[, bool legacy = false]])
+	Scales an image to the desired dimensions  If legacy is true, uses the 
+	incorrect behaviour that was present until Gmagick 2.0.1. If false (default) it uses the correct
+	behaviour.
 */
 PHP_METHOD(gmagick, resizeimage)
 {
@@ -249,14 +254,15 @@ PHP_METHOD(gmagick, resizeimage)
 	long width, height, new_width, new_height, filter = 0;
 	php_gmagick_object *intern;
 	zend_bool fit = 0;
+	zend_bool legacy = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "llld|b", &width, &height, &filter, &blur, &fit) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "llld|bl", &width, &height, &filter, &blur, &fit, &legacy) == FAILURE) {
 		return;
 	}
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	
-	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, width, height, &new_width, &new_height)) {
+	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, width, height, &new_width, &new_height, legacy)) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to calculate image dimensions");
 	}
 
@@ -322,23 +328,26 @@ PHP_METHOD(gmagick, cropimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::cropthumbnailimage(int columns, int rows)
-	 Creates a crop thumbnail
+/* {{{ proto bool Gmagick::cropthumbnailimage(int columns, int rows[, bool legacy])
+	 Creates a crop thumbnail. If legacy is true, uses the 
+	incorrect behaviour that was present until Gmagick 2.0.1. If false (default) it uses the correct
+	behaviour.
 */
 PHP_METHOD(gmagick, cropthumbnailimage)
 {
 	long crop_width, crop_height;
+	zend_bool legacy = 0;
 	php_gmagick_object *intern;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll", &crop_width, &crop_height) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll|l", &crop_width, &crop_height, &legacy) == FAILURE) {
 		return;
 	}
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
-	if (!crop_thumbnail_image(intern->magick_wand, crop_width, crop_height TSRMLS_CC)) {
+	if (!crop_thumbnail_image(intern->magick_wand, crop_width, crop_height, legacy TSRMLS_CC)) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to crop-thumbnail image");
 	}
 
@@ -4053,9 +4062,11 @@ PHP_METHOD(gmagick, rotateimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::scaleImage(int cols, int rows[, bool fit] )
+/* {{{ proto bool Gmagick::scaleImage(int cols, int rows[, bool fit[, bool legacy = false]] )
 	Scales the size of an image to the given dimensions. Passing zero as either of
-	the arguments will preserve dimension while scaling.
+	the arguments will preserve dimension while scaling.  If legacy is true, uses the 
+	incorrect behaviour that was present until Gmagick 2.0.1. If false (default) it uses the correct
+	behaviour.
 */
 PHP_METHOD(gmagick, scaleimage)
 {
@@ -4063,9 +4074,10 @@ PHP_METHOD(gmagick, scaleimage)
 	php_gmagick_object *intern;
 	MagickBool status;
 	zend_bool fit = 0;
+	zend_bool legacy = 0;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll|b", &x, &y, &fit) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll|bl", &x, &y, &fit, &legacy) == FAILURE) {
 		return;
 	}
 
@@ -4073,7 +4085,7 @@ PHP_METHOD(gmagick, scaleimage)
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 	
-	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, x, y, &width, &height)) {
+	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, x, y, &width, &height, legacy)) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to calculate image dimensions");
 	}
 
@@ -4413,9 +4425,12 @@ PHP_METHOD(gmagick, flattenimages)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::sampleImage(int cols, int rows[, bool fit] )
+/* {{{ proto bool Gmagick::sampleImage(int cols, int rows[, bool fit[, bool legacy = false]] )
 	Sample the size of an image to the given dimensions. Passing zero as either of
 	the arguments will preserve dimension while scaling.
+	If legacy is true, uses the 
+	incorrect behaviour that was present until Gmagick 2.0.1. If false (default) it uses the correct
+	behaviour.
 */
 PHP_METHOD(gmagick, sampleimage)
 {
@@ -4423,17 +4438,18 @@ PHP_METHOD(gmagick, sampleimage)
 	php_gmagick_object *intern;
 	MagickBool status;
 	zend_bool fit = 0;
+	zend_bool legacy = 0;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll|b", &x, &y, &fit) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll|bl", &x, &y, &fit, &legacy) == FAILURE) {
 		return;
 	}
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
-	
-	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, x, y, &width, &height)) {
+
+	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, x, y, &width, &height, legacy)) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to calculate image dimensions");
 	}
 

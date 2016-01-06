@@ -273,6 +273,7 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO_EX(gmagick_cropthumbnailimage_args, 0, 0, 2)
 	ZEND_ARG_INFO(0, width)
 	ZEND_ARG_INFO(0, height)
+	ZEND_ARG_INFO(0, legacy)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(gmagick_cyclecolormapimage_args, 0, 0, 1)
