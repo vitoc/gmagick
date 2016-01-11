@@ -620,7 +620,6 @@ void s_calculate_crop(
 */
 zend_bool crop_thumbnail_image(MagickWand *magick_wand, long desired_width, long desired_height, zend_bool legacy TSRMLS_DC)
 {
-	double ratio_x, ratio_y;
 	long offset_x = 0, offset_y = 0, new_width, new_height;
 
 	long orig_width  = MagickGetImageWidth(magick_wand);
@@ -660,10 +659,10 @@ zend_bool crop_thumbnail_image(MagickWand *magick_wand, long desired_width, long
 
 /** zend_bool php_gmagick_thumbnail_dimensions(MagickWand *magick_wand, zend_bool bestfit, long desired_width, long desired_height, long *new_width, long *new_height)
 */
-zend_bool php_gmagick_thumbnail_dimensions(MagickWand *magick_wand, zend_bool bestfit, long desired_width, long desired_height, long *new_width, long *new_height, zend_bool legacy)
+zend_bool php_gmagick_thumbnail_dimensions(MagickWand *magick_wand, zend_bool bestfit, zend_long desired_width, zend_long desired_height, zend_long *new_width, zend_long *new_height, zend_bool legacy)
 {
-	long orig_width, orig_height;
-	
+	zend_long orig_width, orig_height;
+
 	orig_width  = MagickGetImageWidth(magick_wand); 
 	orig_height = MagickGetImageHeight(magick_wand);
 	
@@ -689,7 +688,7 @@ zend_bool php_gmagick_thumbnail_dimensions(MagickWand *magick_wand, zend_bool be
 				*new_height = ratio_x * (double)orig_height;
 			}
 			else {
-				*new_height = gm_round_helper(ratio_x * ((double) orig_height));
+				*new_height = gm_round_helper_class(ratio_x * ((double) orig_height));
 			}
 		} else { 
 			*new_height = desired_height; 
@@ -698,7 +697,7 @@ zend_bool php_gmagick_thumbnail_dimensions(MagickWand *magick_wand, zend_bool be
 				*new_width  = ratio_y * (double)orig_width;
 			}
 			else {
-				*new_width  = gm_round_helper(ratio_y * ((double) orig_width));
+				*new_width  = gm_round_helper_class(ratio_y * ((double) orig_width));
 			}
 		} 
 		
@@ -719,7 +718,7 @@ zend_bool php_gmagick_thumbnail_dimensions(MagickWand *magick_wand, zend_bool be
 					*new_width  = orig_width / ratio;
 				}
 				else {
-					*new_width  = gm_round_helper(((double) orig_width) / ratio);
+					*new_width  = gm_round_helper_class(((double) orig_width) / ratio);
 				}
 
 				*new_height = desired_height;
@@ -729,7 +728,7 @@ zend_bool php_gmagick_thumbnail_dimensions(MagickWand *magick_wand, zend_bool be
 					*new_height = orig_height / ratio;
 				}
 				else {
-					*new_height = gm_round_helper(((double) orig_height) / ratio);
+					*new_height = gm_round_helper_class(((double) orig_height) / ratio);
 				}
 				*new_width  = desired_width;
 			}
