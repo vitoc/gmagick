@@ -754,7 +754,7 @@ PHP_METHOD(gmagickdraw, setfontsize)
 PHP_METHOD(gmagickdraw, setfontstyle)
 {
 	php_gmagickdraw_object *internd;
-	long style_id = AnyStyle;
+	zend_long style_id = AnyStyle;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &style_id) == FAILURE) {
@@ -774,7 +774,7 @@ PHP_METHOD(gmagickdraw, setfontstyle)
 PHP_METHOD(gmagickdraw, setfontweight)
 {
 	php_gmagickdraw_object *internd;
-	long weight;
+	zend_long weight;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &weight) == FAILURE) {
@@ -820,7 +820,7 @@ PHP_METHOD(gmagickdraw, setstrokeopacity)
 PHP_METHOD(gmagickdraw, settextdecoration)
 {
 	php_gmagickdraw_object *internd;
-	long decoration;
+	zend_long decoration;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &decoration) == FAILURE) {
@@ -841,7 +841,7 @@ PHP_METHOD(gmagickdraw, settextdecoration)
 PHP_METHOD(gmagickdraw, setgravity)
 {
 	php_gmagickdraw_object *internd;
-	long gravity;
+	zend_long gravity;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &gravity) == FAILURE) {
 		return;
@@ -939,7 +939,7 @@ PHP_METHOD(gmagickdraw, setstrokedashoffset)
 PHP_METHOD(gmagickdraw, setstrokelinecap)
 {
 	php_gmagickdraw_object *internd;
-	long line_cap;
+	zend_long line_cap;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &line_cap) == FAILURE) {
@@ -959,7 +959,7 @@ PHP_METHOD(gmagickdraw, setstrokelinecap)
 PHP_METHOD(gmagickdraw, setstrokelinejoin)
 {	
 	php_gmagickdraw_object *internd;
-	long line_join;
+	zend_long line_join;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &line_join) == FAILURE) {
@@ -979,7 +979,7 @@ PHP_METHOD(gmagickdraw, setstrokelinejoin)
 PHP_METHOD(gmagickdraw, setstrokemiterlimit)
 {
 	php_gmagickdraw_object *internd;
-	long miter_limit;
+	zend_long miter_limit;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &miter_limit) == FAILURE) {
@@ -1247,7 +1247,7 @@ PHP_METHOD(gmagickdraw, getcliprule)
 PHP_METHOD(gmagickdraw, setcliprule)
 {
 	php_gmagickdraw_object *internd;
-	long fill_rule;
+	zend_long fill_rule;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &fill_rule) == FAILURE) {
@@ -1286,7 +1286,7 @@ PHP_METHOD(gmagickdraw, getclipunits)
 PHP_METHOD(gmagickdraw, setclipunits)
 {	
 	php_gmagickdraw_object *internd;
-	long units;
+	zend_long units;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &units) == FAILURE) {
@@ -1390,7 +1390,7 @@ PHP_METHOD(gmagickdraw, getfillrule)
 PHP_METHOD(gmagickdraw, setfillrule)
 {
 	php_gmagickdraw_object *internd;
-	long fill_rule;
+	zend_long fill_rule;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &fill_rule) == FAILURE) {
@@ -1503,7 +1503,7 @@ PHP_METHOD(gmagickdraw, getfontstretch)
 PHP_METHOD(gmagickdraw, setfontstretch)
 {
 	php_gmagickdraw_object *internd;
-	long stretch;
+	zend_long stretch;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &stretch) == FAILURE) {
@@ -2270,7 +2270,7 @@ PHP_METHOD(gmagickdraw, translate)
 PHP_METHOD(gmagickdraw, setviewbox)
 {
 	php_gmagickdraw_object *internd;
-	long x1, y1, x2, y2;
+	zend_long x1, y1, x2, y2;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "llll", &x1, &y1, &x2, &y2) == FAILURE) {
