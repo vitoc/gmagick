@@ -20,10 +20,10 @@ If you're using versions of PHP below 7.0.1 but above 5.1.3, please use version 
 		<email>mkoppanen@php.net</email>
 		<active>yes</active>
 	</lead>
-	<date>2015-12-29</date>
+	<date>2015-17-01</date>
 	<version>
-		<release>2.0.1RC1</release>
-		<api>2.0.1RC1</api>
+		<release>2.0.1RC2</release>
+		<api>2.0.1RC2</api>
 	</version>
 	<stability>
 		<release>beta</release>
@@ -31,7 +31,7 @@ If you're using versions of PHP below 7.0.1 but above 5.1.3, please use version 
 	</stability>
 	<license uri="http://www.php.net/license">PHP License</license>
 <notes>
-Updated GraphicsMagick version requirement.
+Extraneous optional parameter for blurImage and sharpenImage removed. Only two parameters are supported, radius and sigma.
 </notes>
 	<contents>
 		<dir name="/">
