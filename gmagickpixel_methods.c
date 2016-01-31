@@ -148,7 +148,7 @@ PHP_METHOD(gmagickpixel, getcolorcount)
 PHP_METHOD(gmagickpixel, getcolorvalue)
 {
 	php_gmagickpixel_object *internp;
-	long color;
+	zend_long color;
 	double color_value = 0;
 
 	/* Parse parameters given to function */
@@ -206,7 +206,7 @@ PHP_METHOD(gmagickpixel, getcolorvalue)
 PHP_METHOD(gmagickpixel, setcolorvalue)
 {
 	php_gmagickpixel_object *internp;
-	long color;
+	zend_long color;
 	double color_value;
 
 	/* Parse parameters given to function */

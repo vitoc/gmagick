@@ -47,8 +47,8 @@ static MagickBool OpenBaseDirMonitor(const ConfirmAccessMode mode,
 	}
 	return MagickPass;
 }
-#endif // #if PHP_VERSION_ID < 50399 
-#endif // #if GMAGICK_LIB_MASK >= 1004000
+#endif //#if PHP_VERSION_ID < 50399
+#endif //#if GMAGICK_LIB_MASK >= 1004000
 
 /* {{{ Gmagick Gmagick::read(string filename)
 	Reads image
@@ -210,16 +210,19 @@ PHP_METHOD(gmagick, writeimage)
 }
 /* }}} */
 
-/* {{{ proto Gmagick Gmagick::thumbnail(int width, int height[, bool fit])
-	Scales an image to the desired dimensions
+/* {{{ proto Gmagick Gmagick::thumbnail(int width, int height[, bool fit[, bool legacy = false]])
+	Scales an image to the desired dimensions.  If legacy is true, uses the 
+	incorrect behaviour that was present until Gmagick 2.0.1. If false (default) it uses the correct
+	behaviour.
 */
 PHP_METHOD(gmagick, thumbnailimage)
 {
-	long columns, rows, width, height;
+	zend_long columns, rows, width, height;
 	php_gmagick_object *intern;
 	zend_bool fit = 0;
+	zend_bool legacy = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll|b", &columns, &rows, &fit) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll|bb", &columns, &rows, &fit, &legacy) == FAILURE) {
 		return;
 	}
 
@@ -229,7 +232,7 @@ PHP_METHOD(gmagick, thumbnailimage)
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to strip image");
 	}
 
-	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, columns, rows, &width, &height)) {
+	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, columns, rows, &width, &height, legacy)) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to calculate image dimensions");
 	}
 
@@ -241,23 +244,26 @@ PHP_METHOD(gmagick, thumbnailimage)
 }
 /* }}} */
 
-/* {{{ proto Gmagick Gmagick::resize(int width, int height, int filter, float blur[, bool fit = false])
-	Scales an image to the desired dimensions
+/* {{{ proto Gmagick Gmagick::resize(int width, int height, int filter, float blur[, bool fit = false[, bool legacy = false]])
+	Scales an image to the desired dimensions  If legacy is true, uses the 
+	incorrect behaviour that was present until Gmagick 2.0.1. If false (default) it uses the correct
+	behaviour.
 */
 PHP_METHOD(gmagick, resizeimage)
 {
 	double blur;
-	long width, height, new_width, new_height, filter = 0;
+	zend_long width, height, new_width, new_height, filter = 0;
 	php_gmagick_object *intern;
 	zend_bool fit = 0;
+	zend_bool legacy = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "llld|b", &width, &height, &filter, &blur, &fit) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "llld|bb", &width, &height, &filter, &blur, &fit, &legacy) == FAILURE) {
 		return;
 	}
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	
-	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, width, height, &new_width, &new_height)) {
+	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, width, height, &new_width, &new_height, legacy)) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to calculate image dimensions");
 	}
 
@@ -323,23 +329,26 @@ PHP_METHOD(gmagick, cropimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::cropthumbnailimage(int columns, int rows)
-	 Creates a crop thumbnail
+/* {{{ proto bool Gmagick::cropthumbnailimage(int columns, int rows[, bool legacy])
+	 Creates a crop thumbnail. If legacy is true, uses the 
+	incorrect behaviour that was present until Gmagick 2.0.1. If false (default) it uses the correct
+	behaviour.
 */
 PHP_METHOD(gmagick, cropthumbnailimage)
 {
-	long crop_width, crop_height;
+	zend_long crop_width, crop_height;
+	zend_bool legacy = 0;
 	php_gmagick_object *intern;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll", &crop_width, &crop_height) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll|b", &crop_width, &crop_height, &legacy) == FAILURE) {
 		return;
 	}
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
-	if (!crop_thumbnail_image(intern->magick_wand, crop_width, crop_height TSRMLS_CC)) {
+	if (!crop_thumbnail_image(intern->magick_wand, crop_width, crop_height, legacy TSRMLS_CC)) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to crop-thumbnail image");
 	}
 
@@ -386,7 +395,7 @@ PHP_METHOD(gmagick, compositeimage)
 {
 	zval *source_obj;
 	php_gmagick_object *source, *intern;
-	long x, y, compose;
+	zend_long x, y, compose;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "Olll", &source_obj, php_gmagick_sc_entry, &compose, &x, &y) == FAILURE) {
 		return;
@@ -477,7 +486,7 @@ PHP_METHOD(gmagick, addnoiseimage)
 {
 	php_gmagick_object *intern;
 	MagickBool status;
-	long noise;
+	zend_long noise;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &noise) == FAILURE) {
 		return;
@@ -506,7 +515,7 @@ PHP_METHOD(gmagick, borderimage)
 	php_gmagick_object *intern;
 	php_gmagickpixel_object *internp;
 	MagickBool status;
-	long width, height;
+	zend_long width, height;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "zll", &param, &width, &height) == FAILURE) {
 		return;
@@ -536,7 +545,7 @@ PHP_METHOD(gmagick, thresholdimage)
 	php_gmagick_object *intern;
 	double threshold;
 	MagickBool status;
-	long channel = DefaultChannels;
+	zend_long channel = DefaultChannels;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d|l", &threshold, &channel) == FAILURE) {
 		return;
@@ -591,7 +600,7 @@ PHP_METHOD(gmagick, charcoalimage)
 PHP_METHOD(gmagick, chopimage)
 {
 	php_gmagick_object *intern;
-	long width, height, x, y;
+	zend_long width, height, x, y;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -659,7 +668,7 @@ PHP_METHOD(gmagick, current)
 PHP_METHOD(gmagick, cyclecolormapimage)
 {
 	php_gmagick_object *intern;
-	long displace;
+	zend_long displace;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -933,7 +942,7 @@ PHP_METHOD(gmagick, frameimage)
 	php_gmagick_object *intern;
 	php_gmagickpixel_object *internp;
 	MagickBool status;
-	long width, height, inner_bevel, outer_bevel;
+	zend_long width, height, inner_bevel, outer_bevel;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "zllll", &param, &width, &height, &inner_bevel, &outer_bevel) == FAILURE) {
 		return;
@@ -1241,7 +1250,7 @@ PHP_METHOD(gmagick, getimagebordercolor)
 PHP_METHOD(gmagick, getimagechanneldepth)
 {
 	php_gmagick_object *intern;
-	long channel_type, channel_depth;
+	zend_long channel_type, channel_depth;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &channel_type) == FAILURE) {
@@ -1318,7 +1327,7 @@ PHP_METHOD(gmagick, setimagebordercolor)
 PHP_METHOD(gmagick, setimagechanneldepth)
 {
 	php_gmagick_object *intern;
-	long channel_type, depth;
+	zend_long channel_type, depth;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -1345,7 +1354,7 @@ PHP_METHOD(gmagick, setimagechanneldepth)
 PHP_METHOD(gmagick, setimagecolorspace)
 {
 	php_gmagick_object *intern;
-	long colorspace;
+	zend_long colorspace;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -1372,7 +1381,7 @@ PHP_METHOD(gmagick, setimagecolorspace)
 PHP_METHOD(gmagick, setinterlacescheme)
 {
 	php_gmagick_object *intern;
-	long schema;
+	zend_long schema;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -1515,7 +1524,7 @@ PHP_METHOD(gmagick, getnumberimages)
 PHP_METHOD(gmagick, setimagecompose)
 {
 	php_gmagick_object *intern;
-	long compose;
+	zend_long compose;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -1542,7 +1551,7 @@ PHP_METHOD(gmagick, setimagecompose)
 PHP_METHOD(gmagick, setimagecompression)
 {
 	php_gmagick_object *intern;
-	long compression;
+	zend_long compression;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -1589,7 +1598,7 @@ PHP_METHOD(gmagick, getimagecompression)
 PHP_METHOD(gmagick, setimagedelay)
 {
 	php_gmagick_object *intern;
-	long delay;
+	zend_long delay;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -1616,7 +1625,7 @@ PHP_METHOD(gmagick, setimagedelay)
 PHP_METHOD(gmagick, setimagedepth)
 {
 	php_gmagick_object *intern;
-	long depth;
+	zend_long depth;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -1663,7 +1672,7 @@ PHP_METHOD(gmagick, getimagedispose)
 PHP_METHOD(gmagick, setimagedispose)
 {
 	php_gmagick_object *intern;
-	long dispose;
+	zend_long dispose;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -1921,7 +1930,7 @@ PHP_METHOD(gmagick, setimageformat)
 PHP_METHOD(gmagick, setcompressionquality)
 {
 	php_gmagick_object *intern;
-	long compression_quality;
+	zend_long compression_quality;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -2127,7 +2136,7 @@ PHP_METHOD(gmagick, getimageindex)
 */
 PHP_METHOD(gmagick, setimageindex)
 {
-	long index;
+	zend_long index;
 	MagickBool status;
 	php_gmagick_object *intern;
 
@@ -2176,7 +2185,7 @@ PHP_METHOD(gmagick, getimageinterlacescheme)
 PHP_METHOD(gmagick, setimageinterlacescheme)
 {
 	php_gmagick_object *intern;
-	long interlace;
+	zend_long interlace;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -2522,7 +2531,7 @@ PHP_METHOD(gmagick, getimagetype)
 PHP_METHOD(gmagick, setimageiterations)
 {
 	php_gmagick_object *intern;
-	long iterations;
+	zend_long iterations;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -2605,7 +2614,7 @@ PHP_METHOD(gmagick, setimageredprimary)
 PHP_METHOD(gmagick, setimagerenderingintent)
 {
 	php_gmagick_object *intern;
-	long rendering_intent;
+	zend_long rendering_intent;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -2659,7 +2668,7 @@ PHP_METHOD(gmagick, setimageresolution)
 PHP_METHOD(gmagick, setimagescene)
 {
 	php_gmagick_object *intern;
-	long scene;
+	zend_long scene;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -2686,7 +2695,7 @@ PHP_METHOD(gmagick, setimagescene)
 PHP_METHOD(gmagick, setimagetype)
 {
 	php_gmagick_object *intern;
-	long image_type;
+	zend_long image_type;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -2715,7 +2724,7 @@ PHP_METHOD(gmagick, setimagetype)
 PHP_METHOD(gmagick, setimagepage)
 {
 	php_gmagick_object *intern;
-	long width, height, x, y;
+	zend_long width, height, x, y;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -2872,7 +2881,7 @@ PHP_METHOD(gmagick, getreleasedate)
 */
 PHP_METHOD(gmagick, getresourcelimit)
 {
-	long resource_type;
+	zend_long resource_type;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &resource_type) == FAILURE) {
 		return;
@@ -2943,7 +2952,7 @@ PHP_METHOD(gmagick, getsize)
 PHP_METHOD(gmagick, setimageunits)
 {
 	php_gmagick_object *intern;
-	long units;
+	zend_long units;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -3035,7 +3044,7 @@ PHP_METHOD(gmagick, setsamplingfactors)
 PHP_METHOD(gmagick, setresourcelimit)
 {
 	MagickBool status;
-	long type, limit;
+	zend_long type, limit;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll", &type, &limit) == FAILURE) {
@@ -3058,7 +3067,7 @@ PHP_METHOD(gmagick, setresourcelimit)
 PHP_METHOD(gmagick, setsize)
 {
 	php_gmagick_object *intern;
-	long columns, rows;
+	zend_long columns, rows;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -3212,7 +3221,7 @@ PHP_METHOD(gmagick, levelimage)
 	php_gmagick_object *intern;
 	double black_point, gamma, white_point;
 	MagickBool status;
-	long channel = DefaultChannels;
+	zend_long channel = DefaultChannels;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ddd|l", &black_point, &gamma, &white_point, &channel) == FAILURE) {
@@ -3326,7 +3335,7 @@ PHP_METHOD(gmagick, negateimage)
 	php_gmagick_object *intern;
 	zend_bool gray;
 	MagickBool status;
-	long channel = DefaultChannels;
+	zend_long channel = DefaultChannels;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "b|l", &gray, &channel) == FAILURE) {
@@ -3459,7 +3468,7 @@ PHP_METHOD(gmagick, nextimage)
 PHP_METHOD(gmagick, newimage)
 {
 	php_gmagick_object *intern;
-	long columns, rows;
+	zend_long columns, rows;
 	char *param;
 	size_t param_len = 0;
 	char *format = NULL;
@@ -3500,7 +3509,7 @@ PHP_METHOD(gmagick, normalizeimage)
 {
 	MagickBool status;
 	php_gmagick_object *intern;
-	long channel;
+	zend_long channel;
 
 	/* Parse parameters given to function */
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|l", &channel) == FAILURE) {
@@ -3608,7 +3617,7 @@ PHP_METHOD(gmagick, profileimage)
 PHP_METHOD(gmagick, quantizeimage)
 {
 	php_gmagick_object *intern;
-	long number_colors, colorspace, tree_depth;
+	zend_long number_colors, colorspace, tree_depth;
 	zend_bool dither, measure_error;
 	MagickBool status;
 
@@ -3638,7 +3647,7 @@ PHP_METHOD(gmagick, quantizeimage)
 PHP_METHOD(gmagick, quantizeimages)
 {
 	php_gmagick_object *intern;
-	long number_colors, colorspace, tree_depth;
+	zend_long number_colors, colorspace, tree_depth;
 	zend_bool dither, measure_error;
 	MagickBool status;
 
@@ -3766,7 +3775,7 @@ PHP_METHOD(gmagick, radialblurimage)
 	php_gmagick_object *intern;
 	MagickBool status;
 	double angle;
-	long channel = DefaultChannels;
+	zend_long channel = DefaultChannels;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d|l", &angle, &channel) == FAILURE) {
 		return;
@@ -3796,7 +3805,7 @@ PHP_METHOD(gmagick, raiseimage)
 {
 	php_gmagick_object *intern;
 	MagickBool status;
-	long width, height, x, y;
+	zend_long width, height, x, y;
 	zend_bool raise;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "llllb", &width, &height, &x, &y, &raise) == FAILURE) {
@@ -3981,7 +3990,7 @@ PHP_METHOD(gmagick, removeimageprofile)
 PHP_METHOD(gmagick, resampleimage)
 {
 	double xRes, yRes, blur;
-	long filter = 0;
+	zend_long filter = 0;
 	php_gmagick_object *intern;
 	MagickBool status;
 
@@ -4007,7 +4016,7 @@ PHP_METHOD(gmagick, resampleimage)
 */
 PHP_METHOD(gmagick, rollimage)
 {
-	long x, y;
+	zend_long x, y;
 	php_gmagick_object *intern;
 	MagickBool status;
 
@@ -4059,19 +4068,22 @@ PHP_METHOD(gmagick, rotateimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::scaleImage(int cols, int rows[, bool fit] )
+/* {{{ proto bool Gmagick::scaleImage(int cols, int rows[, bool fit[, bool legacy = false]] )
 	Scales the size of an image to the given dimensions. Passing zero as either of
-	the arguments will preserve dimension while scaling.
+	the arguments will preserve dimension while scaling.  If legacy is true, uses the 
+	incorrect behaviour that was present until Gmagick 2.0.1. If false (default) it uses the correct
+	behaviour.
 */
 PHP_METHOD(gmagick, scaleimage)
 {
-	long x, y, width, height;
+	zend_long x, y, width, height;
 	php_gmagick_object *intern;
 	MagickBool status;
 	zend_bool fit = 0;
+	zend_bool legacy = 0;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll|b", &x, &y, &fit) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll|bb", &x, &y, &fit, &legacy) == FAILURE) {
 		return;
 	}
 
@@ -4079,7 +4091,7 @@ PHP_METHOD(gmagick, scaleimage)
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 	
-	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, x, y, &width, &height)) {
+	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, x, y, &width, &height, legacy)) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to calculate image dimensions");
 	}
 
@@ -4100,7 +4112,7 @@ PHP_METHOD(gmagick, scaleimage)
 PHP_METHOD(gmagick, separateimagechannel)
 {
 	php_gmagick_object *intern;
-	long channel;
+	zend_long channel;
 	MagickBool status;
 
 	/* Parse parameters given to function */
@@ -4131,7 +4143,7 @@ PHP_METHOD(gmagick, sharpenimage)
 	php_gmagick_object *intern;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd|l", &radius, &sigma) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd", &radius, &sigma) == FAILURE) {
 		return;
 	}
 	
@@ -4186,7 +4198,7 @@ PHP_METHOD(gmagick, solarizeimage)
 {
 	php_gmagick_object *intern;
 	MagickBool status;
-	long threshold;
+	zend_long threshold;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &threshold) == FAILURE) {
 		return;
@@ -4419,27 +4431,31 @@ PHP_METHOD(gmagick, flattenimages)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::sampleImage(int cols, int rows[, bool fit] )
+/* {{{ proto bool Gmagick::sampleImage(int cols, int rows[, bool fit[, bool legacy = false]] )
 	Sample the size of an image to the given dimensions. Passing zero as either of
 	the arguments will preserve dimension while scaling.
+	If legacy is true, uses the 
+	incorrect behaviour that was present until Gmagick 2.0.1. If false (default) it uses the correct
+	behaviour.
 */
 PHP_METHOD(gmagick, sampleimage)
 {
-	long x, y, width, height;
+	zend_long x, y, width, height;
 	php_gmagick_object *intern;
 	MagickBool status;
 	zend_bool fit = 0;
+	zend_bool legacy = 0;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll|b", &x, &y, &fit) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll|bb", &x, &y, &fit, &legacy) == FAILURE) {
 		return;
 	}
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
-	
-	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, x, y, &width, &height)) {
+
+	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, x, y, &width, &height, legacy)) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to calculate image dimensions");
 	}
 

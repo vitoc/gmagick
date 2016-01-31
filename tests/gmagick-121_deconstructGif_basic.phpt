@@ -8,65 +8,86 @@ require_once(dirname(__FILE__) . '/skipif.inc');
 checkClassMethods("GmagickDraw", array('circle', 'translate'));
 
 ?>
+--XFAIL--
+GraphicMagick has multiple issues with 'image counts'. It appears to be confused how many images are in the list. 
 --FILE--
 <?php
 
-$deconstruct = 1;
+$aniGif = new \Gmagick();
+$aniGif->setFormat("gif");
 
-function makeSimpleGif($deconstruct) {
-    $aniGif = new \Gmagick();
-    $aniGif->setFormat("gif");
+$circleRadius = 20;
+$imageFrames = 6;
+$imageSize = 200;
 
-    $circleRadius = 20;
-    $imageFrames = 6;
-    $imageSize = 200;
+$background = new \Gmagick();
+$background->newImage($imageSize, $imageSize, "gray");
 
-    $background = new \Gmagick();
-    $background->newImage($imageSize, $imageSize, "gray");
+$blackWhite = new \Gmagick();
+$blackWhite->newImage($imageSize, $imageSize, "white");
 
-    $blackWhite = new \Gmagick();
-    $blackWhite->newImage($imageSize, $imageSize, "white");
+$backgroundPalette = clone $background;
+$backgroundPalette->quantizeImage(240, \Gmagick::COLORSPACE_RGB, 8, false, false);
 
-    $backgroundPalette = clone $background;
-    $backgroundPalette->quantizeImage(240, \Gmagick::COLORSPACE_RGB, 8, false, false);
+$blackWhitePalette = clone $blackWhite;
+$blackWhitePalette->quantizeImage(16, \Gmagick::COLORSPACE_RGB, 8, false, false);
 
-    $blackWhitePalette = clone $blackWhite;
-    $blackWhitePalette->quantizeImage(16, \Gmagick::COLORSPACE_RGB, 8, false, false);
+$backgroundPalette->addimage($blackWhitePalette);
 
-    $backgroundPalette->addimage($blackWhitePalette);
+/*
+for($count=0 ; $count<$imageFrames ; $count++) {
+	echo "Frame: ".$count."\n";
+	$drawing = new \GmagickDraw();
+	$drawing->setFillColor('white');
+	$drawing->setStrokeColor('rgba(64, 64, 64, 0.8)');
+	$strokeWidth = 4;
+	$drawing->setStrokeWidth($strokeWidth);
 
-    for($count=0 ; $count<$imageFrames ; $count++) {
-        echo "Frame: ".$count."\n";
-        $drawing = new \GmagickDraw();
-        $drawing->setFillColor('white');
-        $drawing->setStrokeColor('rgba(64, 64, 64, 0.8)');
-        $strokeWidth = 4;
-        $drawing->setStrokeWidth($strokeWidth);
-        
-        $distanceToMove = $imageSize + (($circleRadius + $strokeWidth) * 2);
-        $offset = ($distanceToMove * $count / ($imageFrames -1)) - ($circleRadius + $strokeWidth);
-        $drawing->translate(
-             $offset,
-             ($imageSize / 2) + ($imageSize / 3 * cos(20 * $count / $imageFrames))
-        );
-        $drawing->circle(0, 0, $circleRadius, 0);
+	$distanceToMove = $imageSize + (($circleRadius + $strokeWidth) * 2);
+	$offset = ($distanceToMove * $count / ($imageFrames -1)) - ($circleRadius + $strokeWidth);
+	$drawing->translate(
+		 $offset,
+		 ($imageSize / 2) + ($imageSize / 3 * cos(20 * $count / $imageFrames))
+	);
+	$drawing->circle(0, 0, $circleRadius, 0);
 
-        $frame = clone $background;
-        $frame->drawimage($drawing);
-        $frame->clutimage($backgroundPalette);
-        $frame->setImageDelay(10);
-        $aniGif->addImage($frame);
-    }
+	$frame = clone $background;
+	$frame->drawimage($drawing);
+	
+	$frame->setImageDelay(10);
+	
+	$frame = new Gmagick();
+	$frame->newimage( int $width , int $height , string $background [, string $format ] )
+	
+	
+	$aniGif->addImage($frame);
+}
+*/
 
-    if ($deconstruct == true) {
-        $aniGif = $aniGif->deconstructImages();
-    }
+$colors = array(
+	"Red",
+	"Orange",
+	"Yellow",
+	"Green",
+	"Indigo",
+	"Violet",
+);
 
-    $bytes = $aniGif->getImagesBlob();
-    if (strlen($bytes) <= 0) { echo "Failed to generate image.";} 
+foreach ($colors as $color) {
+	$frame = new Gmagick();
+	$frame->newimage(100, 100, $color);
+	$aniGif->addImage($frame);
 }
 
-makeSimpleGif($deconstruct) ;
+$aniGif->setImageFormat('gif');
+
+//Even this fails.
+//$aniGif->writeImage("./testgif.gif");
+
+$aniGif = $aniGif->deconstructImages();
+$bytes = $aniGif->getImagesBlob();
+if (strlen($bytes) <= 0) { echo "Failed to generate image.";} 
+
 echo "Ok";
 ?>
 --EXPECTF--
