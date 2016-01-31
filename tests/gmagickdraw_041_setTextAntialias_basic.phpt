@@ -1,10 +1,7 @@
 --TEST--
-Test GmagickDraw, setTextAntialias
+Test GmagickDraw, popDefs
 --SKIPIF--
-<?php
-$imageMagickRequiredVersion=0x675;
-require_once(dirname(__FILE__) . '/skipif.inc');
-?>
+<?php require_once(dirname(__FILE__) . '/skipif.inc'); ?>
 --FILE--
 <?php
 
@@ -12,39 +9,32 @@ $backgroundColor = 'rgb(225, 225, 225)';
 $strokeColor = 'rgb(0, 0, 0)';
 $fillColor = 'DodgerBlue2';
 
-function setTextAntialias($fillColor, $backgroundColor) {
+function popDefs($strokeColor, $fillColor, $backgroundColor) {
 
     $draw = new \GmagickDraw();
-    $draw->setStrokeColor('none');
+
+    $draw->setStrokeColor($strokeColor);
     $draw->setFillColor($fillColor);
-    $draw->setStrokeWidth(1);
-    $draw->setFontSize(32);
-    $draw->setTextAntialias(false);
-    $draw->annotate(5, 30, "Lorem Ipsum!");
-    $draw->setTextAntialias(true);
-    $draw->annotate(5, 65, "Lorem Ipsum!");
+    $draw->setstrokeOpacity(1);
+    $draw->setStrokeWidth(2);
+    $draw->setFontSize(72);
+    $draw->pushDefs();
+    $draw->setStrokeColor('white');
+    $draw->rectangle(50, 50, 200, 200);
+    $draw->popDefs();
 
-    $currentValue = $draw->getTextAntialias();
-
-    if ($currentValue !== true) {
-        echo "Failed to get textAntiAlias setting, which should be true\n";
-        var_dump($currentValue);
-    }
+    $draw->rectangle(300, 50, 450, 200);
 
     $gmagick = new \Gmagick();
-    $gmagick->newImage(220, 80, $backgroundColor);
+    $gmagick->newImage(500, 500, $backgroundColor);
     $gmagick->setImageFormat("png");
     $gmagick->drawImage($draw);
-
-    //Scale the image so that people can see the aliasing.
-    $gmagick->scaleImage(220 * 6, 80 * 6);
-    $gmagick->cropImage(640, 480, 0, 0);
 
     $bytes = $gmagick->getImageBlob();
     if (strlen($bytes) <= 0) { echo "Failed to generate image.";} 
 }
 
-setTextAntialias($fillColor, $backgroundColor);
+popDefs($strokeColor, $fillColor, $backgroundColor) ;
 echo "Ok";
 ?>
 --EXPECTF--
