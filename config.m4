@@ -27,8 +27,10 @@ if test $PHP_GMAGICK != "no"; then
 		else
 			AC_MSG_ERROR(no. You need at least GraphicsMagick version 1.1.0 to use Gmagick.)
 		fi
+		AC_MSG_CHECKING(GraphicsMagick version mask)
+		AC_MSG_RESULT(found version $GRAPHICSMAGICK_VERSION_MASK)
+
         LIB_DIR=$WAND_DIR/lib
-        
         # If "$LIB_DIR" == "/usr/lib" or possible /usr/$PHP_LIBDIR" then you're probably
         # going to have a bad time. PHP m4 files seem to be hard-coded to not link properly against
         # those directories. See PHP_ADD_LIBPATH for the weirdness.
@@ -42,43 +44,4 @@ if test $PHP_GMAGICK != "no"; then
 		PHP_SUBST(GMAGICK_SHARED_LIBADD)	
 		AC_DEFINE(HAVE_GMAGICK,1,[ ])
 		AC_DEFINE_UNQUOTED(GMAGICK_LIB_MASK,$GRAPHICSMAGICK_VERSION_MASK,[Version mask for comparisons])
-
-		# Probe for whether GM that we're compiling against has MagickSetImagePage
-		save_CFLAGS="$CFLAGS"
-		save_LDFLAGS="$LDFLAGS"
-		save_LIBS="$LIBS"
-		LIBS="-Wl,-rpath=${LIB_DIR}"
-		CFLAGS="`$WAND_BINARY --cppflags`"
-		LDFLAGS="`$WAND_BINARY --ldflags` `$WAND_BINARY --libs` -lGraphicsMagickWand"
-
-		AC_PROG_CPP
-		AC_MSG_CHECKING([for MagickSetImagePage function])
-		AC_TRY_RUN([
-#include <wand/wand_api.h>
-
-int main(int argc, char *argv[])
-{
-	MagickWand *magick_wand;
-	unsigned int status;
-	
-	InitializeMagick((char *)NULL);
-	magick_wand = NewMagickWand();
-	MagickReadImage(magick_wand, "magick:rose");
-	status = MagickSetImagePage(magick_wand, 50, 50, 0, 0);
-	DestroyMagick();
-
-	return 0;
-}
-		],[
-		  AC_MSG_RESULT([yes])
-		  AC_DEFINE(HAVE_MAGICK_SET_IMAGE_PAGE, 1, [Have GM with MagickSetImagePage support])
-		], [
-		  AC_MSG_RESULT([no])
-		], [
-		  AC_MSG_RESULT([no])
-		])
-
-	CFLAGS="$save_CFLAGS"
-	LDFLAGS="$save_LDFLAGS"
-	LIBS="$save_LIBS"
 fi

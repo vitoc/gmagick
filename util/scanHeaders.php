@@ -96,9 +96,9 @@ $enumToCheck = [
 
 ];
 
-$imagickHelperContents = file_get_contents("../gmagick_helpers.c");
+$gmagickHelperContents = file_get_contents("../gmagick_helpers.c");
 
-if ($imagickHelperContents == false) {
+if ($gmagickHelperContents == false) {
 	echo "failed to read ../gmagick_helpers.c\n";
 	exit(-1);
 }
@@ -121,7 +121,7 @@ foreach ($enumToCheck as $filename => $enums) {
 		$enumNameList = getEnumList($enum, $pathToImageMagick.$filename);
 		foreach ($enumNameList as $enumName) {
 			//echo "checking for $enumName\n";
-			if (stripos($imagickHelperContents, $enumName) === false) {
+			if (stripos($gmagickHelperContents, $enumName) === false) {
 				echo "value '$enumName' is missing for enum $enum.\n";
 			}
 		}

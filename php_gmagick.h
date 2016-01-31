@@ -57,6 +57,14 @@ typedef long ssize_t;
 #include "ext/standard/info.h"
 #include "ext/standard/php_filestat.h"
 
+#if GMAGICK_LIB_MASK >= 1003018
+	#define HAVE_GMAGICK_SET_IMAGE_PAGE 1
+#endif
+
+#if GMAGICK_LIB_MASK >= 1003020
+	#define HAVE_GMAGICK_SET_IMAGE_GRAVITY 1
+#endif
+
 /* Objects */
 typedef struct _php_gmagick_object  {
 	MagickWand *magick_wand;
@@ -214,7 +222,9 @@ PHP_METHOD(gmagick, getimagematte);
 #endif
 PHP_METHOD(gmagick, getimagegeometry);
 PHP_METHOD(gmagick, getimagemattecolor);
+#ifdef GMAGICK_HAVE_SET_IMAGE_PAGE
 PHP_METHOD(gmagick, getimagepage);
+#endif // GMAGICK_HAVE_SET_IMAGE_PAGE
 PHP_METHOD(gmagick, getimageprofile);
 PHP_METHOD(gmagick, getimageredprimary);
 PHP_METHOD(gmagick, getimagerenderingintent);
@@ -230,7 +240,7 @@ PHP_METHOD(gmagick, setimageresolution);
 PHP_METHOD(gmagick, setresolution);
 PHP_METHOD(gmagick, setimagescene);
 PHP_METHOD(gmagick, setimagetype);
-#ifdef HAVE_MAGICK_SET_IMAGE_PAGE
+#ifdef GMAGICK_HAVE_SET_IMAGE_PAGE
 PHP_METHOD(gmagick, setimagepage);
 #endif
 PHP_METHOD(gmagick, getimageunits);
@@ -294,6 +304,58 @@ PHP_METHOD(gmagick, sampleimage);
 PHP_METHOD(gmagick, cloneimage);
 PHP_METHOD(gmagick, appendimages);
 PHP_METHOD(gmagick, unsharpmaskimage);
+PHP_METHOD(gmagick, adaptivethresholdimage);
+PHP_METHOD(gmagick, affinetransformimage);
+PHP_METHOD(gmagick, averageimages);
+PHP_METHOD(gmagick, blackthresholdimage);
+PHP_METHOD(gmagick, colordecisionlist);
+PHP_METHOD(gmagick, clipimage);
+PHP_METHOD(gmagick, clippathimage);
+PHP_METHOD(gmagick, colorfloodfillimage);
+PHP_METHOD(gmagick, colorizeimage);
+PHP_METHOD(gmagick, compareimagechannels);
+PHP_METHOD(gmagick, compareimages);
+PHP_METHOD(gmagick, contrastimage);
+PHP_METHOD(gmagick, convolveimage);
+PHP_METHOD(gmagick, extentimage);
+PHP_METHOD(gmagick, fximage);
+PHP_METHOD(gmagick, getimageattribute);
+PHP_METHOD(gmagick, getimagechannelextrema);
+PHP_METHOD(gmagick, getimagechannelmean);
+PHP_METHOD(gmagick, getimagecolormapcolor);
+#ifdef HAVE_GMAGICK_SET_IMAGE_GRAVITY
+PHP_METHOD(gmagick, getimagegravity);
+#endif // #ifdef HAVE_GMAGICK_SET_IMAGE_GRAVITY
+PHP_METHOD(gmagick, getimagevirtualpixelmethod);
+PHP_METHOD(gmagick, haldclutimage);
+PHP_METHOD(gmagick, mattefloodfillimage);
+PHP_METHOD(gmagick, montageimage);
+PHP_METHOD(gmagick, morphimages);
+PHP_METHOD(gmagick, mosaicimages);
+PHP_METHOD(gmagick, setimageattribute);
+PHP_METHOD(gmagick, setimagecolormapcolor);
+#ifdef HAVE_GMAGICK_SET_IMAGE_GRAVITY
+PHP_METHOD(gmagick, setimagegravity);
+#endif //HAVE_GMAGICK_SET_IMAGE_GRAVITY
+PHP_METHOD(gmagick, setimagemattecolor);
+PHP_METHOD(gmagick, setimagevirtualpixelmethod);
+PHP_METHOD(gmagick, shaveimage);
+PHP_METHOD(gmagick, steganoimage);
+PHP_METHOD(gmagick, stereoimage);
+PHP_METHOD(gmagick, waveimage);
+PHP_METHOD(gmagick, whitethresholdimage);
+PHP_METHOD(gmagick, getimageboundingbox);
+PHP_METHOD(gmagick, getimagefuzz);
+PHP_METHOD(gmagick, getimagesavedtype);
+PHP_METHOD(gmagick, setdepth);
+PHP_METHOD(gmagick, setformat);
+PHP_METHOD(gmagick, setimagefuzz);
+PHP_METHOD(gmagick, setimageoption);
+PHP_METHOD(gmagick, setimagesavedtype);
+PHP_METHOD(gmagick, setresolutionunits);
+PHP_METHOD(gmagick, setformat);
+PHP_METHOD(gmagick, writeimagefile);
+
 /* draw */
 PHP_METHOD(gmagickdraw, setstrokecolor);
 PHP_METHOD(gmagickdraw, setstrokewidth);

@@ -273,6 +273,7 @@ ZEND_END_ARG_INFO()
 ZEND_BEGIN_ARG_INFO_EX(gmagick_cropthumbnailimage_args, 0, 0, 2)
 	ZEND_ARG_INFO(0, width)
 	ZEND_ARG_INFO(0, height)
+	ZEND_ARG_INFO(0, fit)
 	ZEND_ARG_INFO(0, legacy)
 ZEND_END_ARG_INFO()
 
@@ -683,11 +684,6 @@ ZEND_BEGIN_ARG_INFO_EX(gmagick_swirlimage_args, 0, 0, 1)
 	ZEND_ARG_INFO(0, degrees)
 ZEND_END_ARG_INFO()
 
-ZEND_BEGIN_ARG_INFO_EX(gmagick_tintimage_args, 0, 0, 2)
-	ZEND_ARG_INFO(0, tint_color)
-	ZEND_ARG_INFO(0, opacity)
-ZEND_END_ARG_INFO()
-
 ZEND_BEGIN_ARG_INFO_EX(gmagick_trimimage_args, 0, 0, 1)
 	ZEND_ARG_INFO(0, fuzz)
 ZEND_END_ARG_INFO()
@@ -717,6 +713,178 @@ ZEND_BEGIN_ARG_INFO_EX(gmagick_unsharpmaskimage_args, 0, 0, 4)
 	ZEND_ARG_INFO(0, amount)
 	ZEND_ARG_INFO(0, threshold)
 ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_adaptivethresholdimage_args, 0, 0, 3)
+	ZEND_ARG_INFO(0, width)
+	ZEND_ARG_INFO(0, height)
+	ZEND_ARG_INFO(0, offset)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_affinetransformimage_args, 0, 0, 1)
+	ZEND_ARG_OBJ_INFO(0, GmagickDraw, GmagickDraw, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_blackthresholdimage_args, 0, 0, 1)
+	ZEND_ARG_INFO(0, color)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_colordecisionlist_args, 0, 0, 1)
+	ZEND_ARG_INFO(0, antialias)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_clippathimage_args, 0, 0, 2)
+	ZEND_ARG_INFO(0, pathname)
+	ZEND_ARG_INFO(0, inside)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_colorfloodfillimage_args, 0, 0, 5)
+	ZEND_ARG_INFO(0, fill_color)
+	ZEND_ARG_INFO(0, fuzz)
+	ZEND_ARG_INFO(0, border_color)
+	ZEND_ARG_INFO(0, y)
+	ZEND_ARG_INFO(0, x)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_colorizeimage_args, 0, 0, 2)
+	ZEND_ARG_INFO(0, colorize_color)
+	ZEND_ARG_INFO(0, opacity)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_compareimagechannels_args, 0, 0, 3)
+	ZEND_ARG_OBJ_INFO(0, Gmagick, Gmagick, 0)
+	ZEND_ARG_INFO(0, channel)
+	ZEND_ARG_INFO(0, metric)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_compareimages_args, 0, 0, 2)
+	ZEND_ARG_OBJ_INFO(0, Gmagick, Gmagick, 0)
+	ZEND_ARG_INFO(0, metric)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_contrastimage_args, 0, 0, 1)
+	ZEND_ARG_INFO(0, sharpen)
+ZEND_END_ARG_INFO()
+ZEND_BEGIN_ARG_INFO_EX(gmagick_convolveimage_args, 0, 0, 1)
+	ZEND_ARG_INFO(0, kernel)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_extentimage_args, 0, 0, 4)
+	ZEND_ARG_INFO(0, width)
+	ZEND_ARG_INFO(0, height)
+	ZEND_ARG_INFO(0, x)
+	ZEND_ARG_INFO(0, y)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_getimageattribute_args, 0, 0, 1)
+	ZEND_ARG_INFO(0, key)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_getimagechannelextrema_args, 0, 0, 1)
+	ZEND_ARG_INFO(0, channel)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_getimagechannelmean_args, 0, 0, 1)
+	ZEND_ARG_INFO(0, channel)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_getimagecolormapcolor_args, 0, 0, 1)
+	ZEND_ARG_INFO(0, index)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_haldclutimage_args, 0, 0, 1)
+	ZEND_ARG_OBJ_INFO(0, Gmagick, Gmagick, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_mattefloodfillimage_args, 0, 0, 5)
+	ZEND_ARG_INFO(0, alpha)
+	ZEND_ARG_INFO(0, fuzz)
+	ZEND_ARG_INFO(0, color)
+	ZEND_ARG_INFO(0, x)
+	ZEND_ARG_INFO(0, y)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_montageimage_args, 0, 0, 5)
+	ZEND_ARG_OBJ_INFO(0, GmagickDraw, GmagickDraw, 0)
+	ZEND_ARG_INFO(0, tile_geometry)
+	ZEND_ARG_INFO(0, thumbnail_geometry)
+	ZEND_ARG_INFO(0, montageMode)
+	ZEND_ARG_INFO(0, frame)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_setimageattribute_args, 0, 0, 2)
+	ZEND_ARG_INFO(0, key)
+	ZEND_ARG_INFO(0, value)
+ZEND_END_ARG_INFO()
+
+#ifdef HAVE_GMAGICK_SET_IMAGE_GRAVITY
+ZEND_BEGIN_ARG_INFO_EX(gmagick_setimagegravity_args, 0, 0, 1)
+	ZEND_ARG_INFO(0, gravity)
+ZEND_END_ARG_INFO()
+#endif //HAVE_GMAGICK_SET_IMAGE_GRAVITY
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_setimagemattecolor_args, 0, 0, 1)
+	ZEND_ARG_INFO(0, color)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_setimagevirtualpixelmethod_args, 0, 0, 1)
+	ZEND_ARG_INFO(0, virtual_pixel_method)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_shaveimage_args, 0, 0, 2)
+	ZEND_ARG_INFO(0, columns)
+	ZEND_ARG_INFO(0, rows)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_steganoimage_args, 0, 0, 2)
+	ZEND_ARG_OBJ_INFO(0, Gmagick, Gmagick, 0)
+	ZEND_ARG_INFO(0, offset)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_stereoimage_args, 0, 0, 1)
+	ZEND_ARG_OBJ_INFO(0, Gmagick, Gmagick, 0)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_waveimage_args, 0, 0, 2)
+	ZEND_ARG_INFO(0, amplitude)
+	ZEND_ARG_INFO(0, waveLength)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_getimageboundingbox_args, 0, 0, 1)
+	ZEND_ARG_INFO(0, fuzz)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_setdepth_args, 0, 0, 1)
+	ZEND_ARG_INFO(0, depth)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_setformat_args, 0, 0, 1)
+	ZEND_ARG_INFO(0, format)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_setimagefuzz_args, 0, 0, 1)
+	ZEND_ARG_INFO(0, fuzz)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_setimageoption_args, 0, 0, 3)
+	ZEND_ARG_INFO(0, format)
+	ZEND_ARG_INFO(0, key)
+	ZEND_ARG_INFO(0, value)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_setimagesavedtype_args, 0, 0, 1)
+	ZEND_ARG_INFO(0, type)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setresolutionunits_args, 0, 0, 2)
+	ZEND_ARG_INFO(0, x_resolution)
+	ZEND_ARG_INFO(0, y_resolution)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagick_writeimagefile_args, 0, 0, 1)
+	ZEND_ARG_INFO(0, handle)
+	ZEND_ARG_INFO(0, format)
+ZEND_END_ARG_INFO()
+
 
 /* {{{ static zend_function_entry php_gmagick_functions[]
 */
@@ -817,7 +985,9 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, getimagematte,		gmagick_empty_args, ZEND_ACC_PUBLIC)
 #endif
 	PHP_ME(gmagick, getimagemattecolor,	gmagick_empty_args, ZEND_ACC_PUBLIC)
-	PHP_ME(gmagick, getimagepage, gmagick_empty_args, ZEND_ACC_PUBLIC)	
+#ifdef GMAGICK_HAVE_SET_IMAGE_PAGE
+	PHP_ME(gmagick, getimagepage, gmagick_empty_args, ZEND_ACC_PUBLIC)
+#endif // GMAGICK_HAVE_SET_IMAGE_PAGE
 	PHP_ME(gmagick, getimageprofile,	gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimageredprimary,	gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimagerenderingintent,gmagick_empty_args, ZEND_ACC_PUBLIC)
@@ -833,9 +1003,9 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, setresolution,          gmagick_setresolution_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagescene,		gmagick_setimagescene_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagetype,		gmagick_setimagetype_args, ZEND_ACC_PUBLIC)
-#ifdef HAVE_MAGICK_SET_IMAGE_PAGE 
+#ifdef GMAGICK_HAVE_SET_IMAGE_PAGE 
 	PHP_ME(gmagick, setimagepage,		gmagick_setimagepage_args, ZEND_ACC_PUBLIC)
-#endif //HAVE_MAGICK_SET_IMAGE_PAGE
+#endif //GMAGICK_HAVE_SET_IMAGE_PAGE
 	PHP_ME(gmagick, getimageunits,		gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimagewhitepoint,	gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimagewidth,		gmagick_empty_args, ZEND_ACC_PUBLIC)
@@ -901,6 +1071,55 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, unsharpmaskimage,	gmagick_unsharpmaskimage_args, ZEND_ACC_PUBLIC)
 	PHP_MALIAS(gmagick, read, readimage,	gmagick_readimage_args,	ZEND_ACC_PUBLIC)
 	PHP_MALIAS(gmagick, write, writeimage,	gmagick_writeimage_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, adaptivethresholdimage, gmagick_adaptivethresholdimage_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, affinetransformimage, gmagick_affinetransformimage_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, averageimages, gmagick_empty_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, blackthresholdimage, gmagick_blackthresholdimage_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, colordecisionlist, gmagick_colordecisionlist_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, clipimage, gmagick_empty_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, clippathimage, gmagick_clippathimage_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, colorfloodfillimage, gmagick_colorfloodfillimage_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, colorizeimage, gmagick_colorizeimage_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, compareimagechannels, gmagick_compareimagechannels_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, compareimages, gmagick_compareimages_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, contrastimage, gmagick_contrastimage_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, convolveimage, gmagick_convolveimage_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, extentimage, gmagick_extentimage_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, getimageattribute, gmagick_getimageattribute_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, getimagechannelextrema, gmagick_getimagechannelextrema_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, getimagechannelmean, gmagick_getimagechannelmean_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, getimagecolormapcolor, gmagick_getimagecolormapcolor_args, ZEND_ACC_PUBLIC)
+#ifdef HAVE_GMAGICK_SET_IMAGE_GRAVITY
+	PHP_ME(gmagick, getimagegravity, gmagick_empty_args, ZEND_ACC_PUBLIC)
+#endif // HAVE_GMAGICK_SET_IMAGE_GRAVITY
+	PHP_ME(gmagick, getimagevirtualpixelmethod, gmagick_empty_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, haldclutimage, gmagick_haldclutimage_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, mattefloodfillimage, gmagick_mattefloodfillimage_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, montageimage, gmagick_montageimage_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, morphimages, gmagick_morphimages_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, mosaicimages, gmagick_empty_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, setimageattribute, gmagick_setimageattribute_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, setimagecolormapcolor, gmagick_setimagecolormapcolor_args, ZEND_ACC_PUBLIC)
+#ifdef HAVE_GMAGICK_SET_IMAGE_GRAVITY
+	PHP_ME(gmagick, setimagegravity, gmagick_setimagegravity_args, ZEND_ACC_PUBLIC)
+#endif //#ifdef HAVE_GMAGICK_SET_IMAGE_GRAVITY
+	PHP_ME(gmagick, setimagemattecolor, gmagick_setimagemattecolor_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, setimagevirtualpixelmethod, gmagick_setimagevirtualpixelmethod_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, shaveimage, gmagick_shaveimage_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, steganoimage, gmagick_steganoimage_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, stereoimage, gmagick_stereoimage_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, waveimage, gmagick_waveimage_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, whitethresholdimage, gmagick_whitethresholdimage_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, getimageboundingbox, gmagick_getimageboundingbox_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, getimagefuzz, gmagick_empty_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, getimagesavedtype, gmagick_empty_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, setdepth, gmagick_setdepth_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, setformat, gmagick_setformat_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, setimagefuzz, gmagick_setimagefuzz_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, setimageoption, gmagick_setimageoption_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, setimagesavedtype, gmagick_setimagesavedtype_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, setresolutionunits, gmagickdraw_setresolutionunits_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, writeimagefile, gmagick_writeimagefile_args, ZEND_ACC_PUBLIC)
 	{ NULL, NULL, NULL }
 };
 /* }}} */
