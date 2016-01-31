@@ -4,6 +4,8 @@ Copyright (c) 2009 Vito Chin, Mikko Koppanen
 
 PHP extension that wraps the GraphicsMagick library. Access GraphicsMagick's capabilities via PHP.
 
+[![Build Status](https://travis-ci.org/vitoc/gmagick.svg?branch=master)](https://travis-ci.org/vitoc/gmagick)
+
 Getting Started
 ===============
 
