@@ -240,6 +240,8 @@ Extraneous optional parameter for blurImage and sharpenImage removed. Only two p
 				<file role="test" name="gmagickpixel-003-getcolorcount.phpt"/>
 				<file role="test" name="gmagickpixel-004-clone.phpt"/>
 				<file role="test" name="Vera.ttf"/>
+				<file role="test" name="hald_8.png"/>
+
 			</dir>
 		</dir>
 	</contents>
