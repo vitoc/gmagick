@@ -26,10 +26,10 @@ If you're using versions of PHP below 7.0.1 but above 5.1.3, please use version 
 		<email>danack@php.net</email>
 		<active>yes</active>
 	</lead>	
-	<date>2016-01-31</date>
+	<date>2016-02-02</date>
 	<version>
-		<release>2.0.1RC2</release>
-		<api>2.0.1RC2</api>
+		<release>2.0.1RC3</release>
+		<api>2.0.1RC3</api>
 	</version>
 	<stability>
 		<release>beta</release>
@@ -37,7 +37,7 @@ If you're using versions of PHP below 7.0.1 but above 5.1.3, please use version 
 	</stability>
 	<license uri="http://www.php.net/license">PHP License</license>
 <notes>
-Extraneous optional parameter for blurImage and sharpenImage removed. Only two parameters are supported, radius and sigma. Also, a lot more image methods with corresponding tests.
+Fix for setImagePage availability detection. Added hald_8.png test image.
 </notes>
 	<contents>
 		<dir name="/">

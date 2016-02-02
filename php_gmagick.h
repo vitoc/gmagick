@@ -58,7 +58,7 @@ typedef long ssize_t;
 #include "ext/standard/php_filestat.h"
 
 #if GMAGICK_LIB_MASK >= 1003018
-	#define HAVE_GMAGICK_SET_IMAGE_PAGE 1
+	#define GMAGICK_HAVE_SET_IMAGE_PAGE 1
 #endif
 
 #if GMAGICK_LIB_MASK >= 1003020
