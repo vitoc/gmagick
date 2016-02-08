@@ -19,11 +19,10 @@ Remember to run ldconfig after building GraphicsMagick to update shared library 
 
 Typically, as with most extensions:
 
-$ phpize
-$ ./configure
-$ make
-$ make install
-
+    $ phpize
+    $ ./configure
+    $ make
+    $ make instal
 
 Functions not supported
 =======================
