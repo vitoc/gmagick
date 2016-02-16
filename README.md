@@ -22,7 +22,7 @@ Typically, as with most extensions:
     $ phpize
     $ ./configure
     $ make
-    $ make instal
+    $ make install
 
 Functions not supported
 =======================
