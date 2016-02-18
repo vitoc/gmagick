@@ -1620,11 +1620,20 @@ ZEND_BEGIN_ARG_INFO_EX(gmagickpixel_getcolorvalue_args, 0, 0, 1)
 	ZEND_ARG_INFO(0, color)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(gmagickpixel_getcolorvaluequantum_args, 0, 0, 1)
+	ZEND_ARG_INFO(0, color)
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO_EX(gmagickpixel_setcolor_args, 0, 0, 1)
 	ZEND_ARG_INFO(0, color)
 ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(gmagickpixel_setcolorvalue_args, 0, 0, 2)
+	ZEND_ARG_INFO(0, color)
+	ZEND_ARG_INFO(0, value)
+ZEND_END_ARG_INFO()
+
+ZEND_BEGIN_ARG_INFO_EX(gmagickpixel_setcolorvaluequantum_args, 0, 0, 2)
 	ZEND_ARG_INFO(0, color)
 	ZEND_ARG_INFO(0, value)
 ZEND_END_ARG_INFO()
@@ -1639,6 +1648,8 @@ static zend_function_entry php_gmagickpixel_class_methods[] =
 	PHP_ME(gmagickpixel,	getcolorcount,		gmagickpixel_zero_args,		ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickpixel,	getcolorvalue,		gmagickpixel_getcolorvalue_args,	ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickpixel,	setcolorvalue,		gmagickpixel_setcolorvalue_args,	ZEND_ACC_PUBLIC)
+	PHP_ME(gmagickpixel,	getcolorvaluequantum,		gmagickpixel_getcolorvaluequantum_args,	ZEND_ACC_PUBLIC)
+	PHP_ME(gmagickpixel,	setcolorvaluequantum,		gmagickpixel_setcolorvaluequantum_args,	ZEND_ACC_PUBLIC)
 	{ NULL, NULL, NULL }
 };
 /* }}} */

@@ -258,3 +258,125 @@ PHP_METHOD(gmagickpixel, setcolorvalue)
 	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
+
+/* {{{ proto float GmagickPixel::getColorValueQuantum(int color )
+	Gets the quantum color of the GmagickPixel.
+*/
+PHP_METHOD(gmagickpixel, getcolorvaluequantum)
+{
+	php_gmagickpixel_object *internp;
+	zend_long colorquantum;
+	double color_value_quantum = 0;
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &colorquantum) == FAILURE) {
+		return;
+	}
+
+	internp = Z_GMAGICKPIXEL_OBJ_P(getThis());
+
+	switch (colorquantum) {
+
+		case GMAGICK_COLOR_BLACK:
+			color_value_quantum = PixelGetBlackQuantum(internp->pixel_wand);
+			break;
+
+		case GMAGICK_COLOR_BLUE:
+			color_value_quantum = PixelGetBlueQuantum(internp->pixel_wand);
+			break;
+
+		case GMAGICK_COLOR_CYAN:
+			color_value_quantum = PixelGetCyanQuantum(internp->pixel_wand);
+			break;
+
+		case GMAGICK_COLOR_GREEN:
+			color_value_quantum = PixelGetGreenQuantum(internp->pixel_wand);
+			break;
+
+		case GMAGICK_COLOR_RED:
+			color_value_quantum = PixelGetRedQuantum(internp->pixel_wand);
+			break;
+
+		case GMAGICK_COLOR_YELLOW:
+			color_value_quantum = PixelGetYellowQuantum(internp->pixel_wand);
+			break;
+
+		case GMAGICK_COLOR_MAGENTA:
+			color_value_quantum = PixelGetMagentaQuantum(internp->pixel_wand);
+			break;
+
+		case GMAGICK_COLOR_OPACITY:
+			color_value_quantum = PixelGetOpacityQuantum(internp->pixel_wand);
+			break;
+
+		default:
+			GMAGICK_THROW_GMAGICKPIXEL_EXCEPTION(internp->pixel_wand, "Unknown color type");
+			break;
+	}
+	RETVAL_DOUBLE(color_value_quantum);
+}
+/* }}} */
+
+/* {{{ proto GmagickPixel GmagickPixel::setColorValueQuantum(int color, float value)
+	Sets the normalized color quantum of the GmagickPixel.
+*/
+PHP_METHOD(gmagickpixel, setcolorvaluequantum)
+{
+	php_gmagickpixel_object *internp;
+	zend_long color_quantum;
+	double color_value_quantum_i;
+	Quantum color_value_quantum;
+	char r[100];
+
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ld", &color_quantum, &color_value_quantum_i) == FAILURE) {
+		return;
+	}
+
+	// Possible truncation?
+	color_value_quantum = color_value_quantum_i;
+
+	internp = Z_GMAGICKPIXEL_OBJ_P(getThis());
+
+	switch (color_quantum) {
+		case GMAGICK_COLOR_BLACK:
+			PixelSetBlackQuantum(internp->pixel_wand, color_value_quantum);
+			break;
+
+		case GMAGICK_COLOR_BLUE:
+			PixelSetBlueQuantum(internp->pixel_wand, color_value_quantum);
+			break;
+
+		case GMAGICK_COLOR_CYAN:
+			PixelSetCyanQuantum(internp->pixel_wand, color_value_quantum);
+			break;
+
+		case GMAGICK_COLOR_GREEN:
+			PixelSetGreenQuantum(internp->pixel_wand, color_value_quantum);
+			break;
+
+		case GMAGICK_COLOR_RED:
+			PixelSetRedQuantum(internp->pixel_wand, color_value_quantum);
+			break;
+
+		case GMAGICK_COLOR_YELLOW:
+			PixelSetYellowQuantum(internp->pixel_wand, color_value_quantum);
+			break;
+
+		case GMAGICK_COLOR_MAGENTA:
+			PixelSetMagentaQuantum(internp->pixel_wand, color_value_quantum);
+			break;
+
+		case GMAGICK_COLOR_OPACITY:
+			PixelSetOpacityQuantum(internp->pixel_wand, color_value_quantum);
+			break;
+
+		default:
+			sprintf(r, "Unknown color type: %d", color_quantum);
+			GMAGICK_THROW_GMAGICKPIXEL_EXCEPTION(internp->pixel_wand, r);
+			break;
+
+	}
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */

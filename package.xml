@@ -239,6 +239,7 @@ Fix for setImagePage availability detection. Added hald_8.png test image.
 				<file role="test" name="gmagickpixel-002-setcolorvalue_getcolorvalue.phpt"/>
 				<file role="test" name="gmagickpixel-003-getcolorcount.phpt"/>
 				<file role="test" name="gmagickpixel-004-clone.phpt"/>
+				<file role="test" name="gmagickpixel-005-setcolorvaluequantum_getcolorvaluequantum.phpt"/>
 				<file role="test" name="Vera.ttf"/>
 				<file role="test" name="hald_8.png"/>
 

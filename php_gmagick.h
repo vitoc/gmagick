@@ -472,4 +472,6 @@ PHP_METHOD(gmagickpixel, getcolor);
 PHP_METHOD(gmagickpixel, getcolorcount);
 PHP_METHOD(gmagickpixel, getcolorvalue);
 PHP_METHOD(gmagickpixel, setcolorvalue);
+PHP_METHOD(gmagickpixel, getcolorvaluequantum);
+PHP_METHOD(gmagickpixel, setcolorvaluequantum);
 #endif
