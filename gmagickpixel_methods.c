@@ -265,17 +265,17 @@ PHP_METHOD(gmagickpixel, setcolorvalue)
 PHP_METHOD(gmagickpixel, getcolorvaluequantum)
 {
 	php_gmagickpixel_object *internp;
-	zend_long colorquantum;
-	double color_value_quantum = 0;
+	zend_long color_quantum;
+	Quantum color_value_quantum = 0;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &colorquantum) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &color_quantum) == FAILURE) {
 		return;
 	}
 
 	internp = Z_GMAGICKPIXEL_OBJ_P(getThis());
 
-	switch (colorquantum) {
+	switch (color_quantum) {
 
 		case GMAGICK_COLOR_BLACK:
 			color_value_quantum = PixelGetBlackQuantum(internp->pixel_wand);
@@ -310,10 +310,10 @@ PHP_METHOD(gmagickpixel, getcolorvaluequantum)
 			break;
 
 		default:
-			GMAGICK_THROW_GMAGICKPIXEL_EXCEPTION(internp->pixel_wand, "Unknown color type");
-			break;
+			zend_throw_exception_ex(php_gmagickpixel_exception_class_entry, 2 TSRMLS_CC, "Unknown color type: %d", color_quantum);
+			RETURN_NULL();
 	}
-	RETVAL_DOUBLE(color_value_quantum);
+	RETVAL_LONG(color_value_quantum);
 }
 /* }}} */
 
@@ -324,17 +324,16 @@ PHP_METHOD(gmagickpixel, setcolorvaluequantum)
 {
 	php_gmagickpixel_object *internp;
 	zend_long color_quantum;
-	double color_value_quantum_i;
+	double color_value_quantum_input;
 	Quantum color_value_quantum;
-	char r[100];
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ld", &color_quantum, &color_value_quantum_i) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ld", &color_quantum, &color_value_quantum_input) == FAILURE) {
 		return;
 	}
 
 	// Possible truncation?
-	color_value_quantum = color_value_quantum_i;
+	color_value_quantum = color_value_quantum_input;
 
 	internp = Z_GMAGICKPIXEL_OBJ_P(getThis());
 
@@ -372,11 +371,10 @@ PHP_METHOD(gmagickpixel, setcolorvaluequantum)
 			break;
 
 		default:
-			sprintf(r, "Unknown color type: %d", color_quantum);
-			GMAGICK_THROW_GMAGICKPIXEL_EXCEPTION(internp->pixel_wand, r);
-			break;
-
+			zend_throw_exception_ex(php_gmagickpixel_exception_class_entry, 2 TSRMLS_CC, "Unknown color type: %d", color_quantum);
+			RETURN_NULL();
 	}
+
 	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
