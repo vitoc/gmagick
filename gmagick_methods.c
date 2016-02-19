@@ -3675,12 +3675,13 @@ PHP_METHOD(gmagick, quantizeimages)
 PHP_METHOD(gmagick, queryfontmetrics)
 {
 	zval *objvar;
-	zend_bool dealloc = 0;
 	php_gmagick_object *intern;
 	php_gmagickdraw_object *internd;
 	char *text;
 	size_t text_len;
 	double *metrics;
+	MagickWand *temp_wand = NULL;
+	MagickWand *font_image_wand = NULL;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "Os", &objvar, php_gmagickdraw_sc_entry, &text, &text_len) == FAILURE) {
 		return;
@@ -3688,13 +3689,18 @@ PHP_METHOD(gmagick, queryfontmetrics)
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	internd = Z_GMAGICKDRAW_OBJ_P(objvar);
 	if (MagickGetNumberImages(intern->magick_wand) == 0) {
-		MagickReadImage(intern->magick_wand, "XC:white");
-		MagickScaleImage(intern->magick_wand, 1, 1);
-		dealloc = 1;
+		temp_wand = NewMagickWand();
+		MagickReadImage(temp_wand, "XC:white");
+		MagickScaleImage(temp_wand, 1, 1);
+		font_image_wand = temp_wand;
 	}
-	metrics = MagickQueryFontMetrics(intern->magick_wand, internd->drawing_wand, text);
-	if (dealloc) {
-		MagickRemoveImage(intern->magick_wand);
+	else {
+		font_image_wand = intern->magick_wand;
+	}
+
+	metrics = MagickQueryFontMetrics(font_image_wand, internd->drawing_wand, text);
+	if (temp_wand != NULL) {
+		DestroyMagickWand(temp_wand);
 	}
 	if (metrics != (double *)NULL) {
 		array_init(return_value);
