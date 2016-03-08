@@ -80,7 +80,7 @@ PHP_METHOD(gmagickpixel, setcolor)
 PHP_METHOD(gmagickpixel, setcolorcount)
 {
 	php_gmagickpixel_object *internp;
-	long color_count;
+	zend_long color_count;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &color_count) == FAILURE) {
 		return;
@@ -149,7 +149,7 @@ PHP_METHOD(gmagickpixel, getcolor)
 PHP_METHOD(gmagickpixel, getcolorcount)
 {
 	php_gmagickpixel_object *internp;
-	long color_count;
+	zend_long color_count;
 	
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
 		return;

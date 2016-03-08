@@ -240,6 +240,7 @@ queryFontMetric empty image handling update. New get/setColorValueQuantum method
 				<file role="test" name="gmagickpixel-003-getcolorcount.phpt"/>
 				<file role="test" name="gmagickpixel-004-clone.phpt"/>
 				<file role="test" name="gmagickpixel-005-setcolorvaluequantum_getcolorvaluequantum.phpt"/>
+				<file role="test" name="gmagickpixel-006-setcolorcount.phpt"/>
 				<file role="test" name="Vera.ttf"/>
 				<file role="test" name="hald_8.png"/>
 
