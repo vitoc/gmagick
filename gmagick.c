@@ -1628,6 +1628,10 @@ ZEND_BEGIN_ARG_INFO_EX(gmagickpixel_setcolor_args, 0, 0, 1)
 	ZEND_ARG_INFO(0, color)
 ZEND_END_ARG_INFO()
 
+ZEND_BEGIN_ARG_INFO_EX(gmagickpixel_setcolorcount_args, 0, 0, 1)
+    ZEND_ARG_INFO(0, color_count)
+ZEND_END_ARG_INFO()
+
 ZEND_BEGIN_ARG_INFO_EX(gmagickpixel_setcolorvalue_args, 0, 0, 2)
 	ZEND_ARG_INFO(0, color)
 	ZEND_ARG_INFO(0, value)
@@ -1646,6 +1650,7 @@ static zend_function_entry php_gmagickpixel_class_methods[] =
 	PHP_ME(gmagickpixel,	setcolor,		gmagickpixel_setcolor_args,		ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickpixel,	getcolor,		gmagickpixel_getcolor_args,		ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickpixel,	getcolorcount,		gmagickpixel_zero_args,		ZEND_ACC_PUBLIC)
+	PHP_ME(gmagickpixel,	setcolorcount,		gmagickpixel_setcolorcount_args,		ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickpixel,	getcolorvalue,		gmagickpixel_getcolorvalue_args,	ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickpixel,	setcolorvalue,		gmagickpixel_setcolorvalue_args,	ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickpixel,	getcolorvaluequantum,		gmagickpixel_getcolorvaluequantum_args,	ZEND_ACC_PUBLIC)
