@@ -74,6 +74,26 @@ PHP_METHOD(gmagickpixel, setcolor)
 }
 /* }}} */
 
+/* {{{ proto GmagickPixel GmagickPixel::setColorCount(int colorCount)
+    Sets the color count associated with this color.
+*/
+PHP_METHOD(gmagickpixel, setcolorcount)
+{
+	php_gmagickpixel_object *internp;
+	zend_long color_count;
+
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &color_count) == FAILURE) {
+		return;
+	}
+
+	internp = Z_GMAGICKPIXEL_OBJ_P(getThis());
+
+	PixelSetColorCount(internp->pixel_wand, color_count);
+
+	GMAGICK_CHAIN_METHOD;
+}
+/* }}} */
+
 /* {{{ proto array GmagickPixel::getColor([boolean as_array = false, normalise_array = false])
 	Returns the color of the pixel
 */
@@ -129,7 +149,7 @@ PHP_METHOD(gmagickpixel, getcolor)
 PHP_METHOD(gmagickpixel, getcolorcount)
 {
 	php_gmagickpixel_object *internp;
-	long color_count;
+	zend_long color_count;
 	
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
 		return;
