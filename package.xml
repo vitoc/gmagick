@@ -26,10 +26,10 @@ If you're using versions of PHP below 7.0.1 but above 5.1.3, please use version 
 		<email>danack@php.net</email>
 		<active>yes</active>
 	</lead>	
-	<date>2016-02-20</date>
+	<date>2016-03-12</date>
 	<version>
-		<release>2.0.2RC1</release>
-		<api>2.0.2RC1</api>
+		<release>2.0.2RC2</release>
+		<api>2.0.2RC2</api>
 	</version>
 	<stability>
 		<release>beta</release>
@@ -37,7 +37,7 @@ If you're using versions of PHP below 7.0.1 but above 5.1.3, please use version 
 	</stability>
 	<license uri="http://www.php.net/license">PHP License</license>
 <notes>
-queryFontMetric empty image handling update. New get/setColorValueQuantum methods.
+destroy() now only returns bool. Support for the way references are handled in PHP 7. New setColorCount() method.
 </notes>
 	<contents>
 		<dir name="/">
