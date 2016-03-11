@@ -762,11 +762,7 @@ PHP_METHOD(gmagick, destroy)
 		RETURN_FALSE;
 	}
 	DestroyMagickWand(intern->magick_wand);
-	intern->magick_wand = NewMagickWand();
-	/*
-		Removed fiddling with refcount
-	*/
-	GMAGICK_CHAIN_METHOD;
+	RETURN_TRUE;
 }
 /* }}} */
 
