@@ -437,6 +437,7 @@ void *get_pointinfo_array(zval *coordinate_array, int *num_elements TSRMLS_DC)
 	coordinates = (PointInfo *)emalloc(sizeof(PointInfo) * elements_count);
 
 	ZEND_HASH_FOREACH_VAL(coords, current) {
+		ZVAL_DEREF(current);
 		/* If its something than array lets error here */
 		if(current == NULL || Z_TYPE_P(current) != IS_ARRAY) {
 			efree(coordinates);
@@ -457,6 +458,7 @@ void *get_pointinfo_array(zval *coordinate_array, int *num_elements TSRMLS_DC)
 
 		/* Get X */
 		pz_x = zend_hash_str_find(sub_array, "x", strlen("x"));
+		ZVAL_DEREF(pz_x);
 		if(Z_TYPE_P(pz_x) != IS_DOUBLE && Z_TYPE_P(pz_x) != IS_LONG) {
 			efree(coordinates);
 			coordinates = (PointInfo *)NULL;
@@ -465,6 +467,7 @@ void *get_pointinfo_array(zval *coordinate_array, int *num_elements TSRMLS_DC)
 
 		/* Get Y */
 		pz_y = zend_hash_str_find(sub_array, "y", strlen("y"));
+		ZVAL_DEREF(pz_y);
 		if(Z_TYPE_P(pz_y) != IS_DOUBLE && Z_TYPE_P(pz_y) != IS_LONG) {
 			efree(coordinates);
 			coordinates = (PointInfo *)NULL;
@@ -540,6 +543,7 @@ double *get_double_array_from_zval(zval *param_array, long *num_elements TSRMLS_
 	double_array = (double *)emalloc(sizeof(double) * elements_count);
 
 	ZEND_HASH_FOREACH_VAL(ht, current) {
+		ZVAL_DEREF(current);
 		if(Z_TYPE_P(current) == IS_LONG) {
 			double_array[i] = (double)Z_LVAL_P(current);
 		} else if (Z_TYPE_P(current) == IS_DOUBLE) {
