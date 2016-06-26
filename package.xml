@@ -26,7 +26,7 @@ If you're using versions of PHP below 7.0.1 but above 5.1.3, please use version 
 		<email>danack@php.net</email>
 		<active>yes</active>
 	</lead>	
-	<date>2016-06-27</date>
+	<date>2016-06-26</date>
 	<version>
 		<release>2.0.4RC1</release>
 		<api>2.0.4RC1</api>
