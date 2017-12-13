@@ -105,7 +105,7 @@ PHP_METHOD(gmagick, __construct)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::annotateImage(GmagickDraw drawing_wand, float x, float y, float angle, string text)
+/* {{{ proto Gmagick Gmagick::annotateImage(GmagickDraw drawing_wand, float x, float y, float angle, string text)
 	Annotates an image with text.
 */
 PHP_METHOD(gmagick, annotateimage)
@@ -137,7 +137,7 @@ PHP_METHOD(gmagick, annotateimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::blurImage(float radius, float sigma )
+/* {{{ proto Gmagick Gmagick::blurImage(float radius, float sigma )
 	Adds blur filter to image. Optional third parameter to blur a specific channel.
 */
 PHP_METHOD(gmagick, blurimage)
@@ -329,7 +329,7 @@ PHP_METHOD(gmagick, cropimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::cropthumbnailimage(int columns, int rows[, bool legacy])
+/* {{{ proto Gmagick Gmagick::cropthumbnailimage(int columns, int rows[, bool legacy])
 	 Creates a crop thumbnail. If legacy is true, uses the 
 	incorrect behaviour that was present until Gmagick 2.0.1. If false (default) it uses the correct
 	behaviour.
@@ -419,7 +419,7 @@ PHP_METHOD(gmagick, compositeimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::drawImage(GmagickDraw drawing_wand)
+/* {{{ proto Gmagick Gmagick::drawImage(GmagickDraw drawing_wand)
 	Renders the GmagickDrawing object on the current image.
 */
 PHP_METHOD(gmagick, drawimage)
@@ -450,7 +450,7 @@ PHP_METHOD(gmagick, drawimage)
 }
 /* }}} */
 
-/* {{{ proto bool GMAGICK::addImage(GMAGICK source )
+/* {{{ proto Gmagick GMAGICK::addImage(GMAGICK source )
 	Adds new image to GMAGICK object from the current position of the source object.
 */
 PHP_METHOD(gmagick, addimage)
@@ -479,7 +479,7 @@ PHP_METHOD(gmagick, addimage)
 }
 /* }}} */
 
-/* {{{ proto bool GMAGICK::addNoiseImage(int noise_type[, int channel])
+/* {{{ proto Gmagick GMAGICK::addNoiseImage(int noise_type[, int channel])
 	Adds random noise to the image. Channel parameter is ignored in ImageMagick below 6.2.8
 */
 PHP_METHOD(gmagick, addnoiseimage)
@@ -506,7 +506,7 @@ PHP_METHOD(gmagick, addnoiseimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::borderImage(GmagickPixel bordercolor, int width, int height)
+/* {{{ proto Gmagick Gmagick::borderImage(GmagickPixel bordercolor, int width, int height)
 	Surrounds the image with a border of the color defined by the bordercolor pixel wand.
 */
 PHP_METHOD(gmagick, borderimage)
@@ -567,7 +567,7 @@ PHP_METHOD(gmagick, thresholdimage)
 /* }}} */
 
 
-/* {{{ proto bool Gmagick::charcoalImage(float radius, float sigma)
+/* {{{ proto Gmagick Gmagick::charcoalImage(float radius, float sigma)
 	Simulates a charcoal drawing.
 */
 PHP_METHOD(gmagick, charcoalimage)
@@ -594,7 +594,7 @@ PHP_METHOD(gmagick, charcoalimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::chopImage(int width, int height, int x, int y)
+/* {{{ proto Gmagick Gmagick::chopImage(int width, int height, int x, int y)
 	Removes a region of an image and collapses the image to occupy the removed portion
 */
 PHP_METHOD(gmagick, chopimage)
@@ -623,7 +623,7 @@ PHP_METHOD(gmagick, chopimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::commentImage(string comment)
+/* {{{ proto Gmagick Gmagick::commentImage(string comment)
 	Adds a comment to your image.
 */
 PHP_METHOD(gmagick, commentimage)
@@ -662,7 +662,7 @@ PHP_METHOD(gmagick, current)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::cycleColormapImage(int displace)
+/* {{{ proto Gmagick Gmagick::cycleColormapImage(int displace)
 	Displaces an image's colormap by a given number of positions.  If you cycle the colormap a number of times you can produce a psychodelic effect.
 */
 PHP_METHOD(gmagick, cyclecolormapimage)
@@ -690,7 +690,7 @@ PHP_METHOD(gmagick, cyclecolormapimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::deconstructImages()
+/* {{{ proto Gmagick Gmagick::deconstructImages()
 	Compares each image with the next in a sequence and returns the maximum bounding region of any pixel differences it discovers.
 */
 PHP_METHOD(gmagick, deconstructimages)
@@ -719,7 +719,7 @@ PHP_METHOD(gmagick, deconstructimages)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::despeckleImage()
+/* {{{ proto Gmagick Gmagick::despeckleImage()
 	Reduces the speckle noise in an image while perserving the edges of the original image.
 */
 PHP_METHOD(gmagick, despeckleimage)
@@ -767,7 +767,7 @@ PHP_METHOD(gmagick, destroy)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::edgeImage(float radius)
+/* {{{ proto Gmagick Gmagick::edgeImage(float radius)
 	Enhance edges within the image with a convolution filter of the given radius.  Use a radius of 0 and Edge() selects a suitable radius for you.
 */
 PHP_METHOD(gmagick, edgeimage)
@@ -796,7 +796,7 @@ PHP_METHOD(gmagick, edgeimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::embossImage(float radius, float sigma)
+/* {{{ proto Gmagick Gmagick::embossImage(float radius, float sigma)
 	Returns a grayscale image with a three-dimensional effect.  We convolve the image with a Gaussian operator of the given radius and standard deviation (sigma).  For reasonable results, radius should be larger than sigma.  Use a radius of 0 and it will choose a suitable radius for you.
 */
 PHP_METHOD(gmagick, embossimage)
@@ -827,7 +827,7 @@ PHP_METHOD(gmagick, embossimage)
 
 
 
-/* {{{ proto bool Gmagick::enhanceImage()
+/* {{{ proto Gmagick Gmagick::enhanceImage()
 	Applies a digital filter that improves the quality of a noisy image.
 */
 PHP_METHOD(gmagick, enhanceimage)
@@ -853,7 +853,7 @@ PHP_METHOD(gmagick, enhanceimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::equalizeImage()
+/* {{{ proto Gmagick Gmagick::equalizeImage()
 	Equalizes the image histogram.
 */
 PHP_METHOD(gmagick, equalizeimage)
@@ -879,7 +879,7 @@ PHP_METHOD(gmagick, equalizeimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::flipImage()
+/* {{{ proto Gmagick Gmagick::flipImage()
 	Creates a vertical mirror image by reflecting the pixels around the central x-axis.
 */
 PHP_METHOD(gmagick, flipimage)
@@ -904,7 +904,7 @@ PHP_METHOD(gmagick, flipimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::flopImage()
+/* {{{ proto Gmagick Gmagick::flopImage()
 	Creates a horizontal mirror image by reflecting the pixels around the central y-axis.
 */
 PHP_METHOD(gmagick, flopimage)
@@ -930,7 +930,7 @@ PHP_METHOD(gmagick, flopimage)
 /* }}} */
 
 
-/* {{{ proto bool Gmagick::frameImage(GmagickPixel matte_color, int width, int height, int inner_bevel, int outer_bevel)
+/* {{{ proto Gmagick Gmagick::frameImage(GmagickPixel matte_color, int width, int height, int inner_bevel, int outer_bevel)
 	Adds a simulated three-dimensional border around the image
 */
 PHP_METHOD(gmagick, frameimage)
@@ -960,7 +960,7 @@ PHP_METHOD(gmagick, frameimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::gammaImage(float gamma[, int channel])
+/* {{{ proto Gmagick Gmagick::gammaImage(float gamma[, int channel])
 	Gamma-corrects an image.  The same image viewed on different devices will have perceptual differences in the way the image's intensities are represented on the screen.  Specify individual gamma levels for the red, green, and blue channels, or adjust all three with the gamma parameter.  Values typically range from 0.8 to 2.3.
 */
 PHP_METHOD(gmagick, gammaimage)
@@ -1145,7 +1145,7 @@ PHP_METHOD(gmagick, getimagesblob)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageBackgroundColor(GmagickPixel background)
+/* {{{ proto Gmagick Gmagick::setImageBackgroundColor(GmagickPixel background)
 	Sets the image background color.
 */
 PHP_METHOD(gmagick, setimagebackgroundcolor)
@@ -1175,7 +1175,7 @@ PHP_METHOD(gmagick, setimagebackgroundcolor)
 }
 /* }}} */
 
-/* {{{ proto GmagickPixel Gmagick::getImageBluePrimary(float x, float y)
+/* {{{ proto array Gmagick::getImageBluePrimary(float x, float y)
 	Returns the chromaticy blue primary point for the image.
 */
 PHP_METHOD(gmagick, getimageblueprimary)
@@ -1262,7 +1262,7 @@ PHP_METHOD(gmagick, getimagechanneldepth)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageBluePrimary(float x,float y)
+/* {{{ proto Gmagick Gmagick::setImageBluePrimary(float x,float y)
 	Sets the image chromaticity blue primary point
 */
 PHP_METHOD(gmagick, setimageblueprimary)
@@ -1289,7 +1289,7 @@ PHP_METHOD(gmagick, setimageblueprimary)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageBorderColor(GmagickPixel border)
+/* {{{ proto Gmagick Gmagick::setImageBorderColor(GmagickPixel border)
 	Sets the image border color
 */
 PHP_METHOD(gmagick, setimagebordercolor)
@@ -1318,7 +1318,7 @@ PHP_METHOD(gmagick, setimagebordercolor)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageChannelDepth(int channel, int depth)
+/* {{{ proto Gmagick Gmagick::setImageChannelDepth(int channel, int depth)
 	Sets the depth of a particular image channel
 */
 PHP_METHOD(gmagick, setimagechanneldepth)
@@ -1345,7 +1345,7 @@ PHP_METHOD(gmagick, setimagechanneldepth)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageColorspace(int colorspace)
+/* {{{ proto Gmagick Gmagick::setImageColorspace(int colorspace)
 	Sets the image colorspace
 */
 PHP_METHOD(gmagick, setimagecolorspace)
@@ -1372,7 +1372,7 @@ PHP_METHOD(gmagick, setimagecolorspace)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setInterlaceScheme(INTERLACETYPE interlace_scheme)
+/* {{{ proto Gmagick Gmagick::setInterlaceScheme(INTERLACETYPE interlace_scheme)
 	Sets the image interlace scheme.
 */
 PHP_METHOD(gmagick, setinterlacescheme)
@@ -1515,7 +1515,7 @@ PHP_METHOD(gmagick, getnumberimages)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageCompose(int compose)
+/* {{{ proto Gmagick Gmagick::setImageCompose(int compose)
 	Sets the image composite operator, useful for specifying how to composite the image thumbnail when using the Gmagick::montageImage() method.
 */
 PHP_METHOD(gmagick, setimagecompose)
@@ -1542,7 +1542,7 @@ PHP_METHOD(gmagick, setimagecompose)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageCompression(int compression)
+/* {{{ proto Gmagick Gmagick::setImageCompression(int compression)
     Sets the image compression.
 */
 PHP_METHOD(gmagick, setimagecompression)
@@ -1573,7 +1573,7 @@ PHP_METHOD(gmagick, setimagecompression)
 /* }}} */
 
 
-/* {{{ proto bool Gmagick::getImageCompression
+/* {{{ proto int Gmagick::getImageCompression
 	Gets the image compression
 */
 PHP_METHOD(gmagick, getimagecompression)
@@ -1589,7 +1589,7 @@ PHP_METHOD(gmagick, getimagecompression)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageDelay(int delay)
+/* {{{ proto Gmagick Gmagick::setImageDelay(int delay)
 	Sets the image delay.
 */
 PHP_METHOD(gmagick, setimagedelay)
@@ -1616,7 +1616,7 @@ PHP_METHOD(gmagick, setimagedelay)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageDepth(int depth)
+/* {{{ proto Gmagick Gmagick::setImageDepth(int depth)
 	Sets the image depth.
 */
 PHP_METHOD(gmagick, setimagedepth)
@@ -1643,7 +1643,7 @@ PHP_METHOD(gmagick, setimagedepth)
 }
 /* }}} */
 
-/* {{{ proto long Gmagick::getImageDispose()
+/* {{{ proto int Gmagick::getImageDispose()
 	Gets the image disposal method.
 */
 PHP_METHOD(gmagick, getimagedispose)
@@ -1663,7 +1663,7 @@ PHP_METHOD(gmagick, getimagedispose)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageDispose(int dispose)
+/* {{{ proto Gmagick Gmagick::setImageDispose(int dispose)
 	Sets the image disposal method
 */
 PHP_METHOD(gmagick, setimagedispose)
@@ -1690,7 +1690,7 @@ PHP_METHOD(gmagick, setimagedispose)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setFilename(string filename)
+/* {{{ proto Gmagick Gmagick::setFilename(string filename)
 	Sets the filename before you read or write an image file.
 */
 PHP_METHOD(gmagick, setfilename)
@@ -1746,7 +1746,7 @@ PHP_METHOD(gmagick, getimage)
 }
 /* }}} */
 
-/* {{{ proto Gmagick Gmagick::setImage(Gmagick replace )
+/* {{{ proto bool Gmagick::setImage(Gmagick replace )
 	Replaces the current sequence
 */
 PHP_METHOD(gmagick, setimage)
@@ -1835,7 +1835,7 @@ PHP_METHOD(gmagick, getimagefilename)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageFilename(string filename)
+/* {{{ proto Gmagick Gmagick::setImageFilename(string filename)
 	Sets the filename of a particular image in a sequence.
 */
 PHP_METHOD(gmagick, setimagefilename)
@@ -1891,7 +1891,7 @@ PHP_METHOD(gmagick, getimageformat)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageFormat(string format)
+/* {{{ proto Gmagick Gmagick::setImageFormat(string format)
 	Sets the format of a particular image in a sequence.
 */
 PHP_METHOD(gmagick, setimageformat)
@@ -1921,7 +1921,7 @@ PHP_METHOD(gmagick, setimageformat)
 /* }}} */
 
 #if GMAGICK_LIB_MASK >= 1003007
-/* {{{ proto bool Gmagick::setCompressionQuality(int quality)
+/* {{{ proto Gmagick Gmagick::setCompressionQuality(int quality)
 	Sets the compression quality factor (0-100). The GraphicsMagick default value is 75.
 */
 PHP_METHOD(gmagick, setcompressionquality)
@@ -1969,7 +1969,7 @@ PHP_METHOD(gmagick, getimagegamma)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageGamma(float gamma)
+/* {{{ proto Gmagick Gmagick::setImageGamma(float gamma)
 	Sets the image gamma.
 */
 PHP_METHOD(gmagick, setimagegamma)
@@ -2026,7 +2026,7 @@ PHP_METHOD(gmagick, getimagegreenprimary)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageGreenPrimary(float x, float y)
+/* {{{ proto Gmagick Gmagick::setImageGreenPrimary(float x, float y)
 	Sets the image chromaticity green primary point
 */
 PHP_METHOD(gmagick, setimagegreenprimary)
@@ -2128,7 +2128,7 @@ PHP_METHOD(gmagick, getimageindex)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageIndex(int index)
+/* {{{ proto Gmagick Gmagick::setImageIndex(int index)
 	Returns the index of the current active image, within the Gmagick object.
 */
 PHP_METHOD(gmagick, setimageindex)
@@ -2176,7 +2176,7 @@ PHP_METHOD(gmagick, getimageinterlacescheme)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageInterlaceScheme(int interlace_scheme)
+/* {{{ proto Gmagick Gmagick::setImageInterlaceScheme(int interlace_scheme)
 	Sets the image interlace scheme
 */
 PHP_METHOD(gmagick, setimageinterlacescheme)
@@ -2522,7 +2522,7 @@ PHP_METHOD(gmagick, getimagetype)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageIterations(int iterations)
+/* {{{ proto Gmagick Gmagick::setImageIterations(int iterations)
 	Sets the image iterations.
 */
 PHP_METHOD(gmagick, setimageiterations)
@@ -2549,7 +2549,7 @@ PHP_METHOD(gmagick, setimageiterations)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageProfile(string name, string profile)
+/* {{{ proto Gmagick Gmagick::setImageProfile(string name, string profile)
 	Adds a named profile to the Gmagick object
 */
 PHP_METHOD(gmagick, setimageprofile)
@@ -2578,7 +2578,7 @@ PHP_METHOD(gmagick, setimageprofile)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageRedPrimary(float x,float y)
+/* {{{ proto Gmagick Gmagick::setImageRedPrimary(float x,float y)
 	Sets the image chromaticity red primary point.
 */
 PHP_METHOD(gmagick, setimageredprimary)
@@ -2605,7 +2605,7 @@ PHP_METHOD(gmagick, setimageredprimary)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageRenderingIntent(int rendering_intent)
+/* {{{ proto Gmagick Gmagick::setImageRenderingIntent(int rendering_intent)
 	Sets the image rendering intent.
 */
 PHP_METHOD(gmagick, setimagerenderingintent)
@@ -2632,7 +2632,7 @@ PHP_METHOD(gmagick, setimagerenderingintent)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageResolution(float x_resolution,const float y_resolution)
+/* {{{ proto Gmagick Gmagick::setImageResolution(float x_resolution,const float y_resolution)
 	Sets the image resolution.
 */
 PHP_METHOD(gmagick, setimageresolution)
@@ -2659,7 +2659,7 @@ PHP_METHOD(gmagick, setimageresolution)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageScene(int scene)
+/* {{{ proto Gmagick Gmagick::setImageScene(int scene)
 	Sets the image scene.
 */
 PHP_METHOD(gmagick, setimagescene)
@@ -2686,7 +2686,7 @@ PHP_METHOD(gmagick, setimagescene)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageType(int image_type)
+/* {{{ proto Gmagick Gmagick::setImageType(int image_type)
 	Sets the image type.
 */
 PHP_METHOD(gmagick, setimagetype)
@@ -2873,7 +2873,7 @@ PHP_METHOD(gmagick, getreleasedate)
 }
 /* }}} */
 
-/* {{{ proto Gmagick Gmagick::getResourceLimit(int type)
+/* {{{ proto int Gmagick::getResourceLimit(int type)
 	Returns the specified resource limit in megabytes.
 */
 PHP_METHOD(gmagick, getresourcelimit)
@@ -2943,7 +2943,7 @@ PHP_METHOD(gmagick, getsize)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setImageUnits(int units)
+/* {{{ proto Gmagick Gmagick::setImageUnits(int units)
 	Sets the image units of resolution.
 */
 PHP_METHOD(gmagick, setimageunits)
@@ -2973,7 +2973,7 @@ PHP_METHOD(gmagick, setimageunits)
 
 
 
-/* {{{ proto bool Gmagick::setImageWhitePoint(float x,float y)
+/* {{{ proto Gmagick Gmagick::setImageWhitePoint(float x,float y)
 	Sets the image chromaticity white point.
 */
 PHP_METHOD(gmagick, setimagewhitepoint)
@@ -3000,7 +3000,7 @@ PHP_METHOD(gmagick, setimagewhitepoint)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setSamplingFactors(array factors)
+/* {{{ proto Gmagick Gmagick::setSamplingFactors(array factors)
 	Sets the image sampling factors.
 */
 PHP_METHOD(gmagick, setsamplingfactors)
@@ -3058,7 +3058,7 @@ PHP_METHOD(gmagick, setresourcelimit)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::setSize(int columns, int rows)
+/* {{{ proto Gmagick Gmagick::setSize(int columns, int rows)
 	Sets the size of the Gmagick object.  Set it before you read a raw image format such as RGB, GRAY, or CMYK.
 */
 PHP_METHOD(gmagick, setsize)
@@ -3154,7 +3154,7 @@ PHP_METHOD(gmagick, haspreviousimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::implodeImage(float radius )
+/* {{{ proto Gmagick Gmagick::implodeImage(float radius )
 	Creates a new image that is a copy of an existing one with the image pixels "implode" by the specified percentage. It allocates the memory necessary for the new Image structure and returns a pointer to the new image.
 */
 PHP_METHOD(gmagick, implodeimage)
@@ -3181,7 +3181,7 @@ PHP_METHOD(gmagick, implodeimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::labelImage(string label)
+/* {{{ proto Gmagick Gmagick::labelImage(string label)
 	Adds a label to your image.
 */
 PHP_METHOD(gmagick, labelimage)
@@ -3210,7 +3210,7 @@ PHP_METHOD(gmagick, labelimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::levelImage(float blackPoint, float gamma, float whitePoint[, int channel] )
+/* {{{ proto Gmagick Gmagick::levelImage(float blackPoint, float gamma, float whitePoint[, int channel] )
 	Adjusts the levels of an image by scaling the colors falling between specified white and black points to the full available quantum range. The parameters provided represent the black, mid, and white points. The black point specifies the darkest color in the image. Colors darker than the black point are set to zero. Mid point specifies a gamma correction to apply to the image.  White point specifies the lightest color in the image. Colors brighter than the white point are set to the maximum quantum value.
 */
 PHP_METHOD(gmagick, levelimage)
@@ -3243,7 +3243,7 @@ PHP_METHOD(gmagick, levelimage)
 /* }}} */
 
 
-/* {{{ proto bool Gmagick::magnifyImage()
+/* {{{ proto Gmagick Gmagick::magnifyImage()
 	Is a convenience method that scales an image proportionally to twice its original size.
 */
 PHP_METHOD(gmagick, magnifyimage)
@@ -3268,7 +3268,7 @@ PHP_METHOD(gmagick, magnifyimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::cycleColormapImage(Gmagick map, bool dither)
+/* {{{ proto Gmagick Gmagick::cycleColormapImage(Gmagick map, bool dither)
 	Replaces the colors of an image with the closest color from a reference image.
 */
 PHP_METHOD(gmagick, mapimage)
@@ -3297,7 +3297,7 @@ PHP_METHOD(gmagick, mapimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::medianFilterImage(float radius)
+/* {{{ proto Gmagick Gmagick::medianFilterImage(float radius)
 	Applies a digital filter that improves the quality of a noisy image.  Each pixel is replaced by the median in a set of neighboring pixels as defined by radius.
 */
 PHP_METHOD(gmagick, medianfilterimage)
@@ -3352,7 +3352,7 @@ PHP_METHOD(gmagick, negateimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::minifyImage()
+/* {{{ proto Gmagick Gmagick::minifyImage()
 	Is a convenience method that scales an image proportionally to one-half its original size
 */
 PHP_METHOD(gmagick, minifyimage)
@@ -3379,7 +3379,7 @@ PHP_METHOD(gmagick, minifyimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::modulateImage(float brightness, float saturation, float hue)
+/* {{{ proto Gmagick Gmagick::modulateImage(float brightness, float saturation, float hue)
 	Lets you control the brightness, saturation, and hue of an image.  Hue is the percentage of absolute rotation from the current position.  For example 50 results in a counter-clockwise rotation of 90 degrees, 150 results in a clockwise rotation of 90 degrees, with 0 and 200 both resulting in a rotation of 180 degrees.
 */
 PHP_METHOD(gmagick, modulateimage)
@@ -3405,7 +3405,7 @@ PHP_METHOD(gmagick, modulateimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::motionBlurImage(float radius, float sigma, float angle)
+/* {{{ proto Gmagick Gmagick::motionBlurImage(float radius, float sigma, float angle)
 	Simulates motion blur.  We convolve the image with a Gaussian operator of the given radius and standard deviation (sigma). For reasonable results, radius should be larger than sigma.  Use a radius of 0 and MotionBlurImage() selects a suitable radius for you. Angle gives the angle of the blurring motion.
 */
 PHP_METHOD(gmagick, motionblurimage)
@@ -3459,7 +3459,7 @@ PHP_METHOD(gmagick, nextimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::newImage(int cols, int rows, string color[, string format] )
+/* {{{ proto Gmagick Gmagick::newImage(int cols, int rows, string color[, string format] )
  	Creates a new image of given size, background color and format
 */
 PHP_METHOD(gmagick, newimage)
@@ -3499,7 +3499,7 @@ PHP_METHOD(gmagick, newimage)
 }
 /* }}} */ 
 
-/* {{{ proto bool Gmagick::normalizeImage([int channel])
+/* {{{ proto Gmagick Gmagick::normalizeImage([int channel])
 	Enhances the contrast of a color image by adjusting the pixels color to span the entire range of colors available
 */
 PHP_METHOD(gmagick, normalizeimage)
@@ -3526,7 +3526,7 @@ PHP_METHOD(gmagick, normalizeimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::oilPaintImage(float radius)
+/* {{{ proto Gmagick Gmagick::oilPaintImage(float radius)
 	Applies a special effect filter that simulates an oil painting.  Each pixel is replaced by the most frequent color occurring in a circular region defined by radius.
 */
 PHP_METHOD(gmagick, oilpaintimage)
@@ -3578,7 +3578,7 @@ PHP_METHOD(gmagick, previousimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::profileImage(string name,string profile)
+/* {{{ proto Gmagick Gmagick::profileImage(string name,string profile)
 	Adds or removes a ICC, IPTC, or generic profile from an image.  If the profile is NULL, it is removed from the image otherwise added.  Use a name of '*' and a profile of NULL to remove all profiles from the image.
 */
 PHP_METHOD(gmagick, profileimage)
@@ -3607,7 +3607,7 @@ PHP_METHOD(gmagick, profileimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::quantizeImage(int numberColors, int colorspace, int treedepth, bool dither,
+/* {{{ proto Gmagick Gmagick::quantizeImage(int numberColors, int colorspace, int treedepth, bool dither,
     bool measureError)
 	Analyzes the colors within a reference image
 */
@@ -3637,7 +3637,7 @@ PHP_METHOD(gmagick, quantizeimage)
 /* }}} */
 
 
-/* {{{ proto bool Gmagick::quantizeImages(int number_colors, int colorspace, int treedepth, bool dither,
+/* {{{ proto Gmagick Gmagick::quantizeImages(int number_colors, int colorspace, int treedepth, bool dither,
     bool measure_error)
 	Analyzes the colors within a sequence of images
 */
@@ -3770,7 +3770,7 @@ PHP_METHOD(gmagick, queryformats)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::radialBlurImage(float angle[, int channel])
+/* {{{ proto Gmagick Gmagick::radialBlurImage(float angle[, int channel])
 	Radial blurs an image.
 */
 PHP_METHOD(gmagick, radialblurimage)
@@ -3801,7 +3801,7 @@ PHP_METHOD(gmagick, radialblurimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::raiseImage(int width, int height, int x, int y, bool raise)
+/* {{{ proto Gmagick Gmagick::raiseImage(int width, int height, int x, int y, bool raise)
 	Creates a simulated three-dimensional button-like effect by lightening and darkening the edges of the image.  Members width and height of raise_info define the width of the vertical and horizontal edge of the effect.
 */
 PHP_METHOD(gmagick, raiseimage)
@@ -3829,7 +3829,7 @@ PHP_METHOD(gmagick, raiseimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::readImageBlob(string image )
+/* {{{ proto Gmagick Gmagick::readImageBlob(string image )
     Reads image from a binary string
 */
 PHP_METHOD(gmagick, readimageblob)
@@ -3867,7 +3867,7 @@ PHP_METHOD(gmagick, readimageblob)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::readImageFile(resource filehandle )
+/* {{{ proto Gmagick Gmagick::readImageFile(resource filehandle )
     Reads image from open filehandle
 */
 PHP_METHOD(gmagick, readimagefile)
@@ -3907,7 +3907,7 @@ PHP_METHOD(gmagick, readimagefile)
 /* }}} */
 
 
-/* {{{ proto bool Gmagick::reduceNoiseImage(float radius)
+/* {{{ proto Gmagick Gmagick::reduceNoiseImage(float radius)
 	Smooths the contours of an image
 */
 PHP_METHOD(gmagick, reducenoiseimage)
@@ -3934,7 +3934,7 @@ PHP_METHOD(gmagick, reducenoiseimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::removeImage()
+/* {{{ proto Gmagick Gmagick::removeImage()
 	Removes an image from the image list.
 */
 PHP_METHOD(gmagick, removeimage)
@@ -3987,7 +3987,7 @@ PHP_METHOD(gmagick, removeimageprofile)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::resampleImage(float x_resolution, float y_resolution, int filter, float blur)
+/* {{{ proto Gmagick Gmagick::resampleImage(float x_resolution, float y_resolution, int filter, float blur)
 	Resample image to desired resolution.
 */
 PHP_METHOD(gmagick, resampleimage)
@@ -4014,7 +4014,7 @@ PHP_METHOD(gmagick, resampleimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::rollImage(int x, int y)
+/* {{{ proto Gmagick Gmagick::rollImage(int x, int y)
 	Offsets an image as defined by x and y.
 */
 PHP_METHOD(gmagick, rollimage)
@@ -4040,7 +4040,7 @@ PHP_METHOD(gmagick, rollimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::rotateImage(GmagickPixel background, float degrees)
+/* {{{ proto Gmagick Gmagick::rotateImage(GmagickPixel background, float degrees)
 	Rotates an image the specified number of degrees. Empty triangles left over from rotating the image are filled with the background color.
 */
 PHP_METHOD(gmagick, rotateimage)
@@ -4071,7 +4071,7 @@ PHP_METHOD(gmagick, rotateimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::scaleImage(int cols, int rows[, bool fit[, bool legacy = false]] )
+/* {{{ proto Gmagick Gmagick::scaleImage(int cols, int rows[, bool fit[, bool legacy = false]] )
 	Scales the size of an image to the given dimensions. Passing zero as either of
 	the arguments will preserve dimension while scaling.  If legacy is true, uses the 
 	incorrect behaviour that was present until Gmagick 2.0.1. If false (default) it uses the correct
@@ -4109,7 +4109,7 @@ PHP_METHOD(gmagick, scaleimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::separateImageChannel(int channel)
+/* {{{ proto Gmagick Gmagick::separateImageChannel(int channel)
 	Separates a channel from the image
 */
 PHP_METHOD(gmagick, separateimagechannel)
@@ -4136,7 +4136,7 @@ PHP_METHOD(gmagick, separateimagechannel)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::sharpenImage(float radius, float sigma[, int channel])
+/* {{{ proto Gmagick Gmagick::sharpenImage(float radius, float sigma[, int channel])
     Sharpens an image.  We convolve the image with a Gaussian operator of the given radius  and standard deviation (sigma). For reasonable results, the radius should be larger than sigma.  Use a radius of 0 and selects a suitable radius for you.
 */
 PHP_METHOD(gmagick, sharpenimage)
@@ -4163,7 +4163,7 @@ PHP_METHOD(gmagick, sharpenimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::shearImage(GmagickPixel background, float x_shear, float y_shear)
+/* {{{ proto Gmagick Gmagick::shearImage(GmagickPixel background, float x_shear, float y_shear)
 	Slides one edge of an image along the X or Y axis
 */
 PHP_METHOD(gmagick, shearimage)
@@ -4194,7 +4194,7 @@ PHP_METHOD(gmagick, shearimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::solarizeImage(float threshold)
+/* {{{ proto Gmagick Gmagick::solarizeImage(float threshold)
 	Applies a special effect to the image, similar to the effect achieved in a photo darkroom by selectively exposing areas of photo sensitive paper to light.  Threshold ranges from 0 to QuantumRange and is a measure of the extent of the solarization.
 */
 PHP_METHOD(gmagick, solarizeimage)
@@ -4222,7 +4222,7 @@ PHP_METHOD(gmagick, solarizeimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::spreadImage(float radius )
+/* {{{ proto Gmagick Gmagick::spreadImage(float radius )
 	Special effects method that randomly displaces each pixel in a block defined by the radius parameter.
 */
 PHP_METHOD(gmagick, spreadimage)
@@ -4250,7 +4250,7 @@ PHP_METHOD(gmagick, spreadimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::stripImage()
+/* {{{ proto Gmagick Gmagick::stripImage()
 	Strips an image of all profiles and comments.
 */
 PHP_METHOD(gmagick, stripimage)
@@ -4276,7 +4276,7 @@ PHP_METHOD(gmagick, stripimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::swirlImage(float degrees )
+/* {{{ proto Gmagick Gmagick::swirlImage(float degrees )
 	Swirls the pixels about the center of the image, where degrees indicates the sweep of the arc through which each pixel is moved. You get a more dramatic effect as the degrees move from 1 to 360.
 */
 PHP_METHOD(gmagick, swirlimage)
@@ -4304,7 +4304,7 @@ PHP_METHOD(gmagick, swirlimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::textureImage(Gmagick texture_wand)
+/* {{{ proto Gmagick Gmagick::textureImage(Gmagick texture_wand)
 	Repeatedly tiles the texture image across and down the image canvas.
 */
 PHP_METHOD(gmagick, textureimage)
@@ -4338,7 +4338,7 @@ PHP_METHOD(gmagick, textureimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::trimImage(double fuzz)
+/* {{{ proto Gmagick Gmagick::trimImage(double fuzz)
 	Remove edges that are the background color from the image.
 */
 PHP_METHOD(gmagick, trimimage)
@@ -4434,7 +4434,7 @@ PHP_METHOD(gmagick, flattenimages)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::sampleImage(int cols, int rows[, bool fit[, bool legacy = false]] )
+/* {{{ proto Gmagick Gmagick::sampleImage(int cols, int rows[, bool fit[, bool legacy = false]] )
 	Sample the size of an image to the given dimensions. Passing zero as either of
 	the arguments will preserve dimension while scaling.
 	If legacy is true, uses the 
@@ -4706,7 +4706,7 @@ PHP_METHOD(gmagick, blackthresholdimage)
 }
 /* }}} */
 
-/* {{{ proto void Gmagick::colordecisionlist(string color_correction_collection)
+/* {{{ proto bool Gmagick::colordecisionlist(string color_correction_collection)
 	Set whether antialiasing should be used for operations. On by default.
 */
 
@@ -4866,7 +4866,7 @@ PHP_METHOD(gmagick, colorizeimage)
 }
 /* }}} */
 
-/* {{{ proto Gmagick Gmagick::compareImageChannels(Gmagick reference, int channel, int metric)
+/* {{{ proto array Gmagick::compareImageChannels(Gmagick reference, int channel, int metric)
 	Compares one or more image channels of an image to a reconstructed image and returns the difference image.
 */
 PHP_METHOD(gmagick, compareimagechannels)
@@ -4922,7 +4922,7 @@ PHP_METHOD(gmagick, compareimagechannels)
 }
 /* }}} */
 
-/* {{{ proto Gmagick Gmagick::compareImageChannels(int metric, int distortion)
+/* {{{ proto array Gmagick::compareImageChannels(int metric, int distortion)
 	Compares one or more images and returns the difference image.
 */
 PHP_METHOD(gmagick, compareimages)
@@ -5076,7 +5076,7 @@ PHP_METHOD(gmagick, extentimage)
 /* }}} */
 
 
-/* {{{ proto GmagickPixel Gmagick::getImageAttribute(string key )
+/* {{{ proto string Gmagick::getImageAttribute(string key )
 	Returns a named attribute
 */
 PHP_METHOD(gmagick, getimageattribute)
@@ -5248,7 +5248,7 @@ PHP_METHOD(gmagick, getimagevirtualpixelmethod)
 }
 /* }}} */
 
-/* {{{ proto boolean Gmagick::haldClutImage(Gmagick hald[, int CHANNEL])
+/* {{{ proto bool Gmagick::haldClutImage(Gmagick hald[, int CHANNEL])
    Replaces colors in the image from a Hald color lookup table
 */
 PHP_METHOD(gmagick, haldclutimage)
@@ -5625,7 +5625,7 @@ PHP_METHOD(gmagick, steganoimage)
 }
 /* }}} */
 
-/* {{{ proto bool Gmagick::stereoImage(Gmagick offset_wand)
+/* {{{ proto Gmagick Gmagick::stereoImage(Gmagick offset_wand)
 	Composites two images and produces a single image that is the composite of a left and right image of a stereo pair
 */
 PHP_METHOD(gmagick, stereoimage)
@@ -5757,7 +5757,7 @@ PHP_METHOD(gmagick, whitethresholdimage)
 /* }}} */
 
 
-/* {{{ proto bool Gmagick::getimageboundingbox(float fuzz)
+/* {{{ proto array Gmagick::getimageboundingbox(float fuzz)
 	MagickGetImageBoundingBox() obtains the crop bounding box required to remove a solid-color border from the image. Color quantums which differ less than the fuzz setting are considered to be the same. If a border is not detected, then the the original image dimensions are returned. The crop bounding box estimation uses the same algorithm as MagickTrimImage().
 */
 PHP_METHOD(gmagick, getimageboundingbox)
@@ -5843,7 +5843,7 @@ unsigned int MagickSetDepth(MagickWand *wand,const size_t depth);
 #endif //!defined(MagickSetDepth)
 
 
-/* {{{ proto bool Gmagick::setDepth(int depth)
+/* {{{ proto Gmagick Gmagick::setDepth(int depth)
 	MagickSetDepth() sets the sample depth to be used when reading from a raw image or a format which requires that the depth be specified in advance by the user.
 */
 PHP_METHOD(gmagick, setdepth)
@@ -5869,7 +5869,7 @@ PHP_METHOD(gmagick, setdepth)
 /* }}} */
 
 
-/* {{{ proto bool Gmagick::setImageFuzz(float fuzz)
+/* {{{ proto Gmagick Gmagick::setImageFuzz(float fuzz)
 	MagickSetImageFuzz() sets the color comparison fuzz factor. Colors closer than the fuzz factor are considered to be the same when comparing colors. Note that some other functions such as MagickColorFloodfillImage() implicitly set this value.
 */
 PHP_METHOD(gmagick, setimagefuzz)

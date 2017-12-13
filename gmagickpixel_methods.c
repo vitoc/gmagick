@@ -94,7 +94,7 @@ PHP_METHOD(gmagickpixel, setcolorcount)
 }
 /* }}} */
 
-/* {{{ proto array GmagickPixel::getColor([boolean as_array = false, normalise_array = false])
+/* {{{ proto array|string GmagickPixel::getColor([boolean as_array = false, normalise_array = false])
 	Returns the color of the pixel
 */
 PHP_METHOD(gmagickpixel, getcolor)
@@ -279,7 +279,7 @@ PHP_METHOD(gmagickpixel, setcolorvalue)
 }
 /* }}} */
 
-/* {{{ proto float GmagickPixel::getColorValueQuantum(int color )
+/* {{{ proto int GmagickPixel::getColorValueQuantum(int color )
 	Gets the quantum color of the GmagickPixel.
 */
 PHP_METHOD(gmagickpixel, getcolorvaluequantum)
