@@ -262,7 +262,7 @@ PHP_METHOD(gmagickdraw, getfillopacity)
 }
 /* }}} */
 
-/* {{{ proto string GmagickDraw::getFont()
+/* {{{ proto string|bool GmagickDraw::getFont()
 	Returns a null-terminaged string specifying the font used when annotating with text. The value returned must be freed by the user when no longer needed.
 */
 PHP_METHOD(gmagickdraw, getfont)
@@ -431,7 +431,7 @@ PHP_METHOD(gmagickdraw, gettextdecoration)
 }
 /* }}} */
 
-/* {{{ proto string GmagickDraw::getTextEncoding()
+/* {{{ proto string|bool GmagickDraw::getTextEncoding()
 	Returns a null-terminated string which specifies the code set used for text annotations. The string must be freed by the user once it is no longer required.
 */
 PHP_METHOD(gmagickdraw, gettextencoding)
@@ -456,7 +456,7 @@ PHP_METHOD(gmagickdraw, gettextencoding)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::line(float sx, float sy, float ex, float ey)
+/* {{{ proto GmagickDraw GmagickDraw::line(float sx, float sy, float ex, float ey)
 	Draws a line on the image using the current stroke color, stroke opacity, and stroke width.
 */
 PHP_METHOD(gmagickdraw, line)
@@ -476,7 +476,7 @@ PHP_METHOD(gmagickdraw, line)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::point(float x, float y)
+/* {{{ proto GmagickDraw GmagickDraw::point(float x, float y)
 	Draws a point using the current stroke color and stroke thickness at the specified coordinates.
 */
 PHP_METHOD(gmagickdraw, point)
@@ -496,7 +496,7 @@ PHP_METHOD(gmagickdraw, point)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::polygon(array coordinates)
+/* {{{ proto GmagickDraw GmagickDraw::polygon(array coordinates)
 	Draws a polygon using the current stroke, stroke width, and fill color or texture, using the specified array of coordinates.
 */
 PHP_METHOD(gmagickdraw, polygon)
@@ -526,7 +526,7 @@ PHP_METHOD(gmagickdraw, polygon)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::polyline(array coordinates)
+/* {{{ proto GmagickDraw GmagickDraw::polyline(array coordinates)
 	Draws a polyline using the current stroke, stroke width, and fill color or texture, using the specified array of coordinates.
 */
 PHP_METHOD(gmagickdraw, polyline)
@@ -556,7 +556,7 @@ PHP_METHOD(gmagickdraw, polyline)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::rectangle(float x1, float y1, float x2, float y2)
+/* {{{ proto GmagickDraw GmagickDraw::rectangle(float x1, float y1, float x2, float y2)
 	Draws a rectangle given two coordinates and using the current stroke, stroke width, and fill settings.
 */
 PHP_METHOD(gmagickdraw, rectangle)
@@ -576,7 +576,7 @@ PHP_METHOD(gmagickdraw, rectangle)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::rotate(float degrees)
+/* {{{ proto GmagickDraw GmagickDraw::rotate(float degrees)
 	Applies the specified rotation to the current coordinate space.
 */
 PHP_METHOD(gmagickdraw, rotate)
@@ -596,7 +596,7 @@ PHP_METHOD(gmagickdraw, rotate)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::roundRectangle(float x1, float y1, float x2, float y2, float rx, float ry)
+/* {{{ proto GmagickDraw GmagickDraw::roundRectangle(float x1, float y1, float x2, float y2, float rx, float ry)
 	Draws a rounted rectangle given two coordinates, x & y corner radiuses and using the current stroke, stroke width, and fill settings.
 */
 PHP_METHOD(gmagickdraw, roundrectangle)
@@ -616,7 +616,7 @@ PHP_METHOD(gmagickdraw, roundrectangle)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::scale(float x, float y)
+/* {{{ proto GmagickDraw GmagickDraw::scale(float x, float y)
 	Adjusts the scaling factor to apply in the horizontal and vertical directions to the current coordinate space.
 */
 PHP_METHOD(gmagickdraw, scale)
@@ -634,7 +634,7 @@ PHP_METHOD(gmagickdraw, scale)
 	DrawScale(internd->drawing_wand, x, y);
 	GMAGICK_CHAIN_METHOD;
 }
-/* {{{ proto bool GmagickDraw::setFillColor(PixelWand fill_wand)
+/* {{{ proto GmagickDraw GmagickDraw::setFillColor(PixelWand fill_wand)
 	Sets the fill color to be used for drawing filled objects.
 */
 PHP_METHOD(gmagickdraw, setfillcolor)
@@ -656,7 +656,7 @@ PHP_METHOD(gmagickdraw, setfillcolor)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setFillOpacity(float fillOpacity)
+/* {{{ proto GmagickDraw GmagickDraw::setFillOpacity(float fillOpacity)
 	Sets the opacity to use when drawing using the fill color or fill texture. Fully opaque is 1.0.
 */
 PHP_METHOD(gmagickdraw, setfillopacity)
@@ -676,7 +676,7 @@ PHP_METHOD(gmagickdraw, setfillopacity)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setFont(string font_name)
+/* {{{ proto GmagickDraw GmagickDraw::setFont(string font_name)
 	Sets the fully-sepecified font to use when annotating with text.
 */
 PHP_METHOD(gmagickdraw, setfont)
@@ -728,7 +728,7 @@ PHP_METHOD(gmagickdraw, setfont)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setFontSize(float pointsize)
+/* {{{ proto GmagickDraw GmagickDraw::setFontSize(float pointsize)
 	Sets the font pointsize to use when annotating with text.
 */
 PHP_METHOD(gmagickdraw, setfontsize)
@@ -748,7 +748,7 @@ PHP_METHOD(gmagickdraw, setfontsize)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setFontStyle(int style)
+/* {{{ proto GmagickDraw GmagickDraw::setFontStyle(int style)
 	Sets the font style to use when annotating with text. The AnyStyle enumeration acts as a wild-card "don't care" option.
 */
 PHP_METHOD(gmagickdraw, setfontstyle)
@@ -768,7 +768,7 @@ PHP_METHOD(gmagickdraw, setfontstyle)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setFontWeight(int font_weight)
+/* {{{ proto GmagickDraw GmagickDraw::setFontWeight(int font_weight)
 	Sets the font weight to use when annotating with text.
 */
 PHP_METHOD(gmagickdraw, setfontweight)
@@ -794,7 +794,7 @@ PHP_METHOD(gmagickdraw, setfontweight)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setStrokeOpacity(float stroke_opacity)
+/* {{{ proto GmagickDraw GmagickDraw::setStrokeOpacity(float stroke_opacity)
 	Specifies the opacity of stroked object outlines.
 */
 PHP_METHOD(gmagickdraw, setstrokeopacity)
@@ -814,7 +814,7 @@ PHP_METHOD(gmagickdraw, setstrokeopacity)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setTextDecoration(int decoration)
+/* {{{ proto GmagickDraw GmagickDraw::setTextDecoration(int decoration)
 	Specifies a decoration to be applied when annotating with text.
 */
 PHP_METHOD(gmagickdraw, settextdecoration)
@@ -835,7 +835,7 @@ PHP_METHOD(gmagickdraw, settextdecoration)
 /* }}} */
 
 
-/* {{ proto bool GmagickDraw::setGravity(int GRAVITY)
+/* {{ proto GmagickDraw GmagickDraw::setGravity(int GRAVITY)
    Sets the gravity value
 */
 PHP_METHOD(gmagickdraw, setgravity)
@@ -872,7 +872,7 @@ PHP_METHOD(gmagickdraw, getgravity)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setTextEncoding(string encoding)
+/* {{{ proto GmagickDraw GmagickDraw::setTextEncoding(string encoding)
 	Specifies specifies the code set to use for text annotations. The only character encoding which may be specified at this time is "UTF-8" for representing Unicode as a sequence of bytes. Specify an empty string to set text encoding to the system's default. Successful text annotation using Unicode may require fonts designed to support Unicode.
 */
 PHP_METHOD(gmagickdraw, settextencoding)
@@ -892,7 +892,7 @@ PHP_METHOD(gmagickdraw, settextencoding)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setStrokeAntialias(bool stroke_antialias)
+/* {{{ proto GmagickDraw GmagickDraw::setStrokeAntialias(bool stroke_antialias)
 	Controls whether stroked outlines are antialiased. Stroked outlines are antialiased by default.  When antialiasing is disabled stroked pixels are thresholded to determine if the stroke color or underlying canvas color should be used.
 */
 PHP_METHOD(gmagickdraw, setstrokeantialias)
@@ -913,7 +913,7 @@ PHP_METHOD(gmagickdraw, setstrokeantialias)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setStrokeDashOffset(float dash_offset)
+/* {{{ proto GmagickDraw GmagickDraw::setStrokeDashOffset(float dash_offset)
 	Specifies the offset into the dash pattern to start the dash.
 */
 PHP_METHOD(gmagickdraw, setstrokedashoffset)
@@ -933,7 +933,7 @@ PHP_METHOD(gmagickdraw, setstrokedashoffset)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setStrokeLineCap(int linecap)
+/* {{{ proto GmagickDraw GmagickDraw::setStrokeLineCap(int linecap)
 	Specifies the shape to be used at the end of open subpaths when they are stroked. Values of LineCap are UndefinedCap, ButtCap, RoundCap, and SquareCap.
 */
 PHP_METHOD(gmagickdraw, setstrokelinecap)
@@ -953,7 +953,7 @@ PHP_METHOD(gmagickdraw, setstrokelinecap)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setStrokeLineJoin(int linejoin)
+/* {{{ proto GmagickDraw GmagickDraw::setStrokeLineJoin(int linejoin)
 	Specifies the shape to be used at the corners of paths (or other vector shapes) when they are stroked. Values of LineJoin are UndefinedJoin, MiterJoin, RoundJoin, and BevelJoin.
 */
 PHP_METHOD(gmagickdraw, setstrokelinejoin)
@@ -973,7 +973,7 @@ PHP_METHOD(gmagickdraw, setstrokelinejoin)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setStrokeMiterLimit(int miterlimit)
+/* {{{ proto GmagickDraw GmagickDraw::setStrokeMiterLimit(int miterlimit)
 	Specifies the miter limit. When two line segments meet at a sharp angle and miter joins have been specified for 'lineJoin', it is possible for the miter to extend far beyond the thickness of the line stroking the path. The miterLimit' imposes a limit on the ratio of the miter length to the 'lineWidth'.
 */
 PHP_METHOD(gmagickdraw, setstrokemiterlimit)
@@ -1121,7 +1121,7 @@ PHP_METHOD(gmagickdraw, getstrokedasharray)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::setStrokeDashArray(array dashArray)
+/* {{{ proto GmagickDraw GmagickDraw::setStrokeDashArray(array dashArray)
 	Specifies the pattern of dashes and gaps used to stroke paths. The strokeDashArray represents an array of numbers that specify the lengths of alternating dashes and gaps in pixels. If an odd number of values is provided, then the list of values is repeated to yield an even number of values. To remove an existing dash array, pass a zero number_elements argument and null dash_array. A typical strokeDashArray_ array might contain the members 5 3 2.
 */
 PHP_METHOD(gmagickdraw, setstrokedasharray)
@@ -1176,7 +1176,7 @@ PHP_METHOD(gmagickdraw, circle)
 /* }}} */
 
 	
-/* {{{ proto string GmagickDraw::getClipPath()
+/* {{{ proto string|bool GmagickDraw::getClipPath()
 	Obtains the current clipping path ID. The value returned must be deallocated by the user when it is no longer needed.
 */
 PHP_METHOD(gmagickdraw, getclippath)
@@ -1321,7 +1321,7 @@ PHP_METHOD(gmagickdraw, color)
 }
 /* }}} */
 
-/* {{{ proto bool GmagickDraw::comment(string comment)
+/* {{{ proto GmagickDraw GmagickDraw::comment(string comment)
 	Adds a comment to a vector output stream.
 */
 PHP_METHOD(gmagickdraw, comment)
@@ -1404,7 +1404,7 @@ PHP_METHOD(gmagickdraw, setfillrule)
 }
 /* }}} */
 
-/* {{{ proto string GmagickDraw::getFontFamily()
+/* {{{ proto string|bool GmagickDraw::getFontFamily()
 	Returns the font family to use when annotating with text. The value returned must be freed by the user when it is no longer needed.
 */
 PHP_METHOD(gmagickdraw, getfontfamily)
@@ -1497,7 +1497,7 @@ PHP_METHOD(gmagickdraw, getfontstretch)
 }
 /* }}} */
 
-/* {{{ proto GmagickDraw GmagickDraw::setFontStretch(int fontStretch)
+/* {{{ proto bool GmagickDraw::setFontStretch(int fontStretch)
 	Sets the font stretch to use when annotating with text. The AnyStretch enumeration acts as a wild-card "don't care" option.
 */
 PHP_METHOD(gmagickdraw, setfontstretch)
