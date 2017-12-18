@@ -3126,7 +3126,7 @@ PHP_METHOD(gmagick, hasnextimage)
 		RETURN_FALSE;
 	}
 
-	GMAGICK_CHAIN_METHOD;
+	RETURN_TRUE;
 }
 /* }}} */
 
@@ -3150,7 +3150,7 @@ PHP_METHOD(gmagick, haspreviousimage)
 		RETURN_FALSE;
 	}
 
-	GMAGICK_CHAIN_METHOD;
+	RETURN_TRUE;
 }
 /* }}} */
 
