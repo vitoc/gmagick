@@ -26,7 +26,6 @@
 */
 void php_gmagick_initialize_constants()
 {
-	TSRMLS_FETCH();
 
 	/* Constants defined in php_gmagick.h */
 	GMAGICK_REGISTER_CONST_LONG("COLOR_BLACK", GMAGICK_COLOR_BLACK);
@@ -410,9 +409,9 @@ void php_gmagick_initialize_constants()
 }
 /* }}} */
 
-/* {{{ void *get_pointinfo_array(zval *coordinate_array, int *num_elements TSRMLS_DC)
+/* {{{ void *get_pointinfo_array(zval *coordinate_array, int *num_elements)
 */
-void *get_pointinfo_array(zval *coordinate_array, int *num_elements TSRMLS_DC)
+void *get_pointinfo_array(zval *coordinate_array, int *num_elements)
 {
 	PointInfo *coordinates;
 	long elements_count, sub_elements_count, i;
@@ -493,9 +492,9 @@ void *get_pointinfo_array(zval *coordinate_array, int *num_elements TSRMLS_DC)
 }
 /* }}} */
 
-/* {{{ check_configured_font(char *font, int font_len TSRMLS_DC)
+/* {{{ check_configured_font(char *font, int font_len)
 */
-int check_configured_font(char *font, int font_len TSRMLS_DC)
+int check_configured_font(char *font, int font_len)
 {
 	int retval = 0;
 	char **fonts;
@@ -517,9 +516,9 @@ int check_configured_font(char *font, int font_len TSRMLS_DC)
 }
 /* }}} */
 
-/* {{{ get_double_array_from_zval(zval *param_array, long *num_elements TSRMLS_DC)
+/* {{{ get_double_array_from_zval(zval *param_array, long *num_elements)
 */
-double *get_double_array_from_zval(zval *param_array, long *num_elements TSRMLS_DC)
+double *get_double_array_from_zval(zval *param_array, long *num_elements)
 {
 	zval *current;
 	HashTable *ht;
@@ -558,9 +557,9 @@ double *get_double_array_from_zval(zval *param_array, long *num_elements TSRMLS_
 	return double_array;
 }
 
-/* {{{ count_occurences_of(char needle, char *haystack TSRMLS_DC)
+/* {{{ count_occurences_of(char needle, char *haystack)
 */
-int count_occurences_of(char needle, char *haystack TSRMLS_DC)
+int count_occurences_of(char needle, char *haystack)
 {
 	int occurances = 0;
 
@@ -629,9 +628,9 @@ void s_calculate_crop(
 }
 
 
-/* {{{ zend_bool crop_thumbnail_image(MagickWand *magick_wand, long desired_width, long desired_height TSRMLS_DC)
+/* {{{ zend_bool crop_thumbnail_image(MagickWand *magick_wand, long desired_width, long desired_height)
 */
-zend_bool crop_thumbnail_image(MagickWand *magick_wand, long desired_width, long desired_height, zend_bool legacy TSRMLS_DC)
+zend_bool crop_thumbnail_image(MagickWand *magick_wand, long desired_width, long desired_height, zend_bool legacy)
 {
 	long offset_x = 0, offset_y = 0, new_width, new_height;
 
@@ -758,16 +757,15 @@ zend_bool php_gmagick_thumbnail_dimensions(MagickWand *magick_wand, zend_bool be
 zend_bool php_gmagick_ensure_not_empty(MagickWand *magick_wand)
 {
 	if (MagickGetNumberImages(magick_wand) == 0) {
-	    TSRMLS_FETCH ();
 			GMAGICK_THROW_GMAGICK_EXCEPTION_EX(magick_wand, "Can not process empty Gmagick object");   
 	    return 0;
 	}
 	return 1;
 }
 
-/** double *php_gmagick_zval_to_double_array(zval *param_array, long *num_elements TSRMLS_DC)
+/** double *php_gmagick_zval_to_double_array(zval *param_array, long *num_elements)
 */
-double *php_gmagick_zval_to_double_array(zval *param_array, long *num_elements TSRMLS_DC)
+double *php_gmagick_zval_to_double_array(zval *param_array, long *num_elements)
 {
 	zval *current;
 	HashTable *ht;
@@ -795,7 +793,7 @@ double *php_gmagick_zval_to_double_array(zval *param_array, long *num_elements T
 }
 
 
-zend_bool php_gmagick_stream_handler(php_gmagick_object *intern, php_stream *stream, GmagickOperationType type TSRMLS_DC)
+zend_bool php_gmagick_stream_handler(php_gmagick_object *intern, php_stream *stream, GmagickOperationType type)
 {
 	FILE *fp;
 	unsigned int status;

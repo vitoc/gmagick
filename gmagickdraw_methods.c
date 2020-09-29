@@ -30,7 +30,7 @@ PHP_METHOD(gmagickdraw, setstrokecolor)
 	php_gmagickdraw_object *internd;
 	php_gmagickpixel_object *internp;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z", &param) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "z", &param) == FAILURE) {
 		return;
 	}
 
@@ -54,7 +54,7 @@ PHP_METHOD(gmagickdraw, setstrokewidth)
 	php_gmagickdraw_object *internd;
 	double width;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &width) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "d", &width) == FAILURE) {
 		return;
 	}
 
@@ -75,7 +75,7 @@ PHP_METHOD(gmagickdraw, ellipse)
 	php_gmagickdraw_object *internd;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddddd", &ox, &oy, &rx, &ry, &start, &end) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dddddd", &ox, &oy, &rx, &ry, &start, &end) == FAILURE) {
 		return;
 	}
 
@@ -98,7 +98,7 @@ PHP_METHOD(gmagickdraw, annotate)
 	size_t text_len;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dds", &x, &y, &text, &text_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dds", &x, &y, &text, &text_len) == FAILURE) {
 		return;
 	}
 
@@ -124,7 +124,7 @@ PHP_METHOD(gmagickdraw, affine)
 	AffineMatrix *pmatrix;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a", &affine_matrix) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "a", &affine_matrix) == FAILURE) {
 		return;
 	}
 
@@ -177,7 +177,7 @@ PHP_METHOD(gmagickdraw, arc)
 	double sx, sy, ex, ey, sd, ed;
 	php_gmagickdraw_object *internd;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddddd", &sx, &sy, &ex, &ey, &sd, &ed) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dddddd", &sx, &sy, &ex, &ey, &sd, &ed) == FAILURE) {
 		return;
 	}
 
@@ -200,10 +200,10 @@ PHP_METHOD(gmagickdraw, bezier)
 	int num_elements = 0;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a", &coordinate_array) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "a", &coordinate_array) == FAILURE) {
 		return;
 	}
-	coordinates = get_pointinfo_array(coordinate_array, &num_elements TSRMLS_CC);
+	coordinates = get_pointinfo_array(coordinate_array, &num_elements);
 
 	if (coordinates == (PointInfo *)NULL) {
 		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Unable to read coordinate array", 2);
@@ -226,7 +226,7 @@ PHP_METHOD(gmagickdraw, getfillcolor)
 	php_gmagickdraw_object *internd;
 	PixelWand *tmp_wand;
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "") == FAILURE) {
 		return;
 	}
 	
@@ -251,7 +251,7 @@ PHP_METHOD(gmagickdraw, getfillopacity)
 	php_gmagickdraw_object *internd;
 	double opacity;
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "") == FAILURE) {
 		return;
 	}
 
@@ -270,7 +270,7 @@ PHP_METHOD(gmagickdraw, getfont)
 	php_gmagickdraw_object *internd;
 	char *font;
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "") == FAILURE) {
 		return;
 	}
 
@@ -295,7 +295,7 @@ PHP_METHOD(gmagickdraw, getfontsize)
 	php_gmagickdraw_object *internd;
 	double font_size;
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "") == FAILURE) {
 		return;
 	}
 
@@ -315,7 +315,7 @@ PHP_METHOD(gmagickdraw, getfontstyle)
 	php_gmagickdraw_object *internd;
 	long font_style;
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "") == FAILURE) {
 		return;
 	}
 
@@ -335,7 +335,7 @@ PHP_METHOD(gmagickdraw, getfontweight)
 	php_gmagickdraw_object *internd;
 	long weight;
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "") == FAILURE) {
 		return;
 	}
 
@@ -355,7 +355,7 @@ PHP_METHOD(gmagickdraw, getstrokeopacity)
 	php_gmagickdraw_object *internd;
 	double opacity;
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "") == FAILURE) {
 		return;
 	}
 
@@ -375,7 +375,7 @@ PHP_METHOD(gmagickdraw, getstrokecolor)
 	php_gmagickdraw_object *internd;
 	PixelWand *tmp_wand;
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "") == FAILURE) {
 		return;
 	}
 
@@ -400,7 +400,7 @@ PHP_METHOD(gmagickdraw, getstrokewidth)
 	php_gmagickdraw_object *internd;
 	double width;
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "") == FAILURE) {
 		return;
 	}
 
@@ -419,7 +419,7 @@ PHP_METHOD(gmagickdraw, gettextdecoration)
 	php_gmagickdraw_object *internd;
 	long decoration;
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "") == FAILURE) {
 		return;
 	}
 
@@ -439,7 +439,7 @@ PHP_METHOD(gmagickdraw, gettextencoding)
 	php_gmagickdraw_object *internd;
 	char *encoding;
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "") == FAILURE) {
 		return;
 	}
 
@@ -464,7 +464,7 @@ PHP_METHOD(gmagickdraw, line)
 	php_gmagickdraw_object *internd;
 	double sx, sy, ex, ey;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddd", &sx, &sy, &ex, &ey) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dddd", &sx, &sy, &ex, &ey) == FAILURE) {
 		return;
 	}
 
@@ -485,7 +485,7 @@ PHP_METHOD(gmagickdraw, point)
 	double x, y;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd", &x, &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dd", &x, &y) == FAILURE) {
 		return;
 	}
 
@@ -507,11 +507,11 @@ PHP_METHOD(gmagickdraw, polygon)
 	int num_elements = 0;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a", &coordinate_array) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "a", &coordinate_array) == FAILURE) {
 		return;
 	}
 
-	coordinates = get_pointinfo_array(coordinate_array, &num_elements TSRMLS_CC);
+	coordinates = get_pointinfo_array(coordinate_array, &num_elements);
 
 	if (coordinates == (PointInfo *)NULL) {
 		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Unable to read coordinate array", 2);
@@ -537,11 +537,11 @@ PHP_METHOD(gmagickdraw, polyline)
 	int num_elements = 0;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a", &coordinate_array) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "a", &coordinate_array) == FAILURE) {
 		return;
 	}
 
-	coordinates = get_pointinfo_array(coordinate_array, &num_elements TSRMLS_CC);
+	coordinates = get_pointinfo_array(coordinate_array, &num_elements);
 
 	if (coordinates == (PointInfo *)NULL) {
 		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Unable to read coordinate array", 2);
@@ -565,7 +565,7 @@ PHP_METHOD(gmagickdraw, rectangle)
 	php_gmagickdraw_object *internd;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddd", &x1, &y1, &x2, &y2) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dddd", &x1, &y1, &x2, &y2) == FAILURE) {
 		return;
 	}
 
@@ -585,7 +585,7 @@ PHP_METHOD(gmagickdraw, rotate)
 	double degrees;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &degrees) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "d", &degrees) == FAILURE) {
 		return;
 	}
 
@@ -605,7 +605,7 @@ PHP_METHOD(gmagickdraw, roundrectangle)
 	php_gmagickdraw_object *internd;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddddd", &x1, &y1, &x2, &y2, &rx, &ry) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dddddd", &x1, &y1, &x2, &y2, &rx, &ry) == FAILURE) {
 		return;
 	}
 
@@ -625,7 +625,7 @@ PHP_METHOD(gmagickdraw, scale)
 	double x, y;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd", &x, &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dd", &x, &y) == FAILURE) {
 		return;
 	}
 
@@ -643,7 +643,7 @@ PHP_METHOD(gmagickdraw, setfillcolor)
 	php_gmagickdraw_object *internd;
 	php_gmagickpixel_object *internp;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z", &param) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "z", &param) == FAILURE) {
 		return;
 	}
 
@@ -665,7 +665,7 @@ PHP_METHOD(gmagickdraw, setfillopacity)
 	double fillOpacity;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &fillOpacity) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "d", &fillOpacity) == FAILURE) {
 		return;
 	}
 
@@ -687,7 +687,7 @@ PHP_METHOD(gmagickdraw, setfont)
 	int error = 0;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &font, &font_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &font, &font_len) == FAILURE) {
 		return;
 	}
 
@@ -699,9 +699,9 @@ PHP_METHOD(gmagickdraw, setfont)
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	/* And if it wasn't */
-	if (!check_configured_font(font, font_len TSRMLS_CC)) {
+	if (!check_configured_font(font, font_len)) {
 
-		if (!(absolute = expand_filepath(font, NULL TSRMLS_CC))) {
+		if (!(absolute = expand_filepath(font, NULL))) {
 			GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Unable to set font", 2);
 		}
 
@@ -710,7 +710,7 @@ PHP_METHOD(gmagickdraw, setfont)
 		GMAGICKDRAW_CHECK_READ_OR_WRITE_ERROR(internd, absolute, error, GMAGICK_FREE_FILENAME);
 
 		if (VCWD_ACCESS(absolute, F_OK|R_OK)) {
-			zend_throw_exception_ex(php_gmagickdraw_exception_class_entry, 2 TSRMLS_CC,
+			zend_throw_exception_ex(php_gmagickdraw_exception_class_entry, 2,
 				"The given font is not found in the GraphicsMagick configuration and the file (%s) is not accessible", absolute);
 
 			efree(absolute);
@@ -737,7 +737,7 @@ PHP_METHOD(gmagickdraw, setfontsize)
 	double font_size;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &font_size) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "d", &font_size) == FAILURE) {
 		return;
 	}
 
@@ -757,7 +757,7 @@ PHP_METHOD(gmagickdraw, setfontstyle)
 	zend_long style_id = AnyStyle;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &style_id) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &style_id) == FAILURE) {
 		return;
 	}
 
@@ -777,7 +777,7 @@ PHP_METHOD(gmagickdraw, setfontweight)
 	zend_long weight;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &weight) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &weight) == FAILURE) {
 		return;
 	}
 
@@ -803,7 +803,7 @@ PHP_METHOD(gmagickdraw, setstrokeopacity)
 	double opacity;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &opacity) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "d", &opacity) == FAILURE) {
 		return;
 	}
 
@@ -823,7 +823,7 @@ PHP_METHOD(gmagickdraw, settextdecoration)
 	zend_long decoration;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &decoration) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &decoration) == FAILURE) {
 		return;
 	}
 
@@ -843,7 +843,7 @@ PHP_METHOD(gmagickdraw, setgravity)
 	php_gmagickdraw_object *internd;
 	zend_long gravity;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &gravity) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &gravity) == FAILURE) {
 		return;
 	}
 
@@ -862,7 +862,7 @@ PHP_METHOD(gmagickdraw, getgravity)
 {
 	php_gmagickdraw_object *internd;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "") == FAILURE) {
 		return;
 	}
 
@@ -881,7 +881,7 @@ PHP_METHOD(gmagickdraw, settextencoding)
 	char *encoding;
 	size_t encoding_len;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &encoding, &encoding_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &encoding, &encoding_len) == FAILURE) {
 		return;
 	}
 
@@ -901,7 +901,7 @@ PHP_METHOD(gmagickdraw, setstrokeantialias)
 	zend_bool antialias;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "b", &antialias) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "b", &antialias) == FAILURE) {
 		return;
 	}
 
@@ -922,7 +922,7 @@ PHP_METHOD(gmagickdraw, setstrokedashoffset)
 	double offset;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &offset) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "d", &offset) == FAILURE) {
 		return;
 	}
 
@@ -942,7 +942,7 @@ PHP_METHOD(gmagickdraw, setstrokelinecap)
 	zend_long line_cap;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &line_cap) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &line_cap) == FAILURE) {
 		return;
 	}
 	
@@ -962,7 +962,7 @@ PHP_METHOD(gmagickdraw, setstrokelinejoin)
 	zend_long line_join;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &line_join) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &line_join) == FAILURE) {
 		return;
 	}
 	
@@ -982,7 +982,7 @@ PHP_METHOD(gmagickdraw, setstrokemiterlimit)
 	zend_long miter_limit;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &miter_limit) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &miter_limit) == FAILURE) {
 		return;
 	}
 	
@@ -1132,11 +1132,11 @@ PHP_METHOD(gmagickdraw, setstrokedasharray)
 	php_gmagickdraw_object *internd;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "a", &param_array) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "a", &param_array) == FAILURE) {
 		return;
 	}
 
-	double_array = php_gmagick_zval_to_double_array(param_array, &elements TSRMLS_CC);
+	double_array = php_gmagick_zval_to_double_array(param_array, &elements);
 
 	if (!double_array) {
 		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Cannot read stroke dash array parameter", 2);		
@@ -1164,7 +1164,7 @@ PHP_METHOD(gmagickdraw, circle)
 	php_gmagickdraw_object *internd;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddd", &ox, &oy, &px, &py) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dddd", &ox, &oy, &px, &py) == FAILURE) {
 		return;
 	}
 
@@ -1211,7 +1211,7 @@ PHP_METHOD(gmagickdraw, setclippath)
 	size_t clip_mask_len;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &clip_mask, &clip_mask_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &clip_mask, &clip_mask_len) == FAILURE) {
 		return;
 	}
 
@@ -1250,7 +1250,7 @@ PHP_METHOD(gmagickdraw, setcliprule)
 	zend_long fill_rule;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &fill_rule) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &fill_rule) == FAILURE) {
 		return;
 	}
 	
@@ -1289,7 +1289,7 @@ PHP_METHOD(gmagickdraw, setclipunits)
 	zend_long units;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &units) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &units) == FAILURE) {
 		return;
 	}
 
@@ -1310,7 +1310,7 @@ PHP_METHOD(gmagickdraw, color)
 	long paint_method;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ddl", &x, &y, &paint_method) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "ddl", &x, &y, &paint_method) == FAILURE) {
 		return;
 	}
 
@@ -1331,7 +1331,7 @@ PHP_METHOD(gmagickdraw, comment)
 	size_t comment_len;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &comment, &comment_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &comment, &comment_len) == FAILURE) {
 		return;
 	}
 	
@@ -1353,7 +1353,7 @@ PHP_METHOD(gmagickdraw, setfillpatternurl)
 	size_t url_len;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &url, &url_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &url, &url_len) == FAILURE) {
 		return;
 	}
 
@@ -1393,7 +1393,7 @@ PHP_METHOD(gmagickdraw, setfillrule)
 	zend_long fill_rule;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &fill_rule) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &fill_rule) == FAILURE) {
 		return;
 	}
 	
@@ -1429,7 +1429,7 @@ PHP_METHOD(gmagickdraw, getfontfamily)
 }
 /* }}} */
 
-static zend_bool php_gmagick_check_font(char *font, int font_len TSRMLS_DC)
+static zend_bool php_gmagick_check_font(char *font, int font_len)
 {
 	zend_bool retval = 0;
 	char **fonts;
@@ -1463,18 +1463,18 @@ PHP_METHOD(gmagickdraw, setfontfamily)
 	size_t font_family_len;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &font_family, &font_family_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &font_family, &font_family_len) == FAILURE) {
 		return;
 	}
 
 	/* Check that no empty string is passed */
 	if (font_family_len == 0) {
-		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Can not set empty font family", 2 TSRMLS_CC);
+		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Can not set empty font family", 2);
 		return;
 	}
 
-	if (!php_gmagick_check_font(font_family, font_family_len TSRMLS_CC )) {
-		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Unable to set font family; parameter not found in the list of configured fonts", 2 TSRMLS_CC);
+	if (!php_gmagick_check_font(font_family, font_family_len )) {
+		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Unable to set font family; parameter not found in the list of configured fonts", 2);
 		return;
 	}
 
@@ -1506,7 +1506,7 @@ PHP_METHOD(gmagickdraw, setfontstretch)
 	zend_long stretch;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &stretch) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &stretch) == FAILURE) {
 		return;
 	}
 
@@ -1532,7 +1532,7 @@ PHP_METHOD(gmagickdraw, setfontstretch)
 //	double x, y, width, height;
 //
 //	/* Parse parameters given to function */
-//	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lddddO", &compose, &x, &y, &width, &height, &magick_obj, php_gmagick_sc_entry) == FAILURE) {
+//	if (zend_parse_parameters(ZEND_NUM_ARGS(), "lddddO", &compose, &x, &y, &width, &height, &magick_obj, php_gmagick_sc_entry) == FAILURE) {
 //		return;
 //	}
 //
@@ -1577,7 +1577,7 @@ PHP_METHOD(gmagickdraw, pathcurvetoabsolute)
 	double x1, y1, x2, y2, x, y;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddddd", &x1, &y1, &x2, &y2, &x, &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dddddd", &x1, &y1, &x2, &y2, &x, &y) == FAILURE) {
 		return;
 	}
 
@@ -1597,7 +1597,7 @@ PHP_METHOD(gmagickdraw, pathcurvetorelative)
 	double x1, y1, x2, y2, x, y;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddddd", &x1, &y1, &x2, &y2, &x, &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dddddd", &x1, &y1, &x2, &y2, &x, &y) == FAILURE) {
 		return;
 	}
 
@@ -1617,7 +1617,7 @@ PHP_METHOD(gmagickdraw, pathcurvetoquadraticbezierabsolute)
 	double x1, y1, x, y;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddd", &x1, &y1, &x, &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dddd", &x1, &y1, &x, &y) == FAILURE) {
 		return;
 	}
 	
@@ -1637,7 +1637,7 @@ PHP_METHOD(gmagickdraw, pathcurvetoquadraticbezierrelative)
 	double x1, y1, x, y;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddd", &x1, &y1, &x, &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dddd", &x1, &y1, &x, &y) == FAILURE) {
 		return;
 	}
 	
@@ -1657,7 +1657,7 @@ PHP_METHOD(gmagickdraw, pathcurvetoquadraticbeziersmoothabsolute)
 	double x, y;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd", &x, &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dd", &x, &y) == FAILURE) {
 		return;
 	}
 
@@ -1677,7 +1677,7 @@ PHP_METHOD(gmagickdraw, pathcurvetoquadraticbeziersmoothrelative)
 	double x, y;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd", &x, &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dd", &x, &y) == FAILURE) {
 		return;
 	}
 
@@ -1697,7 +1697,7 @@ PHP_METHOD(gmagickdraw, pathcurvetosmoothabsolute)
 	double x1, y1, x, y;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddd", &x1, &y1, &x, &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dddd", &x1, &y1, &x, &y) == FAILURE) {
 		return;
 	}
 
@@ -1717,7 +1717,7 @@ PHP_METHOD(gmagickdraw, pathcurvetosmoothrelative)
 	double x1, y1, x, y;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddd", &x1, &y1, &x, &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dddd", &x1, &y1, &x, &y) == FAILURE) {
 		return;
 	}
 
@@ -1738,7 +1738,7 @@ PHP_METHOD(gmagickdraw, pathellipticarcabsolute)
 	zend_bool large_arc, sweep;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddbbdd", &rx, &ry, &x_axis_rotation, &large_arc, &sweep, &x, &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dddbbdd", &rx, &ry, &x_axis_rotation, &large_arc, &sweep, &x, &y) == FAILURE) {
 		return;
 	}
 	
@@ -1759,7 +1759,7 @@ PHP_METHOD(gmagickdraw, pathellipticarcrelative)
 	zend_bool large_arc, sweep;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddbbdd", &rx, &ry, &x_axis_rotation, &large_arc, &sweep, &x, &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dddbbdd", &rx, &ry, &x_axis_rotation, &large_arc, &sweep, &x, &y) == FAILURE) {
 		return;
 	}
 	
@@ -1780,7 +1780,7 @@ PHP_METHOD(gmagickdraw, pathmovetoabsolute)
 	double x, y;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd", &x, &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dd", &x, &y) == FAILURE) {
 		return;
 	}
 
@@ -1800,7 +1800,7 @@ PHP_METHOD(gmagickdraw, pathmovetorelative)
 	double x, y;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd", &x, &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dd", &x, &y) == FAILURE) {
 		return;
 	}
 
@@ -1821,7 +1821,7 @@ PHP_METHOD(gmagickdraw, pathlinetoabsolute)
 	double x, y;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd", &x, &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dd", &x, &y) == FAILURE) {
 		return;
 	}
 	
@@ -1841,7 +1841,7 @@ PHP_METHOD(gmagickdraw, pathlinetorelative)
 	double x, y;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd", &x, &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dd", &x, &y) == FAILURE) {
 		return;
 	}
 
@@ -1862,7 +1862,7 @@ PHP_METHOD(gmagickdraw, pathlinetohorizontalabsolute)
 	double y;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d",  &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "d",  &y) == FAILURE) {
 		return;
 	}
 	
@@ -1882,7 +1882,7 @@ PHP_METHOD(gmagickdraw, pathlinetohorizontalrelative)
 	double x;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &x) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "d", &x) == FAILURE) {
 		return;
 	}
 	
@@ -1904,7 +1904,7 @@ PHP_METHOD(gmagickdraw, pathlinetoverticalabsolute)
 	double y;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "d", &y) == FAILURE) {
 		return;
 	}
 
@@ -1924,7 +1924,7 @@ PHP_METHOD(gmagickdraw, pathlinetoverticalrelative)
 	double y;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "d", &y) == FAILURE) {
 		return;
 	}
 	
@@ -2037,7 +2037,7 @@ PHP_METHOD(gmagickdraw, pushclippath)
 	size_t clip_mask_len;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &clip_mask, &clip_mask_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &clip_mask, &clip_mask_len) == FAILURE) {
 		return;
 	}
 
@@ -2076,7 +2076,7 @@ PHP_METHOD(gmagickdraw, pushpattern)
 	double x, y, width, height;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sdddd", &pattern_id, &pattern_id_len, &x, &y, &width, &height) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "sdddd", &pattern_id, &pattern_id_len, &x, &y, &width, &height) == FAILURE) {
 		return;
 	}
 
@@ -2097,7 +2097,7 @@ PHP_METHOD(gmagickdraw, skewx)
 	php_gmagickdraw_object *internd;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &degrees) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "d", &degrees) == FAILURE) {
 		return;
 	}
 
@@ -2117,7 +2117,7 @@ PHP_METHOD(gmagickdraw, skewy)
 	php_gmagickdraw_object *internd;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &degrees) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "d", &degrees) == FAILURE) {
 		return;
 	}
 
@@ -2139,7 +2139,7 @@ PHP_METHOD(gmagickdraw, setstrokepatternurl)
 	size_t url_len;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &url, &url_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &url, &url_len) == FAILURE) {
 		return;
 	}
 
@@ -2178,7 +2178,7 @@ PHP_METHOD(gmagickdraw, settextantialias)
 	php_gmagickdraw_object *internd;
 	zend_bool antialias;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "b", &antialias) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "b", &antialias) == FAILURE) {
 		return;
 	}
 
@@ -2206,7 +2206,7 @@ PHP_METHOD(gmagickdraw, gettextundercolor)
 	tmp_wand = NewPixelWand();
 
 	if (!tmp_wand) {
-		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Failed to allocate space for new PixelWand", 2 TSRMLS_CC);
+		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Failed to allocate space for new PixelWand", 2);
 		return;
 	}
 
@@ -2229,7 +2229,7 @@ PHP_METHOD(gmagickdraw, settextundercolor)
 	php_gmagickdraw_object *internd;
 	php_gmagickpixel_object *internp;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z", &param) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "z", &param) == FAILURE) {
 		return;
 	}
 
@@ -2253,7 +2253,7 @@ PHP_METHOD(gmagickdraw, translate)
 	php_gmagickdraw_object *internd;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd", &x, &y) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "dd", &x, &y) == FAILURE) {
 		return;
 	}
 
@@ -2273,7 +2273,7 @@ PHP_METHOD(gmagickdraw, setviewbox)
 	zend_long x1, y1, x2, y2;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "llll", &x1, &y1, &x2, &y2) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "llll", &x1, &y1, &x2, &y2) == FAILURE) {
 		return;
 	}
 

@@ -31,7 +31,7 @@ PHP_METHOD(gmagickpixel, __construct)
 	char *color_name = NULL;
 	size_t color_name_len = 0;
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|s!", &color_name, &color_name_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "|s!", &color_name, &color_name_len) == FAILURE) {
 		return;
 	}
 
@@ -59,7 +59,7 @@ PHP_METHOD(gmagickpixel, setcolor)
 	size_t color_name_len;
 	MagickBool status;
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &color_name, &color_name_len) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "s", &color_name, &color_name_len) == FAILURE) {
 		return;
 	}
 
@@ -82,7 +82,7 @@ PHP_METHOD(gmagickpixel, setcolorcount)
 	php_gmagickpixel_object *internp;
 	zend_long color_count;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &color_count) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &color_count) == FAILURE) {
 		return;
 	}
 
@@ -103,7 +103,7 @@ PHP_METHOD(gmagickpixel, getcolor)
 	zend_bool as_array = 0, normalise_array = 0;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|bb", &as_array, &normalise_array) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "|bb", &as_array, &normalise_array) == FAILURE) {
 		return;
 	}
 
@@ -151,7 +151,7 @@ PHP_METHOD(gmagickpixel, getcolorcount)
 	php_gmagickpixel_object *internp;
 	zend_long color_count;
 	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "") == FAILURE) {
 		return;
 	}
 
@@ -172,7 +172,7 @@ PHP_METHOD(gmagickpixel, getcolorvalue)
 	double color_value = 0;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &color) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &color) == FAILURE) {
 		return;
 	}
 
@@ -230,7 +230,7 @@ PHP_METHOD(gmagickpixel, setcolorvalue)
 	double color_value;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ld", &color, &color_value) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "ld", &color, &color_value) == FAILURE) {
 		return;
 	}
 
@@ -289,7 +289,7 @@ PHP_METHOD(gmagickpixel, getcolorvaluequantum)
 	Quantum color_value_quantum = 0;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &color_quantum) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "l", &color_quantum) == FAILURE) {
 		return;
 	}
 
@@ -330,7 +330,7 @@ PHP_METHOD(gmagickpixel, getcolorvaluequantum)
 			break;
 
 		default:
-			zend_throw_exception_ex(php_gmagickpixel_exception_class_entry, 2 TSRMLS_CC, "Unknown color type: %d", color_quantum);
+			zend_throw_exception_ex(php_gmagickpixel_exception_class_entry, 2, "Unknown color type: %d", color_quantum);
 			RETURN_NULL();
 	}
 	RETVAL_LONG(color_value_quantum);
@@ -348,7 +348,7 @@ PHP_METHOD(gmagickpixel, setcolorvaluequantum)
 	Quantum color_value_quantum;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ld", &color_quantum, &color_value_quantum_input) == FAILURE) {
+	if (zend_parse_parameters(ZEND_NUM_ARGS(), "ld", &color_quantum, &color_value_quantum_input) == FAILURE) {
 		return;
 	}
 
@@ -391,7 +391,7 @@ PHP_METHOD(gmagickpixel, setcolorvaluequantum)
 			break;
 
 		default:
-			zend_throw_exception_ex(php_gmagickpixel_exception_class_entry, 2 TSRMLS_CC, "Unknown color type: %d", color_quantum);
+			zend_throw_exception_ex(php_gmagickpixel_exception_class_entry, 2, "Unknown color type: %d", color_quantum);
 			RETURN_NULL();
 	}
 
