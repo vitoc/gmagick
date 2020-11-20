@@ -45,10 +45,6 @@ typedef long ssize_t;
 #include "config.h"
 #endif
 
-#ifdef ZTS
-#include "TSRM.h"
-#endif
-
 #include "php.h"
 #include "php_ini.h"
 #include "Zend/zend_exceptions.h"

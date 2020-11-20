@@ -3,7 +3,7 @@ Test filling thumbnail with color
 --SKIPIF--
 <?php require_once(dirname(__FILE__) . '/skipif.inc');
 
-$v = Gmagick::getVersion();
+$v = (new Gmagick)->getVersion();
 if ($v['versionNumber'] < 0x632)
 	die ('skip too old ImageMagick');
 

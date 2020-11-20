@@ -39,15 +39,15 @@
 { \
 	switch(type) { \
 		case 1: \
-			zend_throw_exception(php_gmagick_exception_class_entry, description, (long)code TSRMLS_CC); \
+			zend_throw_exception(php_gmagick_exception_class_entry, description, (long)code); \
 			RETURN_NULL(); \
 		break; \
 		case 2: \
-			zend_throw_exception(php_gmagickdraw_exception_class_entry, description, (long)code TSRMLS_CC); \
+			zend_throw_exception(php_gmagickdraw_exception_class_entry, description, (long)code); \
 			RETURN_NULL(); \
 		break; \
 		case 3: \
-			zend_throw_exception(php_gmagickpixel_exception_class_entry, description, (long)code TSRMLS_CC); \
+			zend_throw_exception(php_gmagickpixel_exception_class_entry, description, (long)code); \
 			RETURN_NULL(); \
 		break; \
 	} \
@@ -59,13 +59,13 @@
 /* {{{ GMAGICK_REGISTER_CONST_LONG(const_name, value)
 */
 #define GMAGICK_REGISTER_CONST_LONG(const_name, value) \
-	zend_declare_class_constant_long(php_gmagick_sc_entry, const_name, sizeof(const_name)-1, (long)value TSRMLS_CC);
+	zend_declare_class_constant_long(php_gmagick_sc_entry, const_name, sizeof(const_name)-1, (long)value);
 /* }}} */
 
 /* {{{ GMAGICK_REGISTER_CONST_STRING(const_name, value)
 */
 #define GMAGICK_REGISTER_CONST_STRING(const_name, value) \
-	zend_declare_class_constant_string(php_gmagick_sc_entry, const_name, sizeof(const_name)-1, value TSRMLS_CC);
+	zend_declare_class_constant_string(php_gmagick_sc_entry, const_name, sizeof(const_name)-1, value);
 /* }}} */
 
 /* {{{ GMAGICK_FREE_MEMORY(type, value)
@@ -89,9 +89,9 @@
         description = NULL; \
 	} \
 	if (!description) { \
-		zend_throw_exception(php_gmagick_exception_class_entry, fallback, 1 TSRMLS_CC); \
+		zend_throw_exception(php_gmagick_exception_class_entry, fallback, 1); \
 	} else { \
-		zend_throw_exception(php_gmagick_exception_class_entry, description, (long)severity TSRMLS_CC); \
+		zend_throw_exception(php_gmagick_exception_class_entry, description, (long)severity); \
 		GMAGICK_FREE_MEMORY(char *, description); \
 	} \
 }
@@ -191,7 +191,7 @@
 /* GraphicsMagick 1.3.3 is missing PixelGetException */
 #define GMAGICK_THROW_GMAGICKPIXEL_EXCEPTION(pixel_wand, fallback) \
 { \
-	zend_throw_exception(php_gmagickpixel_exception_class_entry, fallback, 2 TSRMLS_CC); \
+	zend_throw_exception(php_gmagickpixel_exception_class_entry, fallback, 2); \
 	RETURN_NULL(); \
 }
 /* }}} */
@@ -201,7 +201,7 @@
 /* GraphicsMagick 1.1.x is missing DrawGetException */
 #define GMAGICK_THROW_GMAGICKDRAW_EXCEPTION(drawing_wand, fallback, code) \
 { \
-	zend_throw_exception(php_gmagickdraw_exception_class_entry, fallback, 2 TSRMLS_CC); \
+	zend_throw_exception(php_gmagickdraw_exception_class_entry, fallback, 2); \
 	RETURN_NULL(); \
 }
 /* }}} */
@@ -218,10 +218,10 @@
 		GMAGICK_FREE_MEMORY(char *, description); \
 	} \
 	if (!description) { \
-		zend_throw_exception(php_gmagickdraw_exception_class_entry, fallback, (long)code TSRMLS_CC); \
+		zend_throw_exception(php_gmagickdraw_exception_class_entry, fallback, (long)code); \
 		RETURN_NULL(); \
 	} else { \
-		zend_throw_exception(php_gmagickdraw_exception_class_entry, description, (long)severity TSRMLS_CC); \
+		zend_throw_exception(php_gmagickdraw_exception_class_entry, description, (long)severity); \
 		GMAGICK_FREE_MEMORY(char *, description); \
 		DrawClearException(drawing_wand); \
 		RETURN_NULL(); \
@@ -248,7 +248,7 @@
 		} \
 		break; \
 		case IS_OBJECT: \
-			if (instanceof_function_ex(Z_OBJCE_P(param), php_gmagickpixel_sc_entry, 0 TSRMLS_CC)) { \
+			if (instanceof_function(Z_OBJCE_P(param), php_gmagickpixel_sc_entry)) { \
 				internp = Z_GMAGICKPIXEL_OBJ_P(param); \
 			} else { \
 				GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(caller, "The parameter must be an instance of GmagickPixel or a string", (long)caller); \
@@ -267,7 +267,7 @@
 		if (strlen(filename) > MAXPATHLEN) { \
 			status = GMAGICK_READ_WRITE_FILENAME_TOO_LONG; \
 		} \
-		if (php_check_open_basedir_ex(filename, 0 TSRMLS_CC)) { \
+		if (php_check_open_basedir_ex(filename, 0)) { \
 			status = GMAGICK_READ_WRITE_OPEN_BASEDIR_ERROR; \
 		} \
 	} \
@@ -281,7 +281,7 @@
 		if (PG(safe_mode) && (!php_checkuid_ex(filename, NULL, CHECKUID_CHECK_FILE_AND_DIR, CHECKUID_NO_ERRORS))) { \
 			status = GMAGICK_READ_WRITE_SAFE_MODE_ERROR; \
 		} \
-		if (php_check_open_basedir_ex(filename, 0 TSRMLS_CC)) { \
+		if (php_check_open_basedir_ex(filename, 0)) { \
 			status = GMAGICK_READ_WRITE_OPEN_BASEDIR_ERROR; \
 		} \
 	} \
@@ -296,14 +296,14 @@
 			/* No error */\
 		break;\
 		case 1:\
-			zend_throw_exception_ex(php_gmagickdraw_exception_class_entry, 1 TSRMLS_CC, "Safe mode restricts user to read file: %s", filename);\
+			zend_throw_exception_ex(php_gmagickdraw_exception_class_entry, 1, "Safe mode restricts user to read file: %s", filename);\
 			if (free == GMAGICK_FREE_FILENAME) { \
 				 efree(filename); \
 			}\
 			RETURN_NULL();\
 		break;\
 		case 2:\
-			zend_throw_exception_ex(php_gmagickdraw_exception_class_entry, 1 TSRMLS_CC, "open_basedir restriction in effect. File(%s) is not within the allowed path(s)", filename);\
+			zend_throw_exception_ex(php_gmagickdraw_exception_class_entry, 1, "open_basedir restriction in effect. File(%s) is not within the allowed path(s)", filename);\
 			if (free == GMAGICK_FREE_FILENAME) { \
 				 efree(filename); \
 			}\
@@ -333,7 +333,7 @@
 		} \
 		break; \
 		case IS_OBJECT: \
-			if (instanceof_function_ex(Z_OBJCE_P(param), php_gmagickpixel_sc_entry, 0 TSRMLS_CC)) { \
+			if (instanceof_function(Z_OBJCE_P(param), php_gmagickpixel_sc_entry)) { \
 				internp = Z_GMAGICKPIXEL_OBJ_P(param); \
 			} else { \
 				GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(caller, "The parameter must be an instance of GmagickPixel or a string", (long)caller); \
@@ -348,7 +348,7 @@
 /* {{{ GMAGICK_SAFEMODE_OPENBASEDIR_CHECK(filename) */
 #if PHP_VERSION_ID > 50399
 #define GMAGICK_SAFEMODE_OPENBASEDIR_CHECK(filename) \
-	if (php_check_open_basedir_ex(filename, 0 TSRMLS_CC)) { \
+	if (php_check_open_basedir_ex(filename, 0)) { \
 		zend_error(E_WARNING, "open_basedir restriction in effect "); \
 		return;	\
 	}\
@@ -359,7 +359,7 @@
 		zend_error(E_WARNING, "SAFE MODE restriction in effect "); \
 		return; \
 	} \
-	if (php_check_open_basedir_ex(filename, 0 TSRMLS_CC)) { \
+	if (php_check_open_basedir_ex(filename, 0)) { \
 		zend_error(E_WARNING, "open_basedir restriction in effect "); \
 		return;	\
 	}\

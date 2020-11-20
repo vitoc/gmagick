@@ -33,9 +33,9 @@ zend_class_entry *php_gmagick_exception_class_entry;
 zend_class_entry *php_gmagickdraw_exception_class_entry;
 zend_class_entry *php_gmagickpixel_exception_class_entry;
 
-/* {{{ static void php_gmagick_object_free_storage(void *object TSRMLS_DC)
+/* {{{ static void php_gmagick_object_free_storage(void *object)
 */
-static void php_gmagick_object_free_storage(zend_object *object TSRMLS_DC)
+static void php_gmagick_object_free_storage(zend_object *object)
 {
 	php_gmagick_object *intern = GMAGICK_FETCH_OBJECT(object);
 
@@ -47,7 +47,7 @@ static void php_gmagick_object_free_storage(zend_object *object TSRMLS_DC)
 		DestroyMagickWand(intern->magick_wand);
 	}
 
-	zend_object_std_dtor(&intern->zo TSRMLS_CC);
+	zend_object_std_dtor(&intern->zo);
 }
 /* }}} */
 
@@ -83,9 +83,9 @@ static zend_object *php_gmagick_object_new(zend_class_entry *class_type)
 }
 /* }}} */
 
-/* {{{ static zend_object *php_gmagick_clone_gmagick_object(zval *this_ptr TSRMLS_DC)
+/* {{{ static zend_object *php_gmagick_clone_gmagick_object(zval *this_ptr)
 */
-static zend_object *php_gmagick_clone_gmagick_object(zval *this_ptr TSRMLS_DC)
+static zend_object *php_gmagick_clone_gmagick_object(zval *this_ptr)
 {
 	php_gmagick_object *old_obj = Z_GMAGICK_OBJ_P(this_ptr);
 	php_gmagick_object *new_obj = GMAGICK_FETCH_OBJECT(php_gmagick_object_new_ex(old_obj->zo.ce, 0));
@@ -150,7 +150,7 @@ static zend_object *php_gmagickdraw_object_new(zend_class_entry *class_type)
 }
 /* }}} */
 
-/* {{{ static void php_gmagickpixel_object_free_storage(zend_object *object TSRMLS_DC)
+/* {{{ static void php_gmagickpixel_object_free_storage(zend_object *object)
 */
 static void php_gmagickpixel_object_free_storage(zend_object *object)
 {
@@ -184,7 +184,7 @@ static zend_object *php_gmagickpixel_object_new_ex(zend_class_entry *class_type,
 
 	/* ALLOC_HASHTABLE(intern->zo.properties); */
 
-	zend_object_std_init(&intern->zo, class_type TSRMLS_CC);
+	zend_object_std_init(&intern->zo, class_type);
 	object_properties_init(&intern->zo, class_type );
 
 	intern->zo.handlers = &gmagickpixel_object_handlers;
@@ -195,7 +195,7 @@ static zend_object *php_gmagickpixel_object_new_ex(zend_class_entry *class_type,
 
 /* {{{ static zend_object *php_gmagickpixel_object_new(zend_class_entry *class_type)
 */
-static zend_object *php_gmagickpixel_object_new(zend_class_entry *class_type TSRMLS_DC)
+static zend_object *php_gmagickpixel_object_new(zend_class_entry *class_type)
 {
 	return php_gmagickpixel_object_new_ex(class_type, 1);
 }
@@ -1684,7 +1684,14 @@ PHP_MINIT_FUNCTION(gmagick)
 	memcpy(&gmagick_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
         gmagick_object_handlers.offset = XtOffsetOf(php_gmagick_object, zo);
         gmagick_object_handlers.free_obj = php_gmagick_object_free_storage;
-	gmagick_object_handlers.clone_obj = php_gmagick_clone_gmagick_object;
+
+    #if PHP_VERSION_ID >= 80000
+        /* TODO */
+        gmagick_object_handlers.clone_obj = NULL;
+    #else
+        gmagick_object_handlers.clone_obj = php_gmagick_clone_gmagick_object;
+    #endif
+
 
 	INIT_CLASS_ENTRY(ce, "GmagickDraw", php_gmagickdraw_class_methods);
 	php_gmagickdraw_sc_entry = zend_register_internal_class(&ce);
@@ -1700,7 +1707,13 @@ PHP_MINIT_FUNCTION(gmagick)
 	memcpy(&gmagickpixel_object_handlers, zend_get_std_object_handlers(), sizeof(zend_object_handlers));
 	gmagickpixel_object_handlers.offset = XtOffsetOf(php_gmagickpixel_object, zo);
 	gmagickpixel_object_handlers.free_obj = php_gmagickpixel_object_free_storage;
-	gmagickpixel_object_handlers.clone_obj = php_gmagick_clone_gmagickpixel_object;
+
+    #if PHP_VERSION_ID >= 80000
+        /* TODO */
+        gmagickpixel_object_handlers.clone_obj = NULL;
+    #else
+        gmagickpixel_object_handlers.clone_obj = php_gmagick_clone_gmagickpixel_object;
+    #endif
 
 	/* Initialize GraphicsMagick environment */
 	cwd = virtual_getcwd_ex(&cwd_len);
