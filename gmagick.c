@@ -85,20 +85,37 @@ static zend_object *php_gmagick_object_new(zend_class_entry *class_type)
 
 /* {{{ static zend_object *php_gmagick_clone_gmagick_object(zval *this_ptr TSRMLS_DC)
 */
+#if PHP_MAJOR_VERSION < 8
 static zend_object *php_gmagick_clone_gmagick_object(zval *this_ptr TSRMLS_DC)
 {
 	php_gmagick_object *old_obj = Z_GMAGICK_OBJ_P(this_ptr);
 	php_gmagick_object *new_obj = GMAGICK_FETCH_OBJECT(php_gmagick_object_new_ex(old_obj->zo.ce, 0));
-	 
+
 	zend_objects_clone_members(&new_obj->zo, &old_obj->zo);
-	
+
 	if (new_obj->magick_wand) {
 		DestroyMagickWand(new_obj->magick_wand);
 	}
-	
+
 	new_obj->magick_wand = CloneMagickWand(old_obj->magick_wand);
 	return &new_obj->zo;
 }
+#else
+static zend_object *php_gmagick_clone_gmagick_object(zend_object *this_ptr)
+{
+	php_gmagick_object *old_obj = GMAGICK_FETCH_OBJECT(this_ptr);
+	php_gmagick_object *new_obj = GMAGICK_FETCH_OBJECT(php_gmagick_object_new_ex(this_ptr->ce, 0));
+
+	zend_objects_clone_members(&new_obj->zo, &old_obj->zo);
+
+	if (new_obj->magick_wand) {
+		DestroyMagickWand(new_obj->magick_wand);
+	}
+
+	new_obj->magick_wand = CloneMagickWand(old_obj->magick_wand);
+	return &new_obj->zo;
+}
+#endif
 /* }}} */
 
 /* {{{ static void php_gmagickdraw_object_free_storage(zend_object *object)
@@ -203,6 +220,7 @@ static zend_object *php_gmagickpixel_object_new(zend_class_entry *class_type TSR
 
 /* {{{ static zend_object *php_gmagick_clone_gmagickpixel_object(zval *this_ptr)
 */
+#if PHP_MAJOR_VERSION < 8
 static zend_object *php_gmagick_clone_gmagickpixel_object(zval *this_ptr)
 {
 	php_gmagickpixel_object *old_obj = Z_GMAGICKPIXEL_OBJ_P(this_ptr);
@@ -213,6 +231,19 @@ static zend_object *php_gmagick_clone_gmagickpixel_object(zval *this_ptr)
 
 	return &new_obj->zo;
 }
+#else
+static zend_object *php_gmagick_clone_gmagickpixel_object(zend_object *this_ptr)
+{
+	php_gmagickpixel_object *old_obj = GMAGICKPIXEL_FETCH_OBJECT(this_ptr);
+	php_gmagickpixel_object *new_obj = GMAGICKPIXEL_FETCH_OBJECT(php_gmagickpixel_object_new_ex(old_obj->zo.ce, 0));
+
+	zend_objects_clone_members(&new_obj->zo, &old_obj->zo);
+	GMAGICK_CLONE_PIXELWAND(old_obj->pixel_wand, new_obj->pixel_wand);
+
+	return &new_obj->zo;
+}
+
+#endif
 /* }}} */
 
 ZEND_BEGIN_ARG_INFO_EX(gmagick_empty_args, 0, 0, 0)
@@ -1020,7 +1051,7 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, setimagewhitepoint,	gmagick_setimagewhitepoint_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setsamplingfactors,	gmagick_setsamplingfactors_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setsize,		gmagick_setsize_args, ZEND_ACC_PUBLIC)
-	PHP_ME(gmagick, getversion,		gmagick_empty_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, getversion,		gmagick_empty_args, ZEND_ACC_PUBLIC|ZEND_ACC_STATIC)
 	PHP_ME(gmagick, getimagegeometry, gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimage, gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimage, gmagick_setimage_args, ZEND_ACC_PUBLIC)

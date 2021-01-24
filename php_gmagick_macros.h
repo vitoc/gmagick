@@ -31,7 +31,7 @@
 
 #define GMAGICKPIXEL_FETCH_OBJECT(zv_p) (php_gmagickpixel_object *)((char*)(zv_p) - XtOffsetOf(php_gmagickpixel_object, zo))
 #define Z_GMAGICKPIXEL_OBJ_P(zv) GMAGICKPIXEL_FETCH_OBJECT(Z_OBJ_P((zv)))
-	
+
 /* }}} */
 
 /* Define a set of macros to throw exceptions */
@@ -232,6 +232,7 @@
 #endif
 
 /* {{{ GMAGICK_CLONE_PIXELWAND(source, target) */
+#if PHP_MAJOR_VERSION < 8
 #define GMAGICK_CAST_PARAMETER_TO_COLOR(param, internp, caller) \
 	switch (Z_TYPE_P(param)) { \
 		case IS_STRING: \
@@ -257,7 +258,35 @@
 		default: \
 			GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(caller, "Invalid parameter provided", (long)caller); \
 		break; \
-	} \
+	}
+#else
+#define GMAGICK_CAST_PARAMETER_TO_COLOR(param, internp, caller) \
+	switch (Z_TYPE_P(param)) { \
+		case IS_STRING: \
+		{ \
+			zval object; \
+			PixelWand *pixel_wand = NewPixelWand(); \
+			if (!PixelSetColor(pixel_wand, Z_STRVAL_P(param))) { \
+				GMAGICK_THROW_GMAGICKPIXEL_EXCEPTION(pixel_wand, "Unrecognized color string"); \
+				return; \
+			} \
+			object_init_ex(&object, php_gmagickpixel_sc_entry); \
+			internp = Z_GMAGICKPIXEL_OBJ_P(&object); \
+			GMAGICKPIXEL_REPLACE_PIXELWAND(internp, pixel_wand); \
+		} \
+		break; \
+		case IS_OBJECT: \
+			if (Z_OBJCE_P(param) == php_gmagickpixel_sc_entry) { \
+				internp = Z_GMAGICKPIXEL_OBJ_P(param); \
+			} else { \
+				GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(caller, "The parameter must be an instance of GmagickPixel or a string", (long)caller); \
+			} \
+		break; \
+		default: \
+			GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(caller, "Invalid parameter provided", (long)caller); \
+		break; \
+	}
+#endif
 /* }}} */
 
 /* {{{ GMAGICK_CLONE_PIXELWAND(source, target) */
@@ -316,9 +345,9 @@
 			}\
 			RETURN_NULL();\
 		break;\
-	} \
-/* }}} */
+	}
 
+#if PHP_MAJOR_VERSION < 7
 #define GMAGICK_CAST_PARAMETER_TO_OPACITY(param, internp, caller) \
 	switch (Z_TYPE_P(param)) { \
 		case IS_LONG: \
@@ -342,8 +371,33 @@
 		default: \
 			GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(caller, "Invalid parameter provided", (long)caller); \
 		break; \
-	} \
-/* }}} */
+	}
+#else
+#define GMAGICK_CAST_PARAMETER_TO_OPACITY(param, internp, caller) \
+	switch (Z_TYPE_P(param)) { \
+		case IS_LONG: \
+		case IS_DOUBLE: \
+		{ \
+			zval object; \
+			PixelWand *pixel_wand = NewPixelWand(); \
+			PixelSetOpacity(pixel_wand, Z_DVAL_P(param)); \
+			object_init_ex(&object, php_gmagickpixel_sc_entry); \
+			internp = Z_GMAGICKPIXEL_OBJ_P(&object); \
+			GMAGICKPIXEL_REPLACE_PIXELWAND(internp, pixel_wand); \
+		} \
+		break; \
+		case IS_OBJECT: \
+			if (Z_OBJCE_P(param) == php_gmagickpixel_sc_entry) { \
+				internp = Z_GMAGICKPIXEL_OBJ_P(param); \
+			} else { \
+				GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(caller, "The parameter must be an instance of GmagickPixel or a string", (long)caller); \
+			} \
+		break; \
+		default: \
+			GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(caller, "Invalid parameter provided", (long)caller); \
+		break; \
+	}
+#endif
 
 /* {{{ GMAGICK_SAFEMODE_OPENBASEDIR_CHECK(filename) */
 #if PHP_VERSION_ID > 50399

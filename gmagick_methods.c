@@ -3091,10 +3091,6 @@ PHP_METHOD(gmagick, getversion)
 	char *version_string;
 	unsigned long version_number;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
-
 	version_string = (char *)MagickGetVersion(&version_number);
 	array_init(return_value);
 
