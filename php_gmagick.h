@@ -141,7 +141,6 @@ typedef struct _php_gmagickpixel_object  {
 
 /* Globals, needed for the ini settings */
 ZEND_BEGIN_MODULE_GLOBALS(gmagick)
-	zend_bool set_single_thread;
 	zend_long shutdown_sleep_count;
 ZEND_END_MODULE_GLOBALS(gmagick)
 

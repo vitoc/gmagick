@@ -30,7 +30,18 @@ if test $PHP_GMAGICK != "no"; then
 		AC_MSG_CHECKING(GraphicsMagick version mask)
 		AC_MSG_RESULT(found version $GRAPHICSMAGICK_VERSION_MASK)
 
-		PHP_CHECK_FUNC(omp_pause_resource_all, gomp)
+		AC_MSG_CHECKING(omp_pause_resource_all usability)
+		AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[
+			#include <omp.h>
+		]],[[
+			omp_pause_resource_all(omp_pause_hard);
+		]])],[
+			AC_MSG_RESULT(yes)
+			PHP_CHECK_FUNC(omp_pause_resource_all, gomp)
+			PHP_ADD_LIBRARY(gomp,, GMAGICK_SHARED_LIBADD)
+		],[
+			AC_MSG_RESULT(no)
+		])
 
         LIB_DIR=$WAND_DIR/lib
         # If "$LIB_DIR" == "/usr/lib" or possible /usr/$PHP_LIBDIR" then you're probably
