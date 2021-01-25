@@ -1693,13 +1693,13 @@ static zend_function_entry php_gmagickpixel_class_methods[] =
 /* }}} */
 
 PHP_INI_BEGIN()
-    STD_PHP_INI_ENTRY("gmagick.set_single_thread", "0", PHP_INI_SYSTEM, OnUpdateBool, set_single_thread, zend_gmagick_globals, gmagick_globals)
+    STD_PHP_INI_ENTRY("gmagick.set_single_thread", "1", PHP_INI_SYSTEM, OnUpdateBool, set_single_thread, zend_gmagick_globals, gmagick_globals)
     STD_PHP_INI_ENTRY("gmagick.shutdown_sleep_count",  "10", PHP_INI_ALL, OnUpdateLong, shutdown_sleep_count, zend_gmagick_globals, gmagick_globals)
 PHP_INI_END()
 
 static void php_gmagick_init_globals(zend_gmagick_globals *gmagick_globals)
 {
-    gmagick_globals->set_single_thread = 0;
+    gmagick_globals->set_single_thread = 1;
     // 10 is magick number, that seems to be enough.
     gmagick_globals->shutdown_sleep_count = 10;
 }
