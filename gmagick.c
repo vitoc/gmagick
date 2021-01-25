@@ -21,6 +21,8 @@
 #include "php_gmagick_macros.h"
 #include "php_gmagick_helpers.h"
 
+ZEND_DECLARE_MODULE_GLOBALS(gmagick)
+
 /* handlers */
 static zend_object_handlers gmagick_object_handlers;
 static zend_object_handlers gmagickdraw_object_handlers;
@@ -1690,6 +1692,18 @@ static zend_function_entry php_gmagickpixel_class_methods[] =
 };
 /* }}} */
 
+PHP_INI_BEGIN()
+    STD_PHP_INI_ENTRY("gmagick.set_single_thread", "0", PHP_INI_SYSTEM, OnUpdateBool, set_single_thread, zend_gmagick_globals, gmagick_globals)
+    STD_PHP_INI_ENTRY("gmagick.shutdown_sleep_count",  "10", PHP_INI_ALL, OnUpdateLong, shutdown_sleep_count, zend_gmagick_globals, gmagick_globals)
+PHP_INI_END()
+
+static void php_gmagick_init_globals(zend_gmagick_globals *gmagick_globals)
+{
+    gmagick_globals->set_single_thread = 0;
+    // 10 is magick number, that seems to be enough.
+    gmagick_globals->shutdown_sleep_count = 10;
+}
+
 /* {{{ PHP_MINIT_FUNCTION(gmagick)
 */
 PHP_MINIT_FUNCTION(gmagick)
@@ -1698,6 +1712,8 @@ PHP_MINIT_FUNCTION(gmagick)
 	size_t cwd_len;
 	
 	zend_class_entry ce;
+
+	ZEND_INIT_MODULE_GLOBALS(gmagick, php_gmagick_init_globals, NULL);
 	
 	/* Exception */
 	INIT_CLASS_ENTRY(ce, "GmagickException", NULL);
@@ -1738,12 +1754,20 @@ PHP_MINIT_FUNCTION(gmagick)
 	
 	if (!cwd)
 		return FAILURE;
-	
+
+
 	InitializeMagick(cwd);
 	efree(cwd);
 
 	/* init constants */
 	php_gmagick_initialize_constants();
+
+	REGISTER_INI_ENTRIES();
+
+	if (GMAGICK_G(set_single_thread)) {
+	    MagickSetResourceLimit(ThreadsResource, 1);
+	}
+
 	return SUCCESS;
 }
 /* }}} */
@@ -1753,6 +1777,16 @@ PHP_MINIT_FUNCTION(gmagick)
 PHP_MSHUTDOWN_FUNCTION(gmagick)
 {
 	DestroyMagick();
+#if HAVE_OMP_PAUSE_RESOURCE_ALL
+	// Note there is a patch to add omp_pause_resource_all to DestroyMagick()
+	// https://sourceforge.net/p/graphicsmagick/patches/63/
+	// But it hasn't been accepted
+	omp_pause_resource_all(omp_pause_hard);
+#else
+	for (i = 0; i < 100 && i < GMAGICK_G(shutdown_sleep_count); i += 1) {
+		usleep(1000);
+	}
+#endif
 	return SUCCESS;
 }
 /* }}} */
@@ -1771,6 +1805,8 @@ PHP_MINFO_FUNCTION(gmagick)
 	php_info_print_table_row(2, "gmagick version", PHP_GMAGICK_VERSION);
 	php_info_print_table_row(2, "GraphicsMagick version", version);
 	php_info_print_table_end();
+
+	DISPLAY_INI_ENTRIES();
 }
 
 /* {{{ zend_module_entry gmagick_module_entry

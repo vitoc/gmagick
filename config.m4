@@ -30,6 +30,8 @@ if test $PHP_GMAGICK != "no"; then
 		AC_MSG_CHECKING(GraphicsMagick version mask)
 		AC_MSG_RESULT(found version $GRAPHICSMAGICK_VERSION_MASK)
 
+		PHP_CHECK_FUNC(omp_pause_resource_all, gomp)
+
         LIB_DIR=$WAND_DIR/lib
         # If "$LIB_DIR" == "/usr/lib" or possible /usr/$PHP_LIBDIR" then you're probably
         # going to have a bad time. PHP m4 files seem to be hard-coded to not link properly against

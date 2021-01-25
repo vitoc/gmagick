@@ -29,6 +29,7 @@
 /* Include GraphicsMagick header */
 #include <stdio.h>
 #include <sys/types.h>
+
 #if defined(PHP_WIN32) && !defined(ssize_t)
 /* XXX actually wand_api.h should be included after php.h,
 	ssize_t were there with much more probability. */
@@ -56,6 +57,10 @@ typedef long ssize_t;
 #include "ext/standard/php_string.h"
 #include "ext/standard/info.h"
 #include "ext/standard/php_filestat.h"
+
+#if HAVE_OMP_PAUSE_RESOURCE_ALL
+#include <omp.h>
+#endif
 
 /* backward compat macros */
 
@@ -133,6 +138,20 @@ typedef struct _php_gmagickpixel_object  {
 	PixelWand *pixel_wand;
 	zend_object zo;
 } php_gmagickpixel_object;
+
+/* Globals, needed for the ini settings */
+ZEND_BEGIN_MODULE_GLOBALS(gmagick)
+	zend_bool set_single_thread;
+	zend_long shutdown_sleep_count;
+ZEND_END_MODULE_GLOBALS(gmagick)
+
+#ifdef ZTS
+# define GMAGICK_G(v) TSRMG(gmagick_globals_id, zend_gmagick_globals *, v)
+#else
+# define GMAGICK_G(v) (gmagick_globals.v)
+#endif
+
+ZEND_EXTERN_MODULE_GLOBALS(gmagick)
 
 extern zend_module_entry gmagick_module_entry;
 #define phpext_gmagick_ptr &gmagick_module_entry
