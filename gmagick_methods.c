@@ -262,7 +262,7 @@ PHP_METHOD(gmagick, resizeimage)
 	}
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
-	
+
 	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, width, height, &new_width, &new_height, legacy)) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to calculate image dimensions");
 	}
@@ -286,9 +286,7 @@ PHP_METHOD(gmagick, clear)
 	int i, image_count;
 	zend_bool failure = 0;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	image_count = MagickGetNumberImages(intern->magick_wand);
@@ -298,11 +296,11 @@ PHP_METHOD(gmagick, clear)
 			failure = 1;
 		}
 	}
-	
+
 	if (failure) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Failed to remove all images");
 	}
-	
+
 	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
@@ -315,22 +313,20 @@ PHP_METHOD(gmagick, cropimage)
 	php_gmagick_object *intern;
 	long x, y, width, height;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "llll", &width, &height, &x, &y) == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
-	
+
 	if (MagickCropImage(intern->magick_wand, width, height, x, y) == MagickFalse) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Failed to crop the image");
 	}
-	
+
 	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 /* {{{ proto Gmagick Gmagick::cropthumbnailimage(int columns, int rows[, bool legacy])
-	 Creates a crop thumbnail. If legacy is true, uses the 
+	 Creates a crop thumbnail. If legacy is true, uses the
 	incorrect behaviour that was present until Gmagick 2.0.1. If false (default) it uses the correct
 	behaviour.
 */
@@ -357,9 +353,9 @@ PHP_METHOD(gmagick, cropthumbnailimage)
 /* }}} */
 
 /* {{{ proto Gmagick Gmagick::coalesceImages()
-    Composites a set of images while respecting any page offsets and disposal methods.  
-    GIF, MIFF, and MNG animation sequences typically start with an image background and 
-    each subsequent image varies in size and offset.  returns a new sequence where each image in the 
+    Composites a set of images while respecting any page offsets and disposal methods.
+    GIF, MIFF, and MNG animation sequences typically start with an image background and
+    each subsequent image varies in size and offset.  returns a new sequence where each image in the
     sequence is the same size as the first and composited with the next image in the sequence.
 */
 PHP_METHOD(gmagick, coalesceimages)
@@ -367,9 +363,7 @@ PHP_METHOD(gmagick, coalesceimages)
 	MagickWand *tmp_wand;
 	php_gmagick_object *intern, *intern_return;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -405,7 +399,7 @@ PHP_METHOD(gmagick, compositeimage)
 	source = Z_GMAGICK_OBJ_P(source_obj);
 
 	/*
-		Causes a bug with some GraphicsMagick versions where the exception is 
+		Causes a bug with some GraphicsMagick versions where the exception is
 		not cleared. This would cause all subsequent operations to fail.
 	if (MagickGetNumberImages(source->magick_wand) == 0) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "The source object must contain an image");
@@ -414,7 +408,7 @@ PHP_METHOD(gmagick, compositeimage)
 	if (MagickCompositeImage(intern->magick_wand, source->magick_wand, compose, x, y) == MagickFalse) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Failed to composite the image");
 	}
-	
+
 	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
@@ -432,7 +426,7 @@ PHP_METHOD(gmagick, drawimage)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "O", &objvar, php_gmagickdraw_sc_entry) == FAILURE) {
 		return;
 	}
-	
+
 	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -697,10 +691,8 @@ PHP_METHOD(gmagick, deconstructimages)
 {
 	MagickWand *tmp_wand;
 	php_gmagick_object *intern, *intern_return;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -726,10 +718,8 @@ PHP_METHOD(gmagick, despeckleimage)
 {
 	php_gmagick_object *intern;
 	MagickBool status;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -751,10 +741,8 @@ PHP_METHOD(gmagick, despeckleimage)
 PHP_METHOD(gmagick, destroy)
 {
 	php_gmagick_object *intern;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 
@@ -834,10 +822,8 @@ PHP_METHOD(gmagick, enhanceimage)
 {
 	php_gmagick_object *intern;
 	MagickBool status;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -860,10 +846,8 @@ PHP_METHOD(gmagick, equalizeimage)
 {
 	php_gmagick_object *intern;
 	MagickBool status;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -886,10 +870,8 @@ PHP_METHOD(gmagick, flipimage)
 {
 	php_gmagick_object *intern;
 	MagickBool status;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -911,10 +893,8 @@ PHP_METHOD(gmagick, flopimage)
 {
 	php_gmagick_object *intern;
 	MagickBool status;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -995,10 +975,8 @@ PHP_METHOD(gmagick, gammaimage)
 PHP_METHOD(gmagick, getcopyright)
 {
 	char *copyright;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	copyright = (char *)MagickGetCopyright();
 	ZVAL_STRING(return_value, copyright);
@@ -1015,10 +993,8 @@ PHP_METHOD(gmagick, getfilename)
 {
 	php_gmagick_object *intern;
 	char *filename;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	filename = (char *)MagickGetFilename(intern->magick_wand);
@@ -1038,12 +1014,10 @@ PHP_METHOD(gmagick, getimagebackgroundcolor)
 {
 	php_gmagick_object *intern;
 	php_gmagickpixel_object *internp;
-	MagickBool status;	
+	MagickBool status;
 	PixelWand *tmp_wand;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -1076,9 +1050,7 @@ PHP_METHOD(gmagick, getimageblob)
 	size_t image_size;
 	char *buffer;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 
@@ -1095,7 +1067,7 @@ PHP_METHOD(gmagick, getimageblob)
 	GMAGICK_FREE_MEMORY(unsigned char *, image_contents);
 	return;
 }
-/* }}} */ 
+/* }}} */
 
 /* {{{ proto string Gmagick::getImagesBlob()
 	Returns all image sequences as a string
@@ -1109,10 +1081,8 @@ PHP_METHOD(gmagick, getimagesblob)
 	size_t current;
 	MagickBool status;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
-	
+	ZEND_PARSE_PARAMETERS_NONE();
+
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
@@ -1154,7 +1124,7 @@ PHP_METHOD(gmagick, setimagebackgroundcolor)
 	php_gmagick_object *intern;
 	php_gmagickpixel_object *internp;
 	MagickBool status;
-	
+
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "z", &param) == FAILURE) {
 		return;
 	}
@@ -1183,10 +1153,8 @@ PHP_METHOD(gmagick, getimageblueprimary)
 	php_gmagick_object *intern;
 	MagickBool status;
 	double x, y;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -1214,10 +1182,8 @@ PHP_METHOD(gmagick, getimagebordercolor)
 	php_gmagickpixel_object *internp;
 	MagickBool status;
 	PixelWand *tmp_wand;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -1404,10 +1370,8 @@ PHP_METHOD(gmagick, getimagecolorspace)
 {
 	php_gmagick_object *intern;
 	long colorSpace;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -1424,9 +1388,7 @@ PHP_METHOD(gmagick, getimagecolors)
 {
 	php_gmagick_object *intern;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -1443,10 +1405,8 @@ PHP_METHOD(gmagick, getimagecompose)
 {
 	php_gmagick_object *intern;
 	long composite;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -1463,10 +1423,8 @@ PHP_METHOD(gmagick, getimagedelay)
 {
 	php_gmagick_object *intern;
 	long delay;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -1483,10 +1441,8 @@ PHP_METHOD(gmagick, getimagedepth)
 {
 	php_gmagick_object *intern;
 	long depth;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -1504,10 +1460,8 @@ PHP_METHOD(gmagick, getnumberimages)
 	php_gmagick_object *intern;
 	unsigned long num_images;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
-	
+	ZEND_PARSE_PARAMETERS_NONE();
+
 	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	num_images = MagickGetNumberImages(intern->magick_wand);
@@ -1580,9 +1534,7 @@ PHP_METHOD(gmagick, getimagecompression)
 {
 	php_gmagick_object *intern;
 
-	if (zend_parse_parameters_none() == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	RETVAL_LONG(MagickGetImageCompression(intern->magick_wand));
@@ -1650,11 +1602,9 @@ PHP_METHOD(gmagick, getimagedispose)
 {
 	php_gmagick_object *intern;
 	long dispose;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
-	
+
+	ZEND_PARSE_PARAMETERS_NONE();
+
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
@@ -1725,10 +1675,8 @@ PHP_METHOD(gmagick, getimage)
 	MagickWand *tmp_wand;
 	php_gmagick_object *intern, *intern_return;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
-	
+	ZEND_PARSE_PARAMETERS_NONE();
+
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
@@ -1785,10 +1733,8 @@ PHP_METHOD(gmagick, getimageextrema)
 	php_gmagick_object *intern;
 	unsigned long min, max;
 	MagickBool status;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -1815,10 +1761,8 @@ PHP_METHOD(gmagick, getimagefilename)
 {
 	php_gmagick_object *intern;
 	char *filename;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -1871,10 +1815,8 @@ PHP_METHOD(gmagick, getimageformat)
 {
 	php_gmagick_object *intern;
 	char *format;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 
@@ -1956,10 +1898,8 @@ PHP_METHOD(gmagick, getimagegamma)
 {
 	php_gmagick_object *intern;
 	double gamma;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -2004,10 +1944,8 @@ PHP_METHOD(gmagick, getimagegreenprimary)
 	php_gmagick_object *intern;
 	double x, y;
 	MagickBool status;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -2061,10 +1999,8 @@ PHP_METHOD(gmagick, getimageheight)
 {
 	php_gmagick_object *intern;
 	long height;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -2085,10 +2021,8 @@ PHP_METHOD(gmagick, getimagehistogram)
 	unsigned long colors = 0;
 	unsigned long i;
 	zval tmp_pixelwand;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -2115,10 +2049,8 @@ PHP_METHOD(gmagick, getimageindex)
 {
 	MagickBool status;
 	php_gmagick_object *intern;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 
@@ -2163,10 +2095,8 @@ PHP_METHOD(gmagick, getimageinterlacescheme)
 {
 	php_gmagick_object *intern;
 	long interlace;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -2199,7 +2129,7 @@ PHP_METHOD(gmagick, setimageinterlacescheme)
 	if (status == MagickFalse) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to set image interlace scheme");
 	}
-	
+
 	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
@@ -2211,10 +2141,8 @@ PHP_METHOD(gmagick, getimageiterations)
 {
 	php_gmagick_object *intern;
 	long iterations;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -2232,10 +2160,8 @@ PHP_METHOD(gmagick, getimagegeometry)
 	long width,height;
 	php_gmagick_object *intern;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
-	
+	ZEND_PARSE_PARAMETERS_NONE();
+
 	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -2261,9 +2187,7 @@ PHP_METHOD(gmagick, getimagemattecolor)
 	MagickBool status;
 	PixelWand *tmp_wand;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -2296,15 +2220,13 @@ PHP_METHOD(gmagick, getimagematte)
 {
 	php_gmagick_object *intern;
 	long matte;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
-	matte = MagickGetImageMatte(intern->magick_wand);	
+	matte = MagickGetImageMatte(intern->magick_wand);
 
 	RETVAL_LONG(matte);
 }
@@ -2322,9 +2244,7 @@ PHP_METHOD(gmagick, getimagepage)
 	unsigned long width, height;
 	long x, y;
 
-	if (zend_parse_parameters_none() == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	if (php_gmagick_ensure_not_empty (intern->magick_wand) == 0)
@@ -2387,10 +2307,8 @@ PHP_METHOD(gmagick, getimageredprimary)
 	php_gmagick_object *intern;
 	MagickBool status;
 	double x, y;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -2416,10 +2334,8 @@ PHP_METHOD(gmagick, getimagerenderingintent)
 {
 	php_gmagick_object *intern;
 	long renderingIntent;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -2439,9 +2355,7 @@ PHP_METHOD(gmagick, getimageresolution)
 	MagickBool status;
 	double x, y;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -2467,10 +2381,8 @@ PHP_METHOD(gmagick, getimagescene)
 {
 	php_gmagick_object *intern;
 	unsigned long scene;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -2488,9 +2400,7 @@ PHP_METHOD(gmagick, getimagesignature)
 	php_gmagick_object *intern;
 	char *signature;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -2509,10 +2419,8 @@ PHP_METHOD(gmagick, getimagetype)
 {
 	php_gmagick_object *intern;
 	long imageType;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -2750,10 +2658,8 @@ PHP_METHOD(gmagick, getimageunits)
 {
 	php_gmagick_object *intern;
 	long resolutionType;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -2771,10 +2677,8 @@ PHP_METHOD(gmagick, getimagewhitepoint)
 	php_gmagick_object *intern;
 	MagickBool status;
 	double x, y;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -2800,10 +2704,8 @@ PHP_METHOD(gmagick, getimagewidth)
 {
 	php_gmagick_object *intern;
 	unsigned long width;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -2819,10 +2721,8 @@ PHP_METHOD(gmagick, getimagewidth)
 PHP_METHOD(gmagick, getpackagename)
 {
 	char *package_name;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	package_name = (char *)MagickGetPackageName();
 	ZVAL_STRING(return_value, package_name);
@@ -2839,10 +2739,8 @@ PHP_METHOD(gmagick, getquantumdepth)
 {
 	char *quantum_depth;
 	unsigned long depth;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	quantum_depth = (char *)MagickGetQuantumDepth(&depth);
 
@@ -2860,10 +2758,8 @@ PHP_METHOD(gmagick, getquantumdepth)
 PHP_METHOD(gmagick, getreleasedate)
 {
 	char *release_date;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	release_date = (char *)MagickGetReleaseDate();
 	ZVAL_STRING(return_value, release_date);
@@ -2896,10 +2792,8 @@ PHP_METHOD(gmagick, getsamplingfactors)
 	php_gmagick_object *intern;
 	double *sampling_factors;
 	unsigned long number_factors = 0, i;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 
@@ -2923,10 +2817,8 @@ PHP_METHOD(gmagick, getsize)
 	php_gmagick_object *intern;
 	unsigned long columns, rows;
 	MagickBool status;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	status = MagickGetSize(intern->magick_wand, &columns, &rows);
@@ -3047,7 +2939,7 @@ PHP_METHOD(gmagick, setresourcelimit)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "ll", &type, &limit) == FAILURE) {
 		return;
 	}
-	
+
 	status = MagickSetResourceLimit(type, limit);
 
 	/* No magick is going to happen */
@@ -3109,10 +3001,8 @@ PHP_METHOD(gmagick, hasnextimage)
 {
 	php_gmagick_object *intern;
 	MagickBool status;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	status = MagickHasNextImage(intern->magick_wand);
@@ -3134,9 +3024,7 @@ PHP_METHOD(gmagick, haspreviousimage)
 	php_gmagick_object *intern;
 	MagickBool status;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	status = MagickHasPreviousImage(intern->magick_wand);
@@ -3246,10 +3134,8 @@ PHP_METHOD(gmagick, magnifyimage)
 {
 	php_gmagick_object *intern;
 	MagickBool status;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -3355,10 +3241,8 @@ PHP_METHOD(gmagick, minifyimage)
 {
 	php_gmagick_object *intern;
 	MagickBool status;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -3438,9 +3322,7 @@ PHP_METHOD(gmagick, nextimage)
 	php_gmagick_object *intern;
 	MagickBool status;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	status = MagickNextImage(intern->magick_wand);
@@ -3468,12 +3350,12 @@ PHP_METHOD(gmagick, newimage)
  	size_t format_len = 0;
 	char xc_str[MAX_BUFFER_SIZE];
 
- 	/* Parse parameters given to function */
- 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lls|s", &columns, &rows, &param, &param_len, &format, &format_len) == FAILURE) {
- 		return;
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "lls|s", &columns, &rows, &param, &param_len, &format, &format_len) == FAILURE) {
+		return;
 	}
- 	intern = Z_GMAGICK_OBJ_P(getThis());
- 	
+	intern = Z_GMAGICK_OBJ_P(getThis());
+
 	if (!param_len) {
 		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICK_CLASS, "The color must not be empty", 1);
 	}
@@ -3493,7 +3375,7 @@ PHP_METHOD(gmagick, newimage)
 	}
 	GMAGICK_CHAIN_METHOD;
 }
-/* }}} */ 
+/* }}} */
 
 /* {{{ proto Gmagick Gmagick::normalizeImage([int channel])
 	Enhances the contrast of a color image by adjusting the pixels color to span the entire range of colors available
@@ -3557,10 +3439,8 @@ PHP_METHOD(gmagick, previousimage)
 {
 	php_gmagick_object *intern;
 	MagickBool status;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	status = MagickPreviousImage(intern->magick_wand);
@@ -3782,9 +3662,9 @@ PHP_METHOD(gmagick, radialblurimage)
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
-	// MagickRadialBlurImageChannel still not available in 1.4 
+	// MagickRadialBlurImageChannel still not available in 1.4
 #if GMAGICK_LIB_MASK >= 1005000
-	status = MagickRadialBlurImageChannel(intern->magick_wand, channel, angle);	
+	status = MagickRadialBlurImageChannel(intern->magick_wand, channel, angle);
 #else
 	status = MagickRadialBlurImage(intern->magick_wand, angle);
 #endif
@@ -3938,6 +3818,8 @@ PHP_METHOD(gmagick, removeimage)
 	MagickBool status;
 	php_gmagick_object *intern;
 
+	ZEND_PARSE_PARAMETERS_NONE();
+
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
@@ -4069,7 +3951,7 @@ PHP_METHOD(gmagick, rotateimage)
 
 /* {{{ proto Gmagick Gmagick::scaleImage(int cols, int rows[, bool fit[, bool legacy = false]] )
 	Scales the size of an image to the given dimensions. Passing zero as either of
-	the arguments will preserve dimension while scaling.  If legacy is true, uses the 
+	the arguments will preserve dimension while scaling.  If legacy is true, uses the
 	incorrect behaviour that was present until Gmagick 2.0.1. If false (default) it uses the correct
 	behaviour.
 */
@@ -4089,7 +3971,7 @@ PHP_METHOD(gmagick, scaleimage)
 	intern = Z_GMAGICK_OBJ_P(getThis());
 
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
-	
+
 	if (!php_gmagick_thumbnail_dimensions(intern->magick_wand, fit, x, y, &width, &height, legacy)) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to calculate image dimensions");
 	}
@@ -4145,14 +4027,14 @@ PHP_METHOD(gmagick, sharpenimage)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd", &radius, &sigma) == FAILURE) {
 		return;
 	}
-	
+
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
 	status = MagickSharpenImage(intern->magick_wand, radius, sigma);
-	
+
 	/* No magick is going to happen */
-	if (status == MagickFalse) { 
+	if (status == MagickFalse) {
 		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to sharpen image");
 	}
 	GMAGICK_CHAIN_METHOD;
@@ -4253,10 +4135,8 @@ PHP_METHOD(gmagick, stripimage)
 {
 	php_gmagick_object *intern;
 	MagickBool status;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -4371,10 +4251,8 @@ PHP_METHOD(gmagick, __tostring)
 	unsigned char *image;
 	char *buffer;
 	size_t image_size;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 
@@ -4408,10 +4286,8 @@ PHP_METHOD(gmagick, flattenimages)
 	php_gmagick_object *intern, *intern_return;
 	MagickWand *tmp_wand;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
-	
+	ZEND_PARSE_PARAMETERS_NONE();
+
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
@@ -4433,7 +4309,7 @@ PHP_METHOD(gmagick, flattenimages)
 /* {{{ proto Gmagick Gmagick::sampleImage(int cols, int rows[, bool fit[, bool legacy = false]] )
 	Sample the size of an image to the given dimensions. Passing zero as either of
 	the arguments will preserve dimension while scaling.
-	If legacy is true, uses the 
+	If legacy is true, uses the
 	incorrect behaviour that was present until Gmagick 2.0.1. If false (default) it uses the correct
 	behaviour.
 */
@@ -4477,10 +4353,8 @@ PHP_METHOD(gmagick, cloneimage)
 	MagickWand *tmp_wand;
 	php_gmagick_object *intern, *intern_return;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
-	
+	ZEND_PARSE_PARAMETERS_NONE();
+
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
@@ -4507,10 +4381,8 @@ PHP_METHOD(gmagick, appendimages)
 	zend_bool stack = 0;
 	php_gmagick_object *intern, *intern_return;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
-	
+	ZEND_PARSE_PARAMETERS_NONE();
+
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
 
@@ -4549,7 +4421,7 @@ PHP_METHOD(gmagick, unsharpmaskimage)
 	status = MagickUnsharpMaskImage(intern->magick_wand, radius, sigma, amount, threshold);
 
 	if (status == MagickFalse) {
-			GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to unsharp mask image");		
+			GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to unsharp mask image");
 		return;
 	}
 	RETURN_TRUE;
@@ -4561,23 +4433,23 @@ PHP_METHOD(gmagick, unsharpmaskimage)
 */
 PHP_METHOD(gmagick, setresolution)
 {
-        php_gmagick_object *intern;
-        MagickBool status;
-        double x_resolution, y_resolution;
+	php_gmagick_object *intern;
+	MagickBool status;
+	double x_resolution, y_resolution;
 
-        /* Parse parameters given to function */
-        if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd", &x_resolution, &y_resolution) == FAILURE) {
-                return;
-        }
+	/* Parse parameters given to function */
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd", &x_resolution, &y_resolution) == FAILURE) {
+		return;
+	}
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
-        status = MagickSetResolution(intern->magick_wand, x_resolution, y_resolution);
+	status = MagickSetResolution(intern->magick_wand, x_resolution, y_resolution);
 
-        if (status == MagickFalse) {
-                GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to set resolution");
-                return;
-        }
-        RETURN_TRUE;
+	if (status == MagickFalse) {
+		GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to set resolution");
+		return;
+	}
+	RETURN_TRUE;
 }
 /* }}} */
 
@@ -4648,9 +4520,7 @@ PHP_METHOD(gmagick, averageimages)
 	MagickWand *tmp_wand;
 	php_gmagick_object *intern, *intern_return;
 
-	if (zend_parse_parameters_none() == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -4740,9 +4610,7 @@ PHP_METHOD(gmagick, clipimage)
 	php_gmagick_object *intern;
 	unsigned int status;
 
-	if (zend_parse_parameters_none() == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 
@@ -4827,9 +4695,9 @@ PHP_METHOD(gmagick, colorfloodfillimage)
 
 
 /* {{{ proto bool Gmagick::colorizeImage(GmagickPixel colorize, GmagickPixel opacity)
-	Blends the fill color with each pixel in the image. The 'opacity' color is a 
+	Blends the fill color with each pixel in the image. The 'opacity' color is a
 	per channel strength factor for how strongly the color should be applied. If
-	legacy is true, the behaviour of this function is incorrect, but consistent 
+	legacy is true, the behaviour of this function is incorrect, but consistent
 	with how it behaved before Gmagick version 3.4.0
 */
 PHP_METHOD(gmagick, colorizeimage)
@@ -5212,9 +5080,7 @@ PHP_METHOD(gmagick, getimagegravity)
 {
 	php_gmagick_object *intern;
 
-	if (zend_parse_parameters_none() == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -5232,9 +5098,7 @@ PHP_METHOD(gmagick, getimagevirtualpixelmethod)
 	php_gmagick_object *intern;
 	long pixelMethod;
 
-	if (zend_parse_parameters_none() == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -5396,9 +5260,7 @@ PHP_METHOD(gmagick, mosaicimages)
 	MagickWand *tmp_wand = NULL;
 	php_gmagick_object *intern, *intern_return;
 
-	if (zend_parse_parameters_none() == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -5799,9 +5661,7 @@ PHP_METHOD(gmagick, getimagefuzz)
 	php_gmagick_object *intern;
 	double fuzz;
 
-	if (zend_parse_parameters_none() == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -5821,9 +5681,7 @@ PHP_METHOD(gmagick, getimagesavedtype)
 	php_gmagick_object *intern;
 	ImageType type;
 
-	if (zend_parse_parameters_none() == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	intern = Z_GMAGICK_OBJ_P(getThis());
 	GMAGICK_CHECK_NOT_EMPTY(intern->magick_wand, 1, 1);
@@ -5894,7 +5752,7 @@ PHP_METHOD(gmagick, setimagefuzz)
 
 /* {{{ proto bool Gmagick::setimageoption(string format, string key, string value)
 	MagickSetImageOption() associates one or options with a particular image format (.e.g MagickSetImageOption(wand,"jpeg","preserve-settings","true").
-	
+
 	"jpeg","preserve-settings","true").
 */
 PHP_METHOD(gmagick, setimageoption)
@@ -5905,7 +5763,7 @@ PHP_METHOD(gmagick, setimageoption)
 	unsigned int	 status;
 
 	/* Parse parameters given to function */
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss", 
+	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "sss",
 			&format, &format_len,
 			&key, &key_len,
 			&value, &value_len) == FAILURE) {
