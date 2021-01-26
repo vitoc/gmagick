@@ -1,6 +1,6 @@
 /*
    +----------------------------------------------------------------------+
-   | PHP Version 5 / Gmagick	                                          |
+   | PHP Version 5 / Gmagick                                              |
    +----------------------------------------------------------------------+
    | Copyright (c) 2009 Vito Chin, Mikko Koppanen                         |
    +----------------------------------------------------------------------+
@@ -13,27 +13,27 @@
    | license@php.net so we can mail you a copy immediately.               |
    +----------------------------------------------------------------------+
    | Author: Mikko Kopppanen <mkoppanen@php.net>                          |
-   |         Vito Chin <vito@php.net>		                          |
+   |         Vito Chin <vito@php.net>                                     |
    +----------------------------------------------------------------------+
 */
 
 #include "php_gmagick.h"
 #include "php_gmagick_macros.h"
 #include "php_gmagick_helpers.h"
-			
-#if GMAGICK_LIB_MASK >= 1004000 
+
+#if GMAGICK_LIB_MASK >= 1004000
 #if PHP_VERSION_ID < 50399
 static MagickBool SafeModeMonitor(const ConfirmAccessMode mode,
 				       const char *path,
 				       ExceptionInfo *exception)
 {
 	ARG_NOT_USED(exception);
-#if defined(CHECKUID_CHECK_FILE_AND_DIR)	
+#if defined(CHECKUID_CHECK_FILE_AND_DIR)
 	if (PG(safe_mode) && (!php_checkuid_ex(path, NULL, CHECKUID_CHECK_FILE_AND_DIR, CHECKUID_NO_ERRORS))) {
-		exception = "SafeModeFail";		
+		exception = "SafeModeFail";
 		return MagickFail;
 	}
-#endif	
+#endif
 	return MagickPass;
 }
 
@@ -4546,7 +4546,7 @@ PHP_METHOD(gmagick, unsharpmaskimage)
 	if (php_gmagick_ensure_not_empty (intern->magick_wand) == 0)
 		return;
 
-		status = MagickUnsharpMaskImage(intern->magick_wand, radius, sigma, amount, threshold);
+	status = MagickUnsharpMaskImage(intern->magick_wand, radius, sigma, amount, threshold);
 
 	if (status == MagickFalse) {
 			GMAGICK_THROW_GMAGICK_EXCEPTION(intern->magick_wand, "Unable to unsharp mask image");		

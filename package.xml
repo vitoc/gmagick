@@ -58,6 +58,10 @@ hasNextImage() and hasPreviousImage() now actually returns TRUE on success (expe
 			<file name="CONTRIBUTORS.md" role="doc" />			
 			<file name="LICENSE" role="doc" />
 			<dir name="tests">
+				<file role="test" name="bug63677.phpt"/>
+				<file role="test" name="bug71626.phpt"/>
+				<file role="test" name="bug_71742.phpt"/>
+				<file role="test" name="skipif.inc"/>
 				<file role="test" name="gmagick-001-read_and_write.phpt"/>
 				<file role="test" name="gmagick-002-crop_variations.phpt"/>
 				<file role="test" name="gmagick-003-resize_variations.phpt"/>

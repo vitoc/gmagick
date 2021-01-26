@@ -1,6 +1,6 @@
 /*
    +----------------------------------------------------------------------+
-   | PHP Version 5 / Gmagick	                                          |
+   | PHP Version 5 / Gmagick                                              |
    +----------------------------------------------------------------------+
    | Copyright (c) 2009 Vito Chin, Mikko Koppanen                         |
    +----------------------------------------------------------------------+
@@ -13,7 +13,7 @@
    | license@php.net so we can mail you a copy immediately.               |
    +----------------------------------------------------------------------+
    | Author: Mikko Kopppanen <mkoppanen@php.net>                          |
-   |         Vito Chin <vito@php.net>		                          |
+   |         Vito Chin <vito@php.net>                                     |
    +----------------------------------------------------------------------+
 */
 
@@ -178,11 +178,11 @@ static void php_gmagickpixel_object_free_storage(zend_object *object)
 	if (!intern) {
 		return;
 	}
-	
+
 	if(intern->pixel_wand) {
 		DestroyPixelWand(intern->pixel_wand);
 	}
-	
+
 	zend_object_std_dtor(&intern->zo);
 }
 /* }}} */
@@ -568,19 +568,19 @@ ZEND_BEGIN_ARG_INFO_EX(gmagick_motionblurimage_args, 0, 0, 3)
 	ZEND_ARG_INFO(0, angle)
 ZEND_END_ARG_INFO()
 
- 	
+
 ZEND_BEGIN_ARG_INFO_EX(gmagick_newimage_args, 0, 0, 3)
 	ZEND_ARG_INFO(0, columns)
 	ZEND_ARG_INFO(0, rows)
 	ZEND_ARG_INFO(0, background_color)
 	ZEND_ARG_INFO(0, format)
-ZEND_END_ARG_INFO() 
+ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(gmagick_newpseudoimage_args, 0, 0, 3)
  	ZEND_ARG_INFO(0, columns)
  	ZEND_ARG_INFO(0, rows)
  	ZEND_ARG_INFO(0, pseudoString)
-ZEND_END_ARG_INFO() 
+ZEND_END_ARG_INFO()
 
 ZEND_BEGIN_ARG_INFO_EX(gmagick_getresourcelimit_args, 0, 0, 1)
 	ZEND_ARG_INFO(0, resource_type)
@@ -939,16 +939,16 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick,	thumbnailimage,		gmagick_thumbnailimage_args,	ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick,	clear,			gmagick_empty_args,		ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick,	cropimage,		gmagick_cropimage_args,		ZEND_ACC_PUBLIC)
-	PHP_ME(gmagick, coalesceimages, gmagick_empty_args, ZEND_ACC_PUBLIC)	
+	PHP_ME(gmagick, coalesceimages, gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, compositeimage,		gmagick_compositeimage_args,	ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, drawimage,		gmagick_drawimage_args,		ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, annotateimage,		gmagick_annotateimage_args, 	ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, blurimage,		gmagick_blurimage_args, 	ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, addimage,		gmagick_addimage_args,		ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, addnoiseimage,		gmagick_addnoiseimage_args, 	ZEND_ACC_PUBLIC)
-	PHP_ME(gmagick, negateimage, gmagick_negateimage_args, ZEND_ACC_PUBLIC)	
+	PHP_ME(gmagick, negateimage, gmagick_negateimage_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, borderimage,		gmagick_borderimage_args,	ZEND_ACC_PUBLIC)
-	PHP_ME(gmagick, thresholdimage, gmagick_thresholdimage_args, ZEND_ACC_PUBLIC)	
+	PHP_ME(gmagick, thresholdimage, gmagick_thresholdimage_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, charcoalimage,		gmagick_charcoalimage_args,	ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, chopimage,		gmagick_chopimage_args,		ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, commentimage,		gmagick_commentimage_args,	ZEND_ACC_PUBLIC)
@@ -980,7 +980,7 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, getimagesblob,	    gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagechanneldepth,	gmagick_setimagechanneldepth_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagecolorspace,	gmagick_setimagecolorspace_args, ZEND_ACC_PUBLIC)
-	PHP_ME(gmagick, setinterlacescheme, gmagick_setinterlacescheme_args, ZEND_ACC_PUBLIC)	
+	PHP_ME(gmagick, setinterlacescheme, gmagick_setinterlacescheme_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimagecolorspace,	gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimagecolors,		gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimagecompose,	gmagick_empty_args, ZEND_ACC_PUBLIC)
@@ -988,8 +988,8 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, getimagedepth,		gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getnumberimages,	gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagecompose,	gmagick_setimagecompose_args, ZEND_ACC_PUBLIC)
-	PHP_ME(gmagick, setimagecompression, gmagick_setimagecompression_args, ZEND_ACC_PUBLIC)	
-	PHP_ME(gmagick, getimagecompression, gmagick_empty_args, ZEND_ACC_PUBLIC)		
+	PHP_ME(gmagick, setimagecompression, gmagick_setimagecompression_args, ZEND_ACC_PUBLIC)
+	PHP_ME(gmagick, getimagecompression, gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagedelay,		gmagick_setimagedelay_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagedepth,		gmagick_setimagedepth_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimagedispose,	gmagick_empty_args, ZEND_ACC_PUBLIC)
@@ -1000,9 +1000,9 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, setimagefilename,	gmagick_setimagefilename_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimageformat,		gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimageformat,		gmagick_setimageformat_args, ZEND_ACC_PUBLIC)
-#if GMAGICK_LIB_MASK >= 1003007	
+#if GMAGICK_LIB_MASK >= 1003007
     PHP_ME(gmagick, setcompressionquality,	gmagick_setcompressionquality_args, ZEND_ACC_PUBLIC)
-#endif    
+#endif
 	PHP_ME(gmagick, getimagegamma,		gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagegamma,		gmagick_setimagegamma_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, getimagegreenprimary,	gmagick_empty_args, ZEND_ACC_PUBLIC)
@@ -1036,7 +1036,7 @@ static zend_function_entry php_gmagick_class_methods[] =
 	PHP_ME(gmagick, setresolution,          gmagick_setresolution_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagescene,		gmagick_setimagescene_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagick, setimagetype,		gmagick_setimagetype_args, ZEND_ACC_PUBLIC)
-#ifdef GMAGICK_HAVE_SET_IMAGE_PAGE 
+#ifdef GMAGICK_HAVE_SET_IMAGE_PAGE
 	PHP_ME(gmagick, setimagepage,		gmagick_setimagepage_args, ZEND_ACC_PUBLIC)
 #endif //GMAGICK_HAVE_SET_IMAGE_PAGE
 	PHP_ME(gmagick, getimageunits,		gmagick_empty_args, ZEND_ACC_PUBLIC)
@@ -1305,7 +1305,7 @@ ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setstrokemiterlimit_args, 0, 0, 1)
 	ZEND_ARG_INFO(0, miterLimit)
 ZEND_END_ARG_INFO()
 
-#if GMAGICK_LIB_MASK >= 1003000 
+#if GMAGICK_LIB_MASK >= 1003000
 ZEND_BEGIN_ARG_INFO_EX(gmagickdraw_setstrokedasharray_args, 0, 0, 1)
 	ZEND_ARG_INFO(0, dashArray)
 ZEND_END_ARG_INFO()
@@ -1572,7 +1572,7 @@ static zend_function_entry php_gmagickdraw_class_methods[] =
 	PHP_ME(gmagickdraw, getstrokelinecap,  gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickdraw, getstrokelinejoin,  gmagick_empty_args, ZEND_ACC_PUBLIC)
 	PHP_ME(gmagickdraw, getstrokemiterlimit, gmagick_empty_args, ZEND_ACC_PUBLIC)
-#if GMAGICK_LIB_MASK >= 1003000 	
+#if GMAGICK_LIB_MASK >= 1003000
     PHP_ME(gmagickdraw, getstrokedasharray, gmagick_empty_args, ZEND_ACC_PUBLIC)
     PHP_ME(gmagickdraw, setstrokedasharray, gmagickdraw_setstrokedasharray_args, ZEND_ACC_PUBLIC)
 #endif
@@ -1708,11 +1708,11 @@ PHP_MINIT_FUNCTION(gmagick)
 {
 	char *cwd;
 	size_t cwd_len;
-	
+
 	zend_class_entry ce;
 
 	ZEND_INIT_MODULE_GLOBALS(gmagick, php_gmagick_init_globals, NULL);
-	
+
 	/* Exception */
 	INIT_CLASS_ENTRY(ce, "GmagickException", NULL);
 	php_gmagick_exception_class_entry = zend_register_internal_class_ex(&ce, zend_exception_get_default());
@@ -1738,7 +1738,7 @@ PHP_MINIT_FUNCTION(gmagick)
 	gmagickdraw_object_handlers.offset = XtOffsetOf(php_gmagickdraw_object, zo);
 	gmagickdraw_object_handlers.free_obj = php_gmagickdraw_object_free_storage;
 	gmagickdraw_object_handlers.clone_obj = NULL;
-	
+
 	INIT_CLASS_ENTRY(ce, "GmagickPixel", php_gmagickpixel_class_methods);
 	php_gmagickpixel_sc_entry = zend_register_internal_class(&ce);
 	php_gmagickpixel_sc_entry->create_object = php_gmagickpixel_object_new;
@@ -1749,7 +1749,7 @@ PHP_MINIT_FUNCTION(gmagick)
 
 	/* Initialize GraphicsMagick environment */
 	cwd = virtual_getcwd_ex(&cwd_len);
-	
+
 	if (!cwd)
 		return FAILURE;
 
@@ -1766,10 +1766,14 @@ PHP_MINIT_FUNCTION(gmagick)
 }
 /* }}} */
 
-/* {{{ PHP_MSHUTDOWN_FUNCTION(gmagick) 
+/* {{{ PHP_MSHUTDOWN_FUNCTION(gmagick)
 */
 PHP_MSHUTDOWN_FUNCTION(gmagick)
 {
+#ifndef HAVE_OMP_PAUSE_RESOURCE_ALL
+	int i;
+#endif
+
 	DestroyMagick();
 #if HAVE_OMP_PAUSE_RESOURCE_ALL
 	// Note there is a patch to add omp_pause_resource_all to DestroyMagick()
@@ -1791,9 +1795,9 @@ PHP_MINFO_FUNCTION(gmagick)
 {
 	const char *version;
 	unsigned long version_number;
-	
+
 	version = MagickGetVersion(&version_number);
-	
+
 	php_info_print_table_start();
 	php_info_print_table_header(2, "gmagick module", "enabled");
 	php_info_print_table_row(2, "gmagick version", PHP_GMAGICK_VERSION);

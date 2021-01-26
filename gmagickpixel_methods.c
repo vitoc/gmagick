@@ -330,7 +330,7 @@ PHP_METHOD(gmagickpixel, getcolorvaluequantum)
 			break;
 
 		default:
-			zend_throw_exception_ex(php_gmagickpixel_exception_class_entry, 2 TSRMLS_CC, "Unknown color type: %d", color_quantum);
+			zend_throw_exception_ex(php_gmagickpixel_exception_class_entry, 2 TSRMLS_CC, "Unknown color type: " ZEND_LONG_FMT, color_quantum);
 			RETURN_NULL();
 	}
 	RETVAL_LONG(color_value_quantum);
@@ -391,7 +391,7 @@ PHP_METHOD(gmagickpixel, setcolorvaluequantum)
 			break;
 
 		default:
-			zend_throw_exception_ex(php_gmagickpixel_exception_class_entry, 2 TSRMLS_CC, "Unknown color type: %d", color_quantum);
+			zend_throw_exception_ex(php_gmagickpixel_exception_class_entry, 2 TSRMLS_CC, "Unknown color type: " ZEND_LONG_FMT, color_quantum);
 			RETURN_NULL();
 	}
 
