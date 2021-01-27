@@ -1,6 +1,6 @@
 /*
    +----------------------------------------------------------------------+
-   | PHP Version 5 / Gmagick	                                          |
+   | PHP Version 5 / Gmagick                                              |
    +----------------------------------------------------------------------+
    | Copyright (c) 2009 Vito Chin, Mikko Koppanen                         |
    +----------------------------------------------------------------------+
@@ -13,7 +13,7 @@
    | license@php.net so we can mail you a copy immediately.               |
    +----------------------------------------------------------------------+
    | Author: Mikko Kopppanen <mkoppanen@php.net>                          |
-   |         Vito Chin <vito@php.net>		                          |
+   |         Vito Chin <vito@php.net>                                     |
    +----------------------------------------------------------------------+
 */
 
@@ -21,22 +21,22 @@
 #include "php_gmagick_macros.h"
 #include "php_gmagick_helpers.h"
 
-/* {{{ GmagickPixel Gmagick::__construct([string filename])
-	Constructs a new Gmagick object
+/* {{{ GmagickPixel GmagickPixel::__construct([string color])
+	Constructs a new GmagickPixel object
 */
-PHP_METHOD(gmagickpixel, __construct)
+PHP_METHOD(GmagickPixel, __construct)
 {
 	php_gmagickpixel_object *internp;
 	MagickBool status; // Graphicmagick's boolean type
 	char *color_name = NULL;
 	size_t color_name_len = 0;
-	
+
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "|s!", &color_name, &color_name_len) == FAILURE) {
 		return;
 	}
 
 	internp = Z_GMAGICKPIXEL_OBJ_P(getThis());
-	
+
 	/* If color was given as parameter, set it here.*/
 	if (color_name != NULL && internp->pixel_wand != NULL) {
 		status = PixelSetColor(internp->pixel_wand, color_name);
@@ -44,7 +44,7 @@ PHP_METHOD(gmagickpixel, __construct)
 			GMAGICK_THROW_GMAGICKPIXEL_EXCEPTION(internp->pixel_wand, "Unable to construct GmagickPixel");
 		}
 	}
-	
+
 	RETURN_TRUE;
 }
 /* }}} */
@@ -52,13 +52,13 @@ PHP_METHOD(gmagickpixel, __construct)
 /* {{{ proto GmagickPixel GmagickPixel::setColor(string color)
 	Sets the color of the pixel
 */
-PHP_METHOD(gmagickpixel, setcolor)
+PHP_METHOD(GmagickPixel, setcolor)
 {
 	php_gmagickpixel_object *internp;
 	char *color_name;
 	size_t color_name_len;
 	MagickBool status;
-	
+
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &color_name, &color_name_len) == FAILURE) {
 		return;
 	}
@@ -70,14 +70,14 @@ PHP_METHOD(gmagickpixel, setcolor)
 		GMAGICK_THROW_GMAGICKPIXEL_EXCEPTION(internp->pixel_wand, "Unable to set GmagickPixel color");
 	}
 
-	GMAGICK_CHAIN_METHOD; 
+	GMAGICK_CHAIN_METHOD;
 }
 /* }}} */
 
 /* {{{ proto GmagickPixel GmagickPixel::setColorCount(int colorCount)
     Sets the color count associated with this color.
 */
-PHP_METHOD(gmagickpixel, setcolorcount)
+PHP_METHOD(GmagickPixel, setcolorcount)
 {
 	php_gmagickpixel_object *internp;
 	zend_long color_count;
@@ -97,7 +97,7 @@ PHP_METHOD(gmagickpixel, setcolorcount)
 /* {{{ proto array|string GmagickPixel::getColor([boolean as_array = false, normalise_array = false])
 	Returns the color of the pixel
 */
-PHP_METHOD(gmagickpixel, getcolor)
+PHP_METHOD(GmagickPixel, getcolor)
 {
 	php_gmagickpixel_object *internp;
 	zend_bool as_array = 0, normalise_array = 0;
@@ -112,9 +112,9 @@ PHP_METHOD(gmagickpixel, getcolor)
 	if (!as_array) {
 		char *buffer, *color_string;
 		int len;
-		
+
 		color_string = PixelGetColorAsString(internp->pixel_wand);
-		
+
 		len = spprintf(&buffer, 50, "rgb(%s)", color_string);
 		GMAGICK_FREE_MEMORY(char *, color_string);
 		RETVAL_STRINGL(buffer, len);
@@ -122,14 +122,14 @@ PHP_METHOD(gmagickpixel, getcolor)
 		return;
 	} else {
 		array_init(return_value);
-		
+
 		if (normalise_array == 1) {
 			add_assoc_double(return_value, "r", PixelGetRed(internp->pixel_wand));
 			add_assoc_double(return_value, "g", PixelGetGreen(internp->pixel_wand));
 			add_assoc_double(return_value, "b", PixelGetBlue(internp->pixel_wand));
 		} else {
 			double red, green, blue;
-			
+
 			red = PixelGetRed(internp->pixel_wand ) * 255;
 			green = PixelGetGreen(internp->pixel_wand ) * 255;
 			blue = PixelGetBlue(internp->pixel_wand ) * 255;
@@ -146,14 +146,12 @@ PHP_METHOD(gmagickpixel, getcolor)
 /* {{{ proto int GmagickPixel::getColorCount()
 	Returns the color count associated with this color.
 */
-PHP_METHOD(gmagickpixel, getcolorcount)
+PHP_METHOD(GmagickPixel, getcolorcount)
 {
 	php_gmagickpixel_object *internp;
 	zend_long color_count;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	internp = Z_GMAGICKPIXEL_OBJ_P(getThis());
 
@@ -165,7 +163,7 @@ PHP_METHOD(gmagickpixel, getcolorcount)
 /* {{{ proto float GmagickPixel::getColorValue(int color )
 	Gets the normalized color of the GmagickPixel.
 */
-PHP_METHOD(gmagickpixel, getcolorvalue)
+PHP_METHOD(GmagickPixel, getcolorvalue)
 {
 	php_gmagickpixel_object *internp;
 	zend_long color;
@@ -223,7 +221,7 @@ PHP_METHOD(gmagickpixel, getcolorvalue)
 /* {{{ proto GmagickPixel GmagickPixel::setColorValue(int color, float value )
 	Sets the normalized color of the GmagickPixel.
 */
-PHP_METHOD(gmagickpixel, setcolorvalue)
+PHP_METHOD(GmagickPixel, setcolorvalue)
 {
 	php_gmagickpixel_object *internp;
 	zend_long color;
@@ -273,7 +271,7 @@ PHP_METHOD(gmagickpixel, setcolorvalue)
 		default:
 			GMAGICK_THROW_GMAGICKPIXEL_EXCEPTION(internp->pixel_wand, "Unknown color type");
 		break;
-		
+
 	}
 	GMAGICK_CHAIN_METHOD;
 }
@@ -282,7 +280,7 @@ PHP_METHOD(gmagickpixel, setcolorvalue)
 /* {{{ proto int GmagickPixel::getColorValueQuantum(int color )
 	Gets the quantum color of the GmagickPixel.
 */
-PHP_METHOD(gmagickpixel, getcolorvaluequantum)
+PHP_METHOD(GmagickPixel, getcolorvaluequantum)
 {
 	php_gmagickpixel_object *internp;
 	zend_long color_quantum;
@@ -340,7 +338,7 @@ PHP_METHOD(gmagickpixel, getcolorvaluequantum)
 /* {{{ proto GmagickPixel GmagickPixel::setColorValueQuantum(int color, float value)
 	Sets the normalized color quantum of the GmagickPixel.
 */
-PHP_METHOD(gmagickpixel, setcolorvaluequantum)
+PHP_METHOD(GmagickPixel, setcolorvaluequantum)
 {
 	php_gmagickpixel_object *internp;
 	zend_long color_quantum;

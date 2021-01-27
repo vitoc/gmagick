@@ -114,6 +114,11 @@ typedef long ssize_t;
 	ZEND_ARG_TYPE_INFO(pass_by_ref, name, 0, 0)
 #endif
 
+#ifndef ZEND_ARG_OBJ_TYPE_MASK
+# define ZEND_ARG_OBJ_TYPE_MASK(pass_by_ref, name, class_name, type_mask, default_value) \
+	ZEND_ARG_TYPE_INFO(pass_by_ref, name, 0, 0)
+#endif
+
 #ifndef ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE
 # define ZEND_ARG_TYPE_INFO_WITH_DEFAULT_VALUE(pass_by_ref, name, type_hint, allow_null, default_value) \
 	ZEND_ARG_TYPE_INFO(pass_by_ref, name, type_hint, allow_null)
