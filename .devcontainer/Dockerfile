@@ -13,3 +13,18 @@ RUN if [ "${INSTALL_NODE}" = "true" ]; then su vscode -c "umask 0002 && . /usr/l
 
 # [Optional] Uncomment this line to install global node packages.
 # RUN su vscode -c "source /usr/local/share/nvm/nvm.sh && npm install -g <your-package-here>" 2>&1
+
+ARG GM_VERSION='1.3.36'
+
+WORKDIR /tmp
+RUN wget https://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/${GM_VERSION}/GraphicsMagick-${GM_VERSION}.tar.gz/download && \
+tar -xvzf download && \
+cd GraphicsMagick-${GM_VERSION} && \
+./configure --enable-shared --disable-dependency-tracking && \
+make && \
+make install && \
+pwd
+#RUN cd GraphicsMagick-${GM_VERSION}
+#RUN ./configure --enable-shared --disable-dependency-tracking
+#RUN make
+#RUN make install
