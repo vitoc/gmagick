@@ -22,7 +22,7 @@
 
 /* Define Extension Properties */
 #define PHP_GMAGICK_EXTNAME    "gmagick"
-#define PHP_GMAGICK_VERSION    "2.0.6"
+#define PHP_GMAGICK_VERSION    "2.0.6RC1"
 #define PHP_GMAGICK_EXTNUM     00001
 #define MAX_BUFFER_SIZE        1024
 
