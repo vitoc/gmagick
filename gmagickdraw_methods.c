@@ -1,6 +1,6 @@
 /**
    +----------------------------------------------------------------------+
-   | PHP Version 5 / Gmagick	                                          |
+   | PHP Version 5 / Gmagick                                              |
    +----------------------------------------------------------------------+
    | Copyright (c) 2009 Vito Chin, Mikko Koppanen                         |
    +----------------------------------------------------------------------+
@@ -13,7 +13,7 @@
    | license@php.net so we can mail you a copy immediately.               |
    +----------------------------------------------------------------------+
    | Author: Mikko Kopppanen <mkoppanen@php.net>                          |
-   |         Vito Chin <vito@php.net>		                              |
+   |         Vito Chin <vito@php.net>                                     |
    +----------------------------------------------------------------------+
 */
 
@@ -21,10 +21,10 @@
 #include "php_gmagick_macros.h"
 #include "php_gmagick_helpers.h"
 
-/* {{{ proto GmagickDraw GmagickDraw::setStrokeColor(PixelWand stroke_wand)
+/* {{{ proto GmagickDraw GmagickDraw::setStrokeColor(GmagickPixel|string color)
 	Sets the color used for stroking object outlines.
 */
-PHP_METHOD(gmagickdraw, setstrokecolor)
+PHP_METHOD(GmagickDraw, setstrokecolor)
 {
 	zval *param;
 	php_gmagickdraw_object *internd;
@@ -35,7 +35,7 @@ PHP_METHOD(gmagickdraw, setstrokecolor)
 	}
 
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
-	
+
 	GMAGICK_CAST_PARAMETER_TO_COLOR(param, internp, 2);
 
 	if (internd->drawing_wand != NULL) {
@@ -49,7 +49,7 @@ PHP_METHOD(gmagickdraw, setstrokecolor)
 /* {{{ proto GmagickDraw GmagickDraw::setStrokeWidth(float stroke_width)
 	Sets the width of the stroke used to draw object outlines.
 */
-PHP_METHOD(gmagickdraw, setstrokewidth)
+PHP_METHOD(GmagickDraw, setstrokewidth)
 {
 	php_gmagickdraw_object *internd;
 	double width;
@@ -69,7 +69,7 @@ PHP_METHOD(gmagickdraw, setstrokewidth)
 /* {{{ proto GmagickDraw GmagickDraw::ellipse(float ox, float oy, float rx, float ry, float start, float end)
 	Draws an ellipse on the image.
 */
-PHP_METHOD(gmagickdraw, ellipse)
+PHP_METHOD(GmagickDraw, ellipse)
 {
 	double ox, oy, rx, ry, start, end;
 	php_gmagickdraw_object *internd;
@@ -90,7 +90,7 @@ PHP_METHOD(gmagickdraw, ellipse)
 /* {{{ proto GmagickDraw GmagickDraw::annotate(float x, float y, string *text)
 	Draws text on the image.
 */
-PHP_METHOD(gmagickdraw, annotate)
+PHP_METHOD(GmagickDraw, annotate)
 {
 	php_gmagickdraw_object *internd;
 	double x, y;
@@ -112,7 +112,7 @@ PHP_METHOD(gmagickdraw, annotate)
 /* {{{ proto bool GmagickDraw::affine(array affine)
 	Adjusts the current affine transformation matrix with the specified affine transformation matrix. Note that the current affine transform is adjusted rather than replaced.
 */
-PHP_METHOD(gmagickdraw, affine)
+PHP_METHOD(GmagickDraw, affine)
 {
 	php_gmagickdraw_object *internd;
 	zval *affine_matrix, *current;
@@ -159,7 +159,7 @@ PHP_METHOD(gmagickdraw, affine)
 
 		i++;
 	} ZEND_HASH_FOREACH_END();
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawAffine(internd->drawing_wand, pmatrix);
@@ -172,7 +172,7 @@ PHP_METHOD(gmagickdraw, affine)
 /* {{{ proto GmagickDraw GmagickDraw::arc(float sx, float sy, float ex, float ey, float sd, float ed)
 	Draws an arc falling within a specified bounding rectangle on the image.
 */
-PHP_METHOD(gmagickdraw, arc)
+PHP_METHOD(GmagickDraw, arc)
 {
 	double sx, sy, ex, ey, sd, ed;
 	php_gmagickdraw_object *internd;
@@ -191,7 +191,7 @@ PHP_METHOD(gmagickdraw, arc)
 /* {{{ proto GmagickDraw GmagickDraw::bezier(array coordinates)
 	Draws a bezier curve through a set of points on the image.
 */
-PHP_METHOD(gmagickdraw, bezier)
+PHP_METHOD(GmagickDraw, bezier)
 {
 
 	zval *coordinate_array;
@@ -220,18 +220,16 @@ PHP_METHOD(gmagickdraw, bezier)
 /* {{{ proto GmagickPixel GmagickDraw::getFillColor()
 	Returns the fill color used for drawing filled objects.
 */
-PHP_METHOD(gmagickdraw, getfillcolor)
+PHP_METHOD(GmagickDraw, getfillcolor)
 {
 	php_gmagickpixel_object *internp;
 	php_gmagickdraw_object *internd;
 	PixelWand *tmp_wand;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
-	
+
+	ZEND_PARSE_PARAMETERS_NONE();
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
-	
+
 	tmp_wand = NewPixelWand();
 	DrawGetFillColor(internd->drawing_wand, tmp_wand);
 
@@ -246,14 +244,12 @@ PHP_METHOD(gmagickdraw, getfillcolor)
 /* {{{ proto float GmagickDraw::getFillOpacity()
 	Returns the opacity used when drawing using the fill color or fill texture. Fully opaque is 1.0.
 */
-PHP_METHOD(gmagickdraw, getfillopacity)
+PHP_METHOD(GmagickDraw, getfillopacity)
 {
 	php_gmagickdraw_object *internd;
 	double opacity;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	opacity = DrawGetFillOpacity(internd->drawing_wand);
@@ -265,14 +261,12 @@ PHP_METHOD(gmagickdraw, getfillopacity)
 /* {{{ proto string|bool GmagickDraw::getFont()
 	Returns a null-terminaged string specifying the font used when annotating with text. The value returned must be freed by the user when no longer needed.
 */
-PHP_METHOD(gmagickdraw, getfont)
+PHP_METHOD(GmagickDraw, getfont)
 {
 	php_gmagickdraw_object *internd;
 	char *font;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
@@ -290,14 +284,12 @@ PHP_METHOD(gmagickdraw, getfont)
 /* {{{ proto float GmagickDraw::getFontSize()
 	Returns the font pointsize used when annotating with text.
 */
-PHP_METHOD(gmagickdraw, getfontsize)
+PHP_METHOD(GmagickDraw, getfontsize)
 {
 	php_gmagickdraw_object *internd;
 	double font_size;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
@@ -310,14 +302,12 @@ PHP_METHOD(gmagickdraw, getfontsize)
 /* {{{ proto int GmagickDraw::getFontStyle()
 	Returns the font style used when annotating with text.
 */
-PHP_METHOD(gmagickdraw, getfontstyle)
+PHP_METHOD(GmagickDraw, getfontstyle)
 {
 	php_gmagickdraw_object *internd;
 	long font_style;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
@@ -330,14 +320,12 @@ PHP_METHOD(gmagickdraw, getfontstyle)
 /* {{{ proto int GmagickDraw::getFontWeight()
 	Returns the font weight used when annotating with text.
 */
-PHP_METHOD(gmagickdraw, getfontweight)
+PHP_METHOD(GmagickDraw, getfontweight)
 {
 	php_gmagickdraw_object *internd;
 	long weight;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
@@ -350,14 +338,12 @@ PHP_METHOD(gmagickdraw, getfontweight)
 /* {{{ proto float GmagickDraw::getStrokeOpacity()
 	Returns the opacity of stroked object outlines.
 */
-PHP_METHOD(gmagickdraw, getstrokeopacity)
+PHP_METHOD(GmagickDraw, getstrokeopacity)
 {
 	php_gmagickdraw_object *internd;
 	double opacity;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	opacity = DrawGetStrokeOpacity(internd->drawing_wand);
@@ -366,18 +352,16 @@ PHP_METHOD(gmagickdraw, getstrokeopacity)
 }
 /* }}} */
 
-/* {{{ proto GmagickPixel GmagickDraw::getStrokeColor(PixelWand stroke_color)
+/* {{{ proto GmagickPixel GmagickDraw::getStrokeColor()
 	Returns the color used for stroking object outlines.
 */
-PHP_METHOD(gmagickdraw, getstrokecolor)
+PHP_METHOD(GmagickDraw, getstrokecolor)
 {
 	php_gmagickpixel_object *internp;
 	php_gmagickdraw_object *internd;
 	PixelWand *tmp_wand;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
@@ -395,14 +379,12 @@ PHP_METHOD(gmagickdraw, getstrokecolor)
 /* {{{ proto float GmagickDraw::getStrokeWidth()
 	Returns the width of the stroke used to draw object outlines.
 */
-PHP_METHOD(gmagickdraw, getstrokewidth)
+PHP_METHOD(GmagickDraw, getstrokewidth)
 {
 	php_gmagickdraw_object *internd;
 	double width;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	width = DrawGetStrokeWidth(internd->drawing_wand);
@@ -414,14 +396,12 @@ PHP_METHOD(gmagickdraw, getstrokewidth)
 /* {{{ proto int GmagickDraw::getTextDecoration()
 	Returns the decoration applied when annotating with text.
 */
-PHP_METHOD(gmagickdraw, gettextdecoration)
+PHP_METHOD(GmagickDraw, gettextdecoration)
 {
 	php_gmagickdraw_object *internd;
 	long decoration;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
@@ -434,14 +414,12 @@ PHP_METHOD(gmagickdraw, gettextdecoration)
 /* {{{ proto string|bool GmagickDraw::getTextEncoding()
 	Returns a null-terminated string which specifies the code set used for text annotations. The string must be freed by the user once it is no longer required.
 */
-PHP_METHOD(gmagickdraw, gettextencoding)
+PHP_METHOD(GmagickDraw, gettextencoding)
 {
 	php_gmagickdraw_object *internd;
 	char *encoding;
-	
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	encoding = DrawGetTextEncoding(internd->drawing_wand);
@@ -459,7 +437,7 @@ PHP_METHOD(gmagickdraw, gettextencoding)
 /* {{{ proto GmagickDraw GmagickDraw::line(float sx, float sy, float ex, float ey)
 	Draws a line on the image using the current stroke color, stroke opacity, and stroke width.
 */
-PHP_METHOD(gmagickdraw, line)
+PHP_METHOD(GmagickDraw, line)
 {
 	php_gmagickdraw_object *internd;
 	double sx, sy, ex, ey;
@@ -472,14 +450,13 @@ PHP_METHOD(gmagickdraw, line)
 
 	DrawLine(internd->drawing_wand, sx, sy, ex, ey);
 	GMAGICK_CHAIN_METHOD;
-	
 }
 /* }}} */
 
 /* {{{ proto GmagickDraw GmagickDraw::point(float x, float y)
 	Draws a point using the current stroke color and stroke thickness at the specified coordinates.
 */
-PHP_METHOD(gmagickdraw, point)
+PHP_METHOD(GmagickDraw, point)
 {
 	php_gmagickdraw_object *internd;
 	double x, y;
@@ -499,7 +476,7 @@ PHP_METHOD(gmagickdraw, point)
 /* {{{ proto GmagickDraw GmagickDraw::polygon(array coordinates)
 	Draws a polygon using the current stroke, stroke width, and fill color or texture, using the specified array of coordinates.
 */
-PHP_METHOD(gmagickdraw, polygon)
+PHP_METHOD(GmagickDraw, polygon)
 {
 	zval *coordinate_array;
 	php_gmagickdraw_object *internd;
@@ -529,7 +506,7 @@ PHP_METHOD(gmagickdraw, polygon)
 /* {{{ proto GmagickDraw GmagickDraw::polyline(array coordinates)
 	Draws a polyline using the current stroke, stroke width, and fill color or texture, using the specified array of coordinates.
 */
-PHP_METHOD(gmagickdraw, polyline)
+PHP_METHOD(GmagickDraw, polyline)
 {
 	zval *coordinate_array;
 	php_gmagickdraw_object *internd;
@@ -559,7 +536,7 @@ PHP_METHOD(gmagickdraw, polyline)
 /* {{{ proto GmagickDraw GmagickDraw::rectangle(float x1, float y1, float x2, float y2)
 	Draws a rectangle given two coordinates and using the current stroke, stroke width, and fill settings.
 */
-PHP_METHOD(gmagickdraw, rectangle)
+PHP_METHOD(GmagickDraw, rectangle)
 {
 	double x1, y1, x2, y2;
 	php_gmagickdraw_object *internd;
@@ -579,7 +556,7 @@ PHP_METHOD(gmagickdraw, rectangle)
 /* {{{ proto GmagickDraw GmagickDraw::rotate(float degrees)
 	Applies the specified rotation to the current coordinate space.
 */
-PHP_METHOD(gmagickdraw, rotate)
+PHP_METHOD(GmagickDraw, rotate)
 {
 	php_gmagickdraw_object *internd;
 	double degrees;
@@ -599,7 +576,7 @@ PHP_METHOD(gmagickdraw, rotate)
 /* {{{ proto GmagickDraw GmagickDraw::roundRectangle(float x1, float y1, float x2, float y2, float rx, float ry)
 	Draws a rounted rectangle given two coordinates, x & y corner radiuses and using the current stroke, stroke width, and fill settings.
 */
-PHP_METHOD(gmagickdraw, roundrectangle)
+PHP_METHOD(GmagickDraw, roundrectangle)
 {
 	double x1, y1, x2, y2, rx, ry;
 	php_gmagickdraw_object *internd;
@@ -619,7 +596,7 @@ PHP_METHOD(gmagickdraw, roundrectangle)
 /* {{{ proto GmagickDraw GmagickDraw::scale(float x, float y)
 	Adjusts the scaling factor to apply in the horizontal and vertical directions to the current coordinate space.
 */
-PHP_METHOD(gmagickdraw, scale)
+PHP_METHOD(GmagickDraw, scale)
 {
 	php_gmagickdraw_object *internd;
 	double x, y;
@@ -634,10 +611,10 @@ PHP_METHOD(gmagickdraw, scale)
 	DrawScale(internd->drawing_wand, x, y);
 	GMAGICK_CHAIN_METHOD;
 }
-/* {{{ proto GmagickDraw GmagickDraw::setFillColor(PixelWand fill_wand)
+/* {{{ proto GmagickDraw GmagickDraw::setFillColor(GmagickPixel|string color)
 	Sets the fill color to be used for drawing filled objects.
 */
-PHP_METHOD(gmagickdraw, setfillcolor)
+PHP_METHOD(GmagickDraw, setfillcolor)
 {
 	zval *param;
 	php_gmagickdraw_object *internd;
@@ -659,7 +636,7 @@ PHP_METHOD(gmagickdraw, setfillcolor)
 /* {{{ proto GmagickDraw GmagickDraw::setFillOpacity(float fillOpacity)
 	Sets the opacity to use when drawing using the fill color or fill texture. Fully opaque is 1.0.
 */
-PHP_METHOD(gmagickdraw, setfillopacity)
+PHP_METHOD(GmagickDraw, setfillopacity)
 {
 	php_gmagickdraw_object *internd;
 	double fillOpacity;
@@ -679,7 +656,7 @@ PHP_METHOD(gmagickdraw, setfillopacity)
 /* {{{ proto GmagickDraw GmagickDraw::setFont(string font_name)
 	Sets the fully-sepecified font to use when annotating with text.
 */
-PHP_METHOD(gmagickdraw, setfont)
+PHP_METHOD(GmagickDraw, setfont)
 {
 	php_gmagickdraw_object *internd;
 	char *font, *absolute;
@@ -731,7 +708,7 @@ PHP_METHOD(gmagickdraw, setfont)
 /* {{{ proto GmagickDraw GmagickDraw::setFontSize(float pointsize)
 	Sets the font pointsize to use when annotating with text.
 */
-PHP_METHOD(gmagickdraw, setfontsize)
+PHP_METHOD(GmagickDraw, setfontsize)
 {
 	php_gmagickdraw_object *internd;
 	double font_size;
@@ -751,7 +728,7 @@ PHP_METHOD(gmagickdraw, setfontsize)
 /* {{{ proto GmagickDraw GmagickDraw::setFontStyle(int style)
 	Sets the font style to use when annotating with text. The AnyStyle enumeration acts as a wild-card "don't care" option.
 */
-PHP_METHOD(gmagickdraw, setfontstyle)
+PHP_METHOD(GmagickDraw, setfontstyle)
 {
 	php_gmagickdraw_object *internd;
 	zend_long style_id = AnyStyle;
@@ -771,7 +748,7 @@ PHP_METHOD(gmagickdraw, setfontstyle)
 /* {{{ proto GmagickDraw GmagickDraw::setFontWeight(int font_weight)
 	Sets the font weight to use when annotating with text.
 */
-PHP_METHOD(gmagickdraw, setfontweight)
+PHP_METHOD(GmagickDraw, setfontweight)
 {
 	php_gmagickdraw_object *internd;
 	zend_long weight;
@@ -797,7 +774,7 @@ PHP_METHOD(gmagickdraw, setfontweight)
 /* {{{ proto GmagickDraw GmagickDraw::setStrokeOpacity(float stroke_opacity)
 	Specifies the opacity of stroked object outlines.
 */
-PHP_METHOD(gmagickdraw, setstrokeopacity)
+PHP_METHOD(GmagickDraw, setstrokeopacity)
 {
 	php_gmagickdraw_object *internd;
 	double opacity;
@@ -817,7 +794,7 @@ PHP_METHOD(gmagickdraw, setstrokeopacity)
 /* {{{ proto GmagickDraw GmagickDraw::setTextDecoration(int decoration)
 	Specifies a decoration to be applied when annotating with text.
 */
-PHP_METHOD(gmagickdraw, settextdecoration)
+PHP_METHOD(GmagickDraw, settextdecoration)
 {
 	php_gmagickdraw_object *internd;
 	zend_long decoration;
@@ -838,7 +815,7 @@ PHP_METHOD(gmagickdraw, settextdecoration)
 /* {{ proto GmagickDraw GmagickDraw::setGravity(int GRAVITY)
    Sets the gravity value
 */
-PHP_METHOD(gmagickdraw, setgravity)
+PHP_METHOD(GmagickDraw, setgravity)
 {
 	php_gmagickdraw_object *internd;
 	zend_long gravity;
@@ -858,13 +835,11 @@ PHP_METHOD(gmagickdraw, setgravity)
 /* {{ proto int GmagickDraw::getGravity()
    Gets the gravity value
 */
-PHP_METHOD(gmagickdraw, getgravity)
+PHP_METHOD(GmagickDraw, getgravity)
 {
 	php_gmagickdraw_object *internd;
 
-	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "") == FAILURE) {
-		return;
-	}
+	ZEND_PARSE_PARAMETERS_NONE();
 
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
@@ -875,7 +850,7 @@ PHP_METHOD(gmagickdraw, getgravity)
 /* {{{ proto GmagickDraw GmagickDraw::setTextEncoding(string encoding)
 	Specifies specifies the code set to use for text annotations. The only character encoding which may be specified at this time is "UTF-8" for representing Unicode as a sequence of bytes. Specify an empty string to set text encoding to the system's default. Successful text annotation using Unicode may require fonts designed to support Unicode.
 */
-PHP_METHOD(gmagickdraw, settextencoding)
+PHP_METHOD(GmagickDraw, settextencoding)
 {
 	php_gmagickdraw_object *internd;
 	char *encoding;
@@ -895,7 +870,7 @@ PHP_METHOD(gmagickdraw, settextencoding)
 /* {{{ proto GmagickDraw GmagickDraw::setStrokeAntialias(bool stroke_antialias)
 	Controls whether stroked outlines are antialiased. Stroked outlines are antialiased by default.  When antialiasing is disabled stroked pixels are thresholded to determine if the stroke color or underlying canvas color should be used.
 */
-PHP_METHOD(gmagickdraw, setstrokeantialias)
+PHP_METHOD(GmagickDraw, setstrokeantialias)
 {
 	php_gmagickdraw_object *internd;
 	zend_bool antialias;
@@ -916,7 +891,7 @@ PHP_METHOD(gmagickdraw, setstrokeantialias)
 /* {{{ proto GmagickDraw GmagickDraw::setStrokeDashOffset(float dash_offset)
 	Specifies the offset into the dash pattern to start the dash.
 */
-PHP_METHOD(gmagickdraw, setstrokedashoffset)
+PHP_METHOD(GmagickDraw, setstrokedashoffset)
 {
 	php_gmagickdraw_object *internd;
 	double offset;
@@ -936,7 +911,7 @@ PHP_METHOD(gmagickdraw, setstrokedashoffset)
 /* {{{ proto GmagickDraw GmagickDraw::setStrokeLineCap(int linecap)
 	Specifies the shape to be used at the end of open subpaths when they are stroked. Values of LineCap are UndefinedCap, ButtCap, RoundCap, and SquareCap.
 */
-PHP_METHOD(gmagickdraw, setstrokelinecap)
+PHP_METHOD(GmagickDraw, setstrokelinecap)
 {
 	php_gmagickdraw_object *internd;
 	zend_long line_cap;
@@ -945,7 +920,7 @@ PHP_METHOD(gmagickdraw, setstrokelinecap)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &line_cap) == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawSetStrokeLineCap(internd->drawing_wand, line_cap);
@@ -956,8 +931,8 @@ PHP_METHOD(gmagickdraw, setstrokelinecap)
 /* {{{ proto GmagickDraw GmagickDraw::setStrokeLineJoin(int linejoin)
 	Specifies the shape to be used at the corners of paths (or other vector shapes) when they are stroked. Values of LineJoin are UndefinedJoin, MiterJoin, RoundJoin, and BevelJoin.
 */
-PHP_METHOD(gmagickdraw, setstrokelinejoin)
-{	
+PHP_METHOD(GmagickDraw, setstrokelinejoin)
+{
 	php_gmagickdraw_object *internd;
 	zend_long line_join;
 
@@ -965,7 +940,7 @@ PHP_METHOD(gmagickdraw, setstrokelinejoin)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &line_join) == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawSetStrokeLineJoin(internd->drawing_wand, line_join);
@@ -976,7 +951,7 @@ PHP_METHOD(gmagickdraw, setstrokelinejoin)
 /* {{{ proto GmagickDraw GmagickDraw::setStrokeMiterLimit(int miterlimit)
 	Specifies the miter limit. When two line segments meet at a sharp angle and miter joins have been specified for 'lineJoin', it is possible for the miter to extend far beyond the thickness of the line stroking the path. The miterLimit' imposes a limit on the ratio of the miter length to the 'lineWidth'.
 */
-PHP_METHOD(gmagickdraw, setstrokemiterlimit)
+PHP_METHOD(GmagickDraw, setstrokemiterlimit)
 {
 	php_gmagickdraw_object *internd;
 	zend_long miter_limit;
@@ -985,7 +960,7 @@ PHP_METHOD(gmagickdraw, setstrokemiterlimit)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &miter_limit) == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawSetStrokeMiterLimit(internd->drawing_wand, miter_limit);
@@ -996,7 +971,7 @@ PHP_METHOD(gmagickdraw, setstrokemiterlimit)
 /* {{{ proto bool GmagickDraw::getStrokeAntialias()
 	Returns the current stroke antialias setting. Stroked outlines are antialiased by default.  When antialiasing is disabled stroked pixels are thresholded to determine if the stroke color or underlying canvas color should be used.
 */
-PHP_METHOD(gmagickdraw, getstrokeantialias)
+PHP_METHOD(GmagickDraw, getstrokeantialias)
 {
 	php_gmagickdraw_object *internd;
 	MagickBool status;
@@ -1004,7 +979,7 @@ PHP_METHOD(gmagickdraw, getstrokeantialias)
 	if (zend_parse_parameters_none() == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	status = DrawGetStrokeAntialias(internd->drawing_wand);
 
@@ -1019,7 +994,7 @@ PHP_METHOD(gmagickdraw, getstrokeantialias)
 /* {{{ proto float GmagickDraw::getStrokeDashOffset()
 	Returns the offset into the dash pattern to start the dash.
 */
-PHP_METHOD(gmagickdraw, getstrokedashoffset)
+PHP_METHOD(GmagickDraw, getstrokedashoffset)
 {
 	php_gmagickdraw_object *internd;
 	double offset;
@@ -1027,7 +1002,7 @@ PHP_METHOD(gmagickdraw, getstrokedashoffset)
 	if (zend_parse_parameters_none() == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	offset = DrawGetStrokeDashOffset(internd->drawing_wand);
 
@@ -1038,7 +1013,7 @@ PHP_METHOD(gmagickdraw, getstrokedashoffset)
 /* {{{ proto int GmagickDraw::getStrokeLineCap()
 	Returns the shape to be used at the end of open subpaths when they are stroked. Values of LineCap are UndefinedCap, ButtCap, RoundCap, and SquareCap.
 */
-PHP_METHOD(gmagickdraw, getstrokelinecap)
+PHP_METHOD(GmagickDraw, getstrokelinecap)
 {
 	php_gmagickdraw_object *internd;
 	long line_cap;
@@ -1046,7 +1021,7 @@ PHP_METHOD(gmagickdraw, getstrokelinecap)
 	if (zend_parse_parameters_none() == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	line_cap = DrawGetStrokeLineCap(internd->drawing_wand);
 
@@ -1057,7 +1032,7 @@ PHP_METHOD(gmagickdraw, getstrokelinecap)
 /* {{{ proto int GmagickDraw::getStrokeLineJoin()
 	Returns the shape to be used at the corners of paths (or other vector shapes) when they are stroked. Values of LineJoin are UndefinedJoin, MiterJoin, RoundJoin, and BevelJoin.
 */
-PHP_METHOD(gmagickdraw, getstrokelinejoin)
+PHP_METHOD(GmagickDraw, getstrokelinejoin)
 {
 	php_gmagickdraw_object *internd;
 	long line_join;
@@ -1065,7 +1040,7 @@ PHP_METHOD(gmagickdraw, getstrokelinejoin)
 	if (zend_parse_parameters_none() == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	line_join = DrawGetStrokeLineJoin(internd->drawing_wand);
 
@@ -1076,7 +1051,7 @@ PHP_METHOD(gmagickdraw, getstrokelinejoin)
 /* {{{ proto int GmagickDraw::getStrokeMiterLimit()
 	Returns the miter limit. When two line segments meet at a sharp angle and miter joins have been specified for 'lineJoin', it is possible for the miter to extend far beyond the thickness of the line stroking the path. The miterLimit' imposes a limit on the ratio of the miter length to the 'lineWidth'.
 */
-PHP_METHOD(gmagickdraw, getstrokemiterlimit)
+PHP_METHOD(GmagickDraw, getstrokemiterlimit)
 {
 	php_gmagickdraw_object *internd;
 	unsigned long miter_limit;
@@ -1084,7 +1059,7 @@ PHP_METHOD(gmagickdraw, getstrokemiterlimit)
 	if (zend_parse_parameters_none() == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	miter_limit = DrawGetStrokeMiterLimit(internd->drawing_wand);
 
@@ -1093,11 +1068,11 @@ PHP_METHOD(gmagickdraw, getstrokemiterlimit)
 /* }}} */
 
 
-#if GMAGICK_LIB_MASK >= 1003000 
+#if GMAGICK_LIB_MASK >= 1003000
 /* {{{ proto array GmagickDraw::getStrokeDashArray()
 	Returns an array representing the pattern of dashes and gaps used to stroke paths (see DrawSetStrokeDashArray). The array must be freed once it is no longer required by the user.
 */
-PHP_METHOD(gmagickdraw, getstrokedasharray)
+PHP_METHOD(GmagickDraw, getstrokedasharray)
 {
 	php_gmagickdraw_object *internd;
 	double *stroke_array;
@@ -1124,7 +1099,7 @@ PHP_METHOD(gmagickdraw, getstrokedasharray)
 /* {{{ proto GmagickDraw GmagickDraw::setStrokeDashArray(array dashArray)
 	Specifies the pattern of dashes and gaps used to stroke paths. The strokeDashArray represents an array of numbers that specify the lengths of alternating dashes and gaps in pixels. If an odd number of values is provided, then the list of values is repeated to yield an even number of values. To remove an existing dash array, pass a zero number_elements argument and null dash_array. A typical strokeDashArray_ array might contain the members 5 3 2.
 */
-PHP_METHOD(gmagickdraw, setstrokedasharray)
+PHP_METHOD(GmagickDraw, setstrokedasharray)
 {
 	zval *param_array;
 	double *double_array;
@@ -1139,7 +1114,7 @@ PHP_METHOD(gmagickdraw, setstrokedasharray)
 	double_array = php_gmagick_zval_to_double_array(param_array, &elements TSRMLS_CC);
 
 	if (!double_array) {
-		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Cannot read stroke dash array parameter", 2);		
+		GMAGICK_THROW_EXCEPTION_WITH_MESSAGE(GMAGICKDRAW_CLASS, "Cannot read stroke dash array parameter", 2);
 		return;
 	}
 
@@ -1158,7 +1133,7 @@ PHP_METHOD(gmagickdraw, setstrokedasharray)
 /* {{{ proto GmagickDraw GmagickDraw::circle(float ox, float oy, float px, float py)
 	Draws a circle on the image.
 */
-PHP_METHOD(gmagickdraw, circle)
+PHP_METHOD(GmagickDraw, circle)
 {
 	double ox, oy, px, py;
 	php_gmagickdraw_object *internd;
@@ -1175,11 +1150,11 @@ PHP_METHOD(gmagickdraw, circle)
 }
 /* }}} */
 
-	
+
 /* {{{ proto string|bool GmagickDraw::getClipPath()
 	Obtains the current clipping path ID. The value returned must be deallocated by the user when it is no longer needed.
 */
-PHP_METHOD(gmagickdraw, getclippath)
+PHP_METHOD(GmagickDraw, getclippath)
 {
 	php_gmagickdraw_object *internd;
 	char *clip_path;
@@ -1187,7 +1162,7 @@ PHP_METHOD(gmagickdraw, getclippath)
 	if (zend_parse_parameters_none() == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	clip_path = DrawGetClipPath(internd->drawing_wand);
 
@@ -1204,7 +1179,7 @@ PHP_METHOD(gmagickdraw, getclippath)
 /* {{{ proto GmagickDraw GmagickDraw::setClipPath(string clip_mask)
 	Associates a named clipping path with the image.  Only the areas drawn on by the clipping path will be modified as long as it remains in effect.
 */
-PHP_METHOD(gmagickdraw, setclippath)
+PHP_METHOD(GmagickDraw, setclippath)
 {
 	php_gmagickdraw_object *internd;
 	char *clip_mask;
@@ -1225,7 +1200,7 @@ PHP_METHOD(gmagickdraw, setclippath)
 /* {{{ proto int GmagickDraw::getClipRule()
 	Returns the current polygon fill rule to be used by the clipping path.
 */
-PHP_METHOD(gmagickdraw, getcliprule)
+PHP_METHOD(GmagickDraw, getcliprule)
 {
 	php_gmagickdraw_object *internd;
 	long clip_rule;
@@ -1233,7 +1208,7 @@ PHP_METHOD(gmagickdraw, getcliprule)
 	if (zend_parse_parameters_none() == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	clip_rule = DrawGetClipRule(internd->drawing_wand);
 
@@ -1244,7 +1219,7 @@ PHP_METHOD(gmagickdraw, getcliprule)
 /* {{{ proto GmagickDraw GmagickDraw::setClipRule(int fill_rule)
 	Set the polygon fill rule to be used by the clipping path.
 */
-PHP_METHOD(gmagickdraw, setcliprule)
+PHP_METHOD(GmagickDraw, setcliprule)
 {
 	php_gmagickdraw_object *internd;
 	zend_long fill_rule;
@@ -1253,7 +1228,7 @@ PHP_METHOD(gmagickdraw, setcliprule)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &fill_rule) == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawSetClipRule(internd->drawing_wand, fill_rule);
@@ -1264,7 +1239,7 @@ PHP_METHOD(gmagickdraw, setcliprule)
 /* {{{ proto int GmagickDraw::getClipUnits()
 	Returns the interpretation of clip path units.
 */
-PHP_METHOD(gmagickdraw, getclipunits)
+PHP_METHOD(GmagickDraw, getclipunits)
 {
 	php_gmagickdraw_object *internd;
 	long units;
@@ -1272,7 +1247,7 @@ PHP_METHOD(gmagickdraw, getclipunits)
 	if (zend_parse_parameters_none() == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	units = DrawGetClipUnits(internd->drawing_wand);
 
@@ -1283,8 +1258,8 @@ PHP_METHOD(gmagickdraw, getclipunits)
 /* {{{ proto GmagickDraw GmagickDraw::setClipUnits(int clip_units)
 	Sets the interpretation of clip path units.
 */
-PHP_METHOD(gmagickdraw, setclipunits)
-{	
+PHP_METHOD(GmagickDraw, setclipunits)
+{
 	php_gmagickdraw_object *internd;
 	zend_long units;
 
@@ -1303,7 +1278,7 @@ PHP_METHOD(gmagickdraw, setclipunits)
 /* {{{ proto GmagickDraw GmagickDraw::color(float x, float y, int paintMethod)
 	Draws color on image using the current fill color, starting at specified position, and using specified paint method. The available paint methods are:
 */
-PHP_METHOD(gmagickdraw, color)
+PHP_METHOD(GmagickDraw, color)
 {
 	php_gmagickdraw_object *internd;
 	double x, y;
@@ -1324,7 +1299,7 @@ PHP_METHOD(gmagickdraw, color)
 /* {{{ proto GmagickDraw GmagickDraw::comment(string comment)
 	Adds a comment to a vector output stream.
 */
-PHP_METHOD(gmagickdraw, comment)
+PHP_METHOD(GmagickDraw, comment)
 {
 	php_gmagickdraw_object *internd;
 	char *comment;
@@ -1334,7 +1309,7 @@ PHP_METHOD(gmagickdraw, comment)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "s", &comment, &comment_len) == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawComment(internd->drawing_wand, comment);
@@ -1346,7 +1321,7 @@ PHP_METHOD(gmagickdraw, comment)
 	Sets the URL to use as a fill pattern for filling objects. Only local URLs ("#identifier") are supported at this time.
 	These local URLs are normally created by defining a named fill pattern with DrawPushPattern/DrawPopPattern.
 */
-PHP_METHOD(gmagickdraw, setfillpatternurl)
+PHP_METHOD(GmagickDraw, setfillpatternurl)
 {
 	php_gmagickdraw_object *internd;
 	char *url;
@@ -1364,10 +1339,10 @@ PHP_METHOD(gmagickdraw, setfillpatternurl)
 }
 /* }}} */
 
-/* {{{ proto int GmagickDraw::getFillRule(const DrawingWand *wand)
+/* {{{ proto int GmagickDraw::getFillRule()
 	Returns the fill rule used while drawing polygons.
 */
-PHP_METHOD(gmagickdraw, getfillrule)
+PHP_METHOD(GmagickDraw, getfillrule)
 {
 	php_gmagickdraw_object *internd;
 	long fill_rule;
@@ -1375,7 +1350,7 @@ PHP_METHOD(gmagickdraw, getfillrule)
 	if (zend_parse_parameters_none() == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	fill_rule = DrawGetFillRule(internd->drawing_wand);
 
@@ -1387,7 +1362,7 @@ PHP_METHOD(gmagickdraw, getfillrule)
 /* {{{ proto GmagickDraw GmagickDraw::setFillRule(int fill_rule)
 	Sets the fill rule to use while drawing polygons.
 */
-PHP_METHOD(gmagickdraw, setfillrule)
+PHP_METHOD(GmagickDraw, setfillrule)
 {
 	php_gmagickdraw_object *internd;
 	zend_long fill_rule;
@@ -1396,7 +1371,7 @@ PHP_METHOD(gmagickdraw, setfillrule)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &fill_rule) == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawSetFillRule(internd->drawing_wand, fill_rule);
@@ -1407,7 +1382,7 @@ PHP_METHOD(gmagickdraw, setfillrule)
 /* {{{ proto string|bool GmagickDraw::getFontFamily()
 	Returns the font family to use when annotating with text. The value returned must be freed by the user when it is no longer needed.
 */
-PHP_METHOD(gmagickdraw, getfontfamily)
+PHP_METHOD(GmagickDraw, getfontfamily)
 {
 	php_gmagickdraw_object *internd;
 	char *font_family;
@@ -1456,7 +1431,7 @@ static zend_bool php_gmagick_check_font(char *font, int font_len TSRMLS_DC)
 /* {{{ proto GmagickDraw GmagickDraw::setFontFamily(string font_family)
 	Sets the font family to use when annotating with text.
 */
-PHP_METHOD(gmagickdraw, setfontfamily)
+PHP_METHOD(GmagickDraw, setfontfamily)
 {
 	php_gmagickdraw_object *internd;
 	char *font_family;
@@ -1485,10 +1460,10 @@ PHP_METHOD(gmagickdraw, setfontfamily)
 }
 /* }}} */
 
-/* {{{ proto int GmagickDraw::getFontStretch(int fontStretch)
+/* {{{ proto int GmagickDraw::getFontStretch()
 	Gets the font stretch to use when annotating with text
 */
-PHP_METHOD(gmagickdraw, getfontstretch)
+PHP_METHOD(GmagickDraw, getfontstretch)
 {
 	php_gmagickdraw_object *internd;
 
@@ -1500,7 +1475,7 @@ PHP_METHOD(gmagickdraw, getfontstretch)
 /* {{{ proto bool GmagickDraw::setFontStretch(int fontStretch)
 	Sets the font stretch to use when annotating with text. The AnyStretch enumeration acts as a wild-card "don't care" option.
 */
-PHP_METHOD(gmagickdraw, setfontstretch)
+PHP_METHOD(GmagickDraw, setfontstretch)
 {
 	php_gmagickdraw_object *internd;
 	zend_long stretch;
@@ -1523,7 +1498,7 @@ PHP_METHOD(gmagickdraw, setfontstretch)
 ///* {{{ proto bool GmagickDraw::composite(int compose, float x, float y, float width, float height, MagickWand magick_wand)
 //	Composites an image onto the current image, using the specified composition operator, specified position, and at the specified size.
 //*/
-// PHP_METHOD(gmagickdraw, composite)
+// PHP_METHOD(GmagickDraw, composite)
 // {
 //	php_gmagickdraw_object *internd;
 //	php_gmagick_object *other_image;
@@ -1554,14 +1529,14 @@ PHP_METHOD(gmagickdraw, setfontstretch)
 /* {{{ proto GmagickDraw GmagickDraw::pathClose()
 	Adds a path element to the current path which closes the current subpath by drawing a straight line from the current point to the current subpath's most recent starting point (usually, the most recent moveto point).
 */
-PHP_METHOD(gmagickdraw, pathclose)
+PHP_METHOD(GmagickDraw, pathclose)
 {
 	php_gmagickdraw_object *internd;
 
 	if (zend_parse_parameters_none() == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	DrawPathClose(internd->drawing_wand);
 	GMAGICK_CHAIN_METHOD;
@@ -1571,7 +1546,7 @@ PHP_METHOD(gmagickdraw, pathclose)
 /* {{{ proto GmagickDraw GmagickDraw::pathCurveToAbsolute(float x1, float y1, float x2, float y2, float x, float y)
 	Draws a cubic Bezier curve from the current point to (x,y) using (x1,y1) as the control point at the beginning of the curve and (x2,y2) as the control point at the end of the curve using absolute coordinates. At the end of the command, the new current point becomes the final (x,y) coordinate pair used in the polybezier.
 */
-PHP_METHOD(gmagickdraw, pathcurvetoabsolute)
+PHP_METHOD(GmagickDraw, pathcurvetoabsolute)
 {
 	php_gmagickdraw_object *internd;
 	double x1, y1, x2, y2, x, y;
@@ -1591,7 +1566,7 @@ PHP_METHOD(gmagickdraw, pathcurvetoabsolute)
 /* {{{ proto GmagickDraw GmagickDraw::pathCurveToRelative(float x1, float y1, float x2, float y2, float x, float y)
 	Draws a cubic Bezier curve from the current point to (x,y) using (x1,y1) as the control point at the beginning of the curve and (x2,y2) as the control point at the end of the curve using relative coordinates. At the end of the command, the new current point becomes the final (x,y) coordinate pair used in the polybezier.
 */
-PHP_METHOD(gmagickdraw, pathcurvetorelative)
+PHP_METHOD(GmagickDraw, pathcurvetorelative)
 {
 	php_gmagickdraw_object *internd;
 	double x1, y1, x2, y2, x, y;
@@ -1611,7 +1586,7 @@ PHP_METHOD(gmagickdraw, pathcurvetorelative)
 /* {{{ proto GmagickDraw GmagickDraw::pathCurveToQuadraticBezierAbsolute(float x1, float y1, float x, float y)
 	Draws a quadratic Bezier curve from the current point to (x,y) using (x1,y1) as the control point using absolute coordinates. At the end of the command, the new current point becomes the final (x,y) coordinate pair used in the polybezier.
 */
-PHP_METHOD(gmagickdraw, pathcurvetoquadraticbezierabsolute)
+PHP_METHOD(GmagickDraw, pathcurvetoquadraticbezierabsolute)
 {
 	php_gmagickdraw_object *internd;
 	double x1, y1, x, y;
@@ -1620,7 +1595,7 @@ PHP_METHOD(gmagickdraw, pathcurvetoquadraticbezierabsolute)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddd", &x1, &y1, &x, &y) == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathCurveToQuadraticBezierAbsolute(internd->drawing_wand, x1, y1, x, y);
@@ -1631,7 +1606,7 @@ PHP_METHOD(gmagickdraw, pathcurvetoquadraticbezierabsolute)
 /* {{{ proto GmagickDraw GmagickDraw::pathCurveToQuadraticBezierRelative(float x1, float y1, float x, float y)
 	Draws a quadratic Bezier curve from the current point to (x,y) using (x1,y1) as the control point using relative coordinates. At the end of the command, the new current point becomes the final (x,y) coordinate pair used in the polybezier.
 */
-PHP_METHOD(gmagickdraw, pathcurvetoquadraticbezierrelative)
+PHP_METHOD(GmagickDraw, pathcurvetoquadraticbezierrelative)
 {
 	php_gmagickdraw_object *internd;
 	double x1, y1, x, y;
@@ -1640,7 +1615,7 @@ PHP_METHOD(gmagickdraw, pathcurvetoquadraticbezierrelative)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddd", &x1, &y1, &x, &y) == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathCurveToQuadraticBezierRelative(internd->drawing_wand, x1, y1, x, y);
@@ -1651,7 +1626,7 @@ PHP_METHOD(gmagickdraw, pathcurvetoquadraticbezierrelative)
 /* {{{ proto GmagickDraw GmagickDraw::pathCurveToQuadraticBezierSmoothAbsolute(float x, float y)
 	Draws a quadratic Bezier curve (using relative coordinates) from the current point to (x,y). The control point is assumed to be the reflection of the control point on the previous command relative to the current point. (If there is no previous command or if the previous command was not a DrawPathCurveToQuadraticBezierAbsolute, DrawPathCurveToQuadraticBezierRelative, DrawPathCurveToQuadraticBezierSmoothAbsolut or DrawPathCurveToQuadraticBezierSmoothRelative, assume the control point is coincident with the current point.). At the end of the command, the new current point becomes the final (x,y) coordinate pair used in the polybezier.
 */
-PHP_METHOD(gmagickdraw, pathcurvetoquadraticbeziersmoothabsolute)
+PHP_METHOD(GmagickDraw, pathcurvetoquadraticbeziersmoothabsolute)
 {
 	php_gmagickdraw_object *internd;
 	double x, y;
@@ -1671,7 +1646,7 @@ PHP_METHOD(gmagickdraw, pathcurvetoquadraticbeziersmoothabsolute)
 /* {{{ proto GmagickDraw GmagickDraw::pathCurveToQuadraticBezierSmoothRelative(float x, float y)
 	Draws a quadratic Bezier curve (using relative coordinates) from the current point to (x, y). The control point is assumed to be the reflection of the control point on the previous command relative to the current point. (If there is no previous command or if the previous command was not a DrawPathCurveToQuadraticBezierAbsolute, DrawPathCurveToQuadraticBezierRelative, DrawPathCurveToQuadraticBezierSmoothAbsolut or DrawPathCurveToQuadraticBezierSmoothRelative, assume the control point is coincident with the current point). At the end of the command, the new current point becomes the final (x, y) coordinate pair used in the polybezier.
 */
-PHP_METHOD(gmagickdraw, pathcurvetoquadraticbeziersmoothrelative)
+PHP_METHOD(GmagickDraw, pathcurvetoquadraticbeziersmoothrelative)
 {
 	php_gmagickdraw_object *internd;
 	double x, y;
@@ -1691,7 +1666,7 @@ PHP_METHOD(gmagickdraw, pathcurvetoquadraticbeziersmoothrelative)
 /* {{{ proto GmagickDraw GmagickDraw::pathCurveToSmoothAbsolute(float x2, float y2, float x, float y)
 	Draws a cubic Bezier curve from the current point to (x,y) using absolute coordinates. The first control point is assumed to be the reflection of the second control point on the previous command relative to the current point. (If there is no previous command or if the previous command was not an DrawPathCurveToAbsolute, DrawPathCurveToRelative, DrawPathCurveToSmoothAbsolute or DrawPathCurveToSmoothRelative, assume the first control point is coincident with the current point.) (x2,y2) is the second control point (i.e., the control point at the end of the curve). At the end of the command, the new current point becomes the final (x,y) coordinate pair used in the polybezier.
 */
-PHP_METHOD(gmagickdraw, pathcurvetosmoothabsolute)
+PHP_METHOD(GmagickDraw, pathcurvetosmoothabsolute)
 {
 	php_gmagickdraw_object *internd;
 	double x1, y1, x, y;
@@ -1711,7 +1686,7 @@ PHP_METHOD(gmagickdraw, pathcurvetosmoothabsolute)
 /* {{{ proto GmagickDraw GmagickDraw::pathCurveToSmoothRelative(float x2, float y2, float x, float y)
 	Draws a cubic Bezier curve from the current point to (x,y) using relative coordinates. The first control point is assumed to be the reflection of the second control point on the previous command relative to the current point. (If there is no previous command or if the previous command was not an DrawPathCurveToAbsolute, DrawPathCurveToRelative, DrawPathCurveToSmoothAbsolute or DrawPathCurveToSmoothRelative, assume the first control point is coincident with the current point.) (x2,y2) is the second control point (i.e., the control point at the end of the curve). At the end of the command, the new current point becomes the final (x,y) coordinate pair used in the polybezier.
 */
-PHP_METHOD(gmagickdraw, pathcurvetosmoothrelative)
+PHP_METHOD(GmagickDraw, pathcurvetosmoothrelative)
 {
 	php_gmagickdraw_object *internd;
 	double x1, y1, x, y;
@@ -1731,7 +1706,7 @@ PHP_METHOD(gmagickdraw, pathcurvetosmoothrelative)
 /* {{{ proto GmagickDraw GmagickDraw::pathEllipticArcAbsolute(float rx, float ry, float x_axis_rotation, bool large_arc_flag, bool sweep_flag, float x, float y)
 	Draws an elliptical arc from the current point to (x, y) using absolute coordinates. The size and orientation of the ellipse are defined by two radii (rx, ry) and an xAxisRotation, which indicates how the ellipse as a whole is rotated relative to the current coordinate system. The center (cx, cy) of the ellipse is calculated automatically to satisfy the constraints imposed by the other parameters. largeArcFlag and sweepFlag contribute to the automatic calculations and help determine how the arc is drawn. If largeArcFlag is true then draw the larger of the available arcs. If sweepFlag is true, then draw the arc matching a clock-wise rotation.
 */
-PHP_METHOD(gmagickdraw, pathellipticarcabsolute)
+PHP_METHOD(GmagickDraw, pathellipticarcabsolute)
 {
 	php_gmagickdraw_object *internd;
 	double rx, ry, x_axis_rotation, x, y;
@@ -1741,7 +1716,7 @@ PHP_METHOD(gmagickdraw, pathellipticarcabsolute)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddbbdd", &rx, &ry, &x_axis_rotation, &large_arc, &sweep, &x, &y) == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	DrawPathEllipticArcAbsolute(internd->drawing_wand, rx, ry, x_axis_rotation, large_arc, sweep, x, y);
 
@@ -1752,7 +1727,7 @@ PHP_METHOD(gmagickdraw, pathellipticarcabsolute)
 /* {{{ proto GmagickDraw GmagickDraw::pathEllipticArcRelative(float rx, float ry, float x_axis_rotation, bool large_arc_flag, bool sweep_flag, float x, float y)
 	Draws an elliptical arc from the current point to (x, y) using relative coordinates. The size and orientation of the ellipse are defined by two radii (rx, ry) and an xAxisRotation, which indicates how the ellipse as a whole is rotated relative to the current coordinate system. The center (cx, cy) of the ellipse is calculated automatically to satisfy the constraints imposed by the other parameters. largeArcFlag and sweepFlag contribute to the automatic calculations and help determine how the arc is drawn. If largeArcFlag is true then draw the larger of the available arcs. If sweepFlag is true, then draw the arc matching a clock-wise rotation.
 */
-PHP_METHOD(gmagickdraw, pathellipticarcrelative)
+PHP_METHOD(GmagickDraw, pathellipticarcrelative)
 {
 	php_gmagickdraw_object *internd;
 	double rx, ry, x_axis_rotation, x, y;
@@ -1762,7 +1737,7 @@ PHP_METHOD(gmagickdraw, pathellipticarcrelative)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dddbbdd", &rx, &ry, &x_axis_rotation, &large_arc, &sweep, &x, &y) == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 	DrawPathEllipticArcRelative(internd->drawing_wand, rx, ry, x_axis_rotation, large_arc, sweep, x, y);
 
@@ -1774,7 +1749,7 @@ PHP_METHOD(gmagickdraw, pathellipticarcrelative)
 /* {{{ proto GmagickDraw GmagickDraw::pathMoveToAbsolute(float x, float y)
 	Starts a new sub-path at the given coordinate using absolute coordinates. The current point then becomes the specified coordinate.
 */
-PHP_METHOD(gmagickdraw, pathmovetoabsolute)
+PHP_METHOD(GmagickDraw, pathmovetoabsolute)
 {
 	php_gmagickdraw_object *internd;
 	double x, y;
@@ -1794,7 +1769,7 @@ PHP_METHOD(gmagickdraw, pathmovetoabsolute)
 /* {{{ proto GmagickDraw GmagickDraw::pathMoveToRelative(float x, float y)
 	Starts a new sub-path at the given coordinate using relative coordinates. The current point then becomes the specified coordinate.
 */
-PHP_METHOD(gmagickdraw, pathmovetorelative)
+PHP_METHOD(GmagickDraw, pathmovetorelative)
 {
 	php_gmagickdraw_object *internd;
 	double x, y;
@@ -1815,7 +1790,7 @@ PHP_METHOD(gmagickdraw, pathmovetorelative)
 /* {{{ proto GmagickDraw GmagickDraw::pathLineToAbsolute(float x, float y)
 	Draws a line path from the current point to the given coordinate using absolute coordinates. The coordinate then becomes the new current point.
 */
-PHP_METHOD(gmagickdraw, pathlinetoabsolute)
+PHP_METHOD(GmagickDraw, pathlinetoabsolute)
 {
 	php_gmagickdraw_object *internd;
 	double x, y;
@@ -1824,7 +1799,7 @@ PHP_METHOD(gmagickdraw, pathlinetoabsolute)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "dd", &x, &y) == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathLineToAbsolute(internd->drawing_wand, x, y);
@@ -1835,7 +1810,7 @@ PHP_METHOD(gmagickdraw, pathlinetoabsolute)
 /* {{{ proto GmagickDraw GmagickDraw::pathLineToRelative(float x, float y)
 	Draws a line path from the current point to the given coordinate using relative coordinates. The coordinate then becomes the new current point.
 */
-PHP_METHOD(gmagickdraw, pathlinetorelative)
+PHP_METHOD(GmagickDraw, pathlinetorelative)
 {
 	php_gmagickdraw_object *internd;
 	double x, y;
@@ -1856,7 +1831,7 @@ PHP_METHOD(gmagickdraw, pathlinetorelative)
 /* {{{ proto GmagickDraw GmagickDraw::pathLineToHorizontalAbsolute(float x)
 	Draws a horizontal line path from the current point to the target point using absolute coordinates.  The target point then becomes the new current point.
 */
-PHP_METHOD(gmagickdraw, pathlinetohorizontalabsolute)
+PHP_METHOD(GmagickDraw, pathlinetohorizontalabsolute)
 {
 	php_gmagickdraw_object *internd;
 	double y;
@@ -1865,7 +1840,7 @@ PHP_METHOD(gmagickdraw, pathlinetohorizontalabsolute)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d",  &y) == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathLineToHorizontalAbsolute(internd->drawing_wand, y);
@@ -1876,7 +1851,7 @@ PHP_METHOD(gmagickdraw, pathlinetohorizontalabsolute)
 /* {{{ proto GmagickDraw GmagickDraw::pathLineToHorizontalRelative(float x)
 	Draws a horizontal line path from the current point to the target point using relative coordinates.  The target point then becomes the new current point.
 */
-PHP_METHOD(gmagickdraw, pathlinetohorizontalrelative)
+PHP_METHOD(GmagickDraw, pathlinetohorizontalrelative)
 {
 	php_gmagickdraw_object *internd;
 	double x;
@@ -1885,7 +1860,7 @@ PHP_METHOD(gmagickdraw, pathlinetohorizontalrelative)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &x) == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathLineToHorizontalRelative(internd->drawing_wand, x);
@@ -1898,7 +1873,7 @@ PHP_METHOD(gmagickdraw, pathlinetohorizontalrelative)
 /* {{{ proto GmagickDraw GmagickDraw::pathLineToVerticalAbsolute(float y)
 	Draws a vertical line path from the current point to the target point using absolute coordinates.  The target point then becomes the new current point.
 */
-PHP_METHOD(gmagickdraw, pathlinetoverticalabsolute)
+PHP_METHOD(GmagickDraw, pathlinetoverticalabsolute)
 {
 	php_gmagickdraw_object *internd;
 	double y;
@@ -1918,7 +1893,7 @@ PHP_METHOD(gmagickdraw, pathlinetoverticalabsolute)
 /* {{{ proto GmagickDraw GmagickDraw::pathLineToVerticalRelative(float y)
 	Draws a vertical line path from the current point to the target point using relative coordinates.  The target point then becomes the new current point.
 */
-PHP_METHOD(gmagickdraw, pathlinetoverticalrelative)
+PHP_METHOD(GmagickDraw, pathlinetoverticalrelative)
 {
 	php_gmagickdraw_object *internd;
 	double y;
@@ -1927,7 +1902,7 @@ PHP_METHOD(gmagickdraw, pathlinetoverticalrelative)
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "d", &y) == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());
 
 	DrawPathLineToVerticalRelative(internd->drawing_wand, y);
@@ -1940,14 +1915,14 @@ PHP_METHOD(gmagickdraw, pathlinetoverticalrelative)
 /* {{{ proto GmagickDraw GmagickDraw::pathStart()
 	Declares the start of a path drawing list which is terminated by a matching DrawPathFinish() command. All other DrawPath commands must be enclosed between a and a DrawPathFinish() command. This is because path drawing commands are subordinate commands and they do not function by themselves.
 */
-PHP_METHOD(gmagickdraw, pathstart)
+PHP_METHOD(GmagickDraw, pathstart)
 {
 	php_gmagickdraw_object *internd;
 
 	if (zend_parse_parameters_none() == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	DrawPathStart(internd->drawing_wand);
 	GMAGICK_CHAIN_METHOD;
@@ -1956,15 +1931,15 @@ PHP_METHOD(gmagickdraw, pathstart)
 
 /* {{{ proto GmagickDraw GmagickDraw::pathFinish()
 	Terminates the current path.
-*/  
-PHP_METHOD(gmagickdraw, pathfinish)
+*/
+PHP_METHOD(GmagickDraw, pathfinish)
 {
 	php_gmagickdraw_object *internd;
 
 	if (zend_parse_parameters_none() == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	DrawPathFinish(internd->drawing_wand);
 	GMAGICK_CHAIN_METHOD;
@@ -1976,14 +1951,14 @@ PHP_METHOD(gmagickdraw, pathfinish)
 /* {{{ proto GmagickDraw GmagickDraw::popClipPath()
 	Terminates a clip path definition.
 */
-PHP_METHOD(gmagickdraw, popclippath)
+PHP_METHOD(GmagickDraw, popclippath)
 {
 	php_gmagickdraw_object *internd;
 
 	if (zend_parse_parameters_none() == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	DrawPopClipPath(internd->drawing_wand);
 	GMAGICK_CHAIN_METHOD;
@@ -1994,14 +1969,14 @@ PHP_METHOD(gmagickdraw, popclippath)
 /* {{{ proto GmagickDraw GmagickDraw::popDefs()
 	Terminates a definition list
 */
-PHP_METHOD(gmagickdraw, popdefs)
+PHP_METHOD(GmagickDraw, popdefs)
 {
 	php_gmagickdraw_object *internd;
 
 	if (zend_parse_parameters_none() == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	DrawPopDefs(internd->drawing_wand);
 	GMAGICK_CHAIN_METHOD;
@@ -2012,7 +1987,7 @@ PHP_METHOD(gmagickdraw, popdefs)
 /* {{{ proto GmagickDraw GmagickDraw::popPattern()
 	Terminates a pattern definition.
 */
-PHP_METHOD(gmagickdraw, poppattern)
+PHP_METHOD(GmagickDraw, poppattern)
 {
 	php_gmagickdraw_object *internd;
 
@@ -2030,7 +2005,7 @@ PHP_METHOD(gmagickdraw, poppattern)
 /* {{{ proto GmagickDraw GmagickDraw::pushClipPath(string clip_mask_id)
 	Starts a clip path definition which is comprized of any number of drawing commands and terminated by a DrawPopClipPath() command.
 */
-PHP_METHOD(gmagickdraw, pushclippath)
+PHP_METHOD(GmagickDraw, pushclippath)
 {
 	php_gmagickdraw_object *internd;
 	char *clip_mask;
@@ -2051,14 +2026,14 @@ PHP_METHOD(gmagickdraw, pushclippath)
 /* {{{ proto GmagickDraw GmagickDraw::pushDefs()
 	Indicates that commands up to a terminating DrawPopDefs() command create named elements (e.g. clip-paths, textures, etc.) which may safely be processed earlier for the sake of efficiency.
 */
-PHP_METHOD(gmagickdraw, pushdefs)
+PHP_METHOD(GmagickDraw, pushdefs)
 {
 	php_gmagickdraw_object *internd;
 
 	if (zend_parse_parameters_none() == FAILURE) {
 		return;
 	}
-	
+
 	internd = Z_GMAGICKDRAW_OBJ_P(getThis());;
 	DrawPushDefs(internd->drawing_wand);
 	GMAGICK_CHAIN_METHOD;
@@ -2068,8 +2043,8 @@ PHP_METHOD(gmagickdraw, pushdefs)
 /* {{{ proto GmagickDraw GmagickDraw::pushPattern(string pattern_id, float x, float y, float width, float height)
 	Indicates that subsequent commands up to a DrawPopPattern() command comprise the definition of a named pattern. The pattern space is assigned top left corner coordinates, a width and height, and becomes its own drawing space.  Anything which can be drawn may be used in a pattern definition. Named patterns may be used as stroke or brush definitions.
 */
-PHP_METHOD(gmagickdraw, pushpattern)
-{	
+PHP_METHOD(GmagickDraw, pushpattern)
+{
 	php_gmagickdraw_object *internd;
 	char *pattern_id;
 	size_t pattern_id_len;
@@ -2091,7 +2066,7 @@ PHP_METHOD(gmagickdraw, pushpattern)
 /* {{{ proto GmagickDraw GmagickDraw::skewX(float degrees)
 	Skews the current coordinate system in the horizontal direction.
 */
-PHP_METHOD(gmagickdraw, skewx)
+PHP_METHOD(GmagickDraw, skewx)
 {
 	double degrees;
 	php_gmagickdraw_object *internd;
@@ -2111,7 +2086,7 @@ PHP_METHOD(gmagickdraw, skewx)
 /* {{{ proto GmagickDraw GmagickDraw::skewY(float degrees)
 	Skews the current coordinate system in the vertical direction.
 */
-PHP_METHOD(gmagickdraw, skewy)
+PHP_METHOD(GmagickDraw, skewy)
 {
 	double degrees;
 	php_gmagickdraw_object *internd;
@@ -2132,7 +2107,7 @@ PHP_METHOD(gmagickdraw, skewy)
 /* {{{ proto GmagickDraw GmagickDraw::setStrokePatternURL(string stroke_url)
 	Sets the pattern used for stroking object outlines.
 */
-PHP_METHOD(gmagickdraw, setstrokepatternurl)
+PHP_METHOD(GmagickDraw, setstrokepatternurl)
 {
 	php_gmagickdraw_object *internd;
 	char *url;
@@ -2153,7 +2128,7 @@ PHP_METHOD(gmagickdraw, setstrokepatternurl)
 /* {{{ proto bool GmagickDraw::getTextAntialias()
 	Returns the current text antialias setting, which determines whether text is antialiased.  Text is antialiased by default.
 */
-PHP_METHOD(gmagickdraw, gettextantialias)
+PHP_METHOD(GmagickDraw, gettextantialias)
 {
 	php_gmagickdraw_object *internd;
 	unsigned int text_anti_alias;
@@ -2170,10 +2145,10 @@ PHP_METHOD(gmagickdraw, gettextantialias)
 /* }}} */
 
 
-/* {{{ proto bool GmagickDraw::getAntialias()
+/* {{{ proto bool GmagickDraw::setAntialias(bool anti_alias)
 	Returns the antialias property associated with the wand.
 */
-PHP_METHOD(gmagickdraw, settextantialias)
+PHP_METHOD(GmagickDraw, settextantialias)
 {
 	php_gmagickdraw_object *internd;
 	zend_bool antialias;
@@ -2189,10 +2164,10 @@ PHP_METHOD(gmagickdraw, settextantialias)
 }
 /* }}} */
 
-/* {{{ proto ImagickPixel GmagickDraw::getTextUnderColor(PixelWand under_color)
+/* {{{ proto GmagickPixel GmagickDraw::getTextUnderColor()
 	Returns the color of a background rectangle to place under text annotations.
 */
-PHP_METHOD(gmagickdraw, gettextundercolor)
+PHP_METHOD(GmagickDraw, gettextundercolor)
 {
 	php_gmagickpixel_object *internp;
 	php_gmagickdraw_object *internd;
@@ -2220,10 +2195,10 @@ PHP_METHOD(gmagickdraw, gettextundercolor)
 }
 /* }}} */
 
-/* {{{ proto GmagickDraw GmagickDraw::setTextUnderColor(PixelWand under_wand)
+/* {{{ proto GmagickDraw GmagickDraw::setTextUnderColor(GmagickPixel|string color)
 	Specifies the color of a background rectangle to place under text annotations.
 */
-PHP_METHOD(gmagickdraw, settextundercolor)
+PHP_METHOD(GmagickDraw, settextundercolor)
 {
 	zval *param;
 	php_gmagickdraw_object *internd;
@@ -2247,7 +2222,7 @@ PHP_METHOD(gmagickdraw, settextundercolor)
 /* {{{ proto GmagickDraw GmagickDraw::translate(float x, float y)
 	Applies a translation to the current coordinate system which moves the coordinate system origin to the specified coordinate.
 */
-PHP_METHOD(gmagickdraw, translate)
+PHP_METHOD(GmagickDraw, translate)
 {
 	double x, y;
 	php_gmagickdraw_object *internd;
@@ -2267,7 +2242,7 @@ PHP_METHOD(gmagickdraw, translate)
 /* {{{ proto GmagickDraw GmagickDraw::setViewbox(float x1, float y1, float x2, float y2 )
 	Sets the overall canvas size to be recorded with the drawing vector data. Usually this will be specified using the same size as the canvas image. When the vector data is saved to SVG or MVG formats, the viewbox is use to specify the size of the canvas image that a viewer will render the vector data on.
 */
-PHP_METHOD(gmagickdraw, setviewbox)
+PHP_METHOD(GmagickDraw, setviewbox)
 {
 	php_gmagickdraw_object *internd;
 	zend_long x1, y1, x2, y2;
@@ -2286,7 +2261,7 @@ PHP_METHOD(gmagickdraw, setviewbox)
 /* {{{ proto GmagickDraw GmagickDraw::popGraphicContext()
 	Destroys the current DrawingWand in the stack, and returns to the previously pushed DrawingWand. Multiple DrawingWands may exist. It is an error to attempt to pop more DrawingWands than have been pushed, and it is proper form to pop all DrawingWands which have been pushed.
 */
-PHP_METHOD(gmagickdraw, popGraphicContext)
+PHP_METHOD(GmagickDraw, popGraphicContext)
 {
 	php_gmagickdraw_object *internd;
 
@@ -2305,7 +2280,7 @@ PHP_METHOD(gmagickdraw, popGraphicContext)
 /* {{{ proto GmagickDraw GmagickDraw::pushGraphicContext()
 	Clones the current DrawingWand to create a new DrawingWand, which is then added to the DrawingWand stack. The original drawing DrawingWand(s) may be returned to by invoking PopDrawingWand(). The DrawingWands are stored on a DrawingWand stack. For every Pop there must have already been an equivalent Push.
 */
-PHP_METHOD(gmagickdraw, pushGraphicContext)
+PHP_METHOD(GmagickDraw, pushGraphicContext)
 {
 	php_gmagickdraw_object *internd;
 

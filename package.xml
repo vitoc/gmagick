@@ -26,7 +26,7 @@ If you're using versions of PHP below 7.0.1 but above 5.1.3, please use version 
 		<user>danack</user>
 		<email>danack@php.net</email>
 		<active>yes</active>
-	</lead>	
+	</lead>
 	<date>2017-01-01</date>
 	<version>
 		<release>2.0.5RC1</release>
@@ -52,12 +52,18 @@ hasNextImage() and hasPreviousImage() now actually returns TRUE on success (expe
 			<file name="gmagick_methods.c" role="src" />
 			<file name="gmagickpixel_methods.c" role="src" />
 			<file name="php_gmagick.h" role="src" />
+			<file name="gmagick_arginfo.h" role="src" />
+			<file name="gmagick.stub.php" role="src" />
 			<file name="php_gmagick_helpers.h" role="src" />
 			<file name="php_gmagick_macros.h" role="src" />
 			<file name="README.md" role="doc" />
-			<file name="CONTRIBUTORS.md" role="doc" />			
+			<file name="CONTRIBUTORS.md" role="doc" />
 			<file name="LICENSE" role="doc" />
 			<dir name="tests">
+				<file role="test" name="bug63677.phpt"/>
+				<file role="test" name="bug71626.phpt"/>
+				<file role="test" name="bug_71742.phpt"/>
+				<file role="test" name="skipif.inc"/>
 				<file role="test" name="gmagick-001-read_and_write.phpt"/>
 				<file role="test" name="gmagick-002-crop_variations.phpt"/>
 				<file role="test" name="gmagick-003-resize_variations.phpt"/>
@@ -180,7 +186,7 @@ hasNextImage() and hasPreviousImage() now actually returns TRUE on success (expe
                 <file role="test" name="gmagick-118_shaveImage_basic.phpt"/>
                 <file role="test" name="gmagick-119_thumbnail_fill.phpt"/>
                 <file role="test" name="gmagick-120_writeImageFile.phpt"/>
-                <file role="test" name="gmagick-121_deconstructGif_basic.phpt"/>	
+                <file role="test" name="gmagick-121_deconstructGif_basic.phpt"/>
                 <file role="test" name="gmagick-122_unsharpMaskImage_basic.phpt"/>
                 <file role="test" name="gmagick-123_sharpenImage_basic.phpt"/>
                 <file role="test" name="gmagick-124__reduceNoiseImage_basic.phpt"/>
