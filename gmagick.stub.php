@@ -44,7 +44,7 @@ class Gmagick {
 	public function addimage(Gmagick $source): Gmagick {}
 	public function addnoiseimage(int $noise_type): Gmagick {}
 	public function borderimage(GmagickPixel|string $color, int $width, int $height): Gmagick {}
-	public function thresholdimage(float $threshold, int $channel = CHANNEL_DEFAULT): bool {}
+	public function thresholdimage(float $threshold, int $channel = Gmagick::CHANNEL_DEFAULT): bool {}
 	public function charcoalimage(float $radius, float $sigma): Gmagick {}
 	public function chopimage(int $width, int $height, int $x, int $y): Gmagick {}
 	public function commentimage(string $comment): Gmagick {}
@@ -241,7 +241,7 @@ class Gmagick {
 	public function getimagegeometry(): array {}
 	public function getresourcelimit(int $type): int {}
 	public function setresourcelimit(int $type, int $limit): bool {}
-	public function negateimage(bool $gray, int $channel = CHANNEL_DEFAULT): bool {}
+	public function negateimage(bool $gray, int $channel = Gmagick::CHANNEL_DEFAULT): bool {}
 	public function sharpenimage(float $radius, float $sigma): bool {}
 	public function textureimage(Gmagick $texture_wand): Gmagick {}
 	public function flattenimages(): Gmagick {}
