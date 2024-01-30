@@ -4975,7 +4975,7 @@ PHP_METHOD(Gmagick, getimagechannelextrema)
 {
 	php_gmagick_object *intern;
 	long channel_type;
-	size_t minima, maxima;
+	unsigned long minima, maxima;
 	unsigned int status;
 
 	if (zend_parse_parameters(ZEND_NUM_ARGS() TSRMLS_CC, "l", &channel_type) == FAILURE) {

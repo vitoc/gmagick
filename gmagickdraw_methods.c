@@ -1409,7 +1409,7 @@ static zend_bool php_gmagick_check_font(char *font, int font_len TSRMLS_DC)
 	zend_bool retval = 0;
 	char **fonts;
 	unsigned long i = 0;
-	size_t num_fonts = 0;
+	unsigned long num_fonts = 0;
 
 	/* Check that user is only able to set a proper font */
 	fonts = MagickQueryFonts("*", &num_fonts);
